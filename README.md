@@ -7,10 +7,11 @@ Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarl
 - `index.html`: uygulamanın tamamı (arayüz, mantık, örnek veriler)
 - `manifest.webmanifest`, `icons/`: ana ekrana eklenebilir uygulama (PWA) ayarları ve simgeler
 - `vercel.json`: Vercel yayın ayarları (güvenlik başlıkları)
+- `package.json`: proje bilgisi ve yerel çalıştırma komutu (bağımlılık yok, derleme adımı yok)
 
 ## Bilgisayarında çalıştırma
 
-`index.html` dosyasına çift tıklaman yeterli. Alternatif olarak klasörde `npx serve` çalıştırabilirsin.
+`index.html` dosyasına çift tıklaman yeterli. Alternatif olarak klasörde `npm start` çalıştırabilirsin (Node.js 18 veya üstü gerekir).
 
 ## GitHub'a yükleme
 
@@ -30,7 +31,7 @@ git push -u origin main
 
 1. vercel.com'a GitHub hesabınla giriş yap.
 2. **Add New → Project** de ve `yukyol` deposunu seç (Import).
-3. **Framework Preset: Other** seçili kalsın. Build Command ve Output Directory alanlarını boş bırak.
+3. **Framework Preset: Other** seçili kalsın. Build Command, Output Directory ve Install Command alanlarını boş bırak (derleme adımı yok, `package.json` içinde `build` komutu bilerek tanımlı değil).
 4. **Deploy**'a bas. Birkaç saniye sonra `https://yukyol-....vercel.app` adresinde yayında olur.
 5. Depoya her yeni değişiklik gönderdiğinde Vercel otomatik yeniden yayınlar.
 
