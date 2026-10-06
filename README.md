@@ -7,11 +7,17 @@ Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarl
 - `index.html`: uygulamanın tamamı (arayüz, mantık, örnek veriler)
 - `manifest.webmanifest`, `icons/`: ana ekrana eklenebilir uygulama (PWA) ayarları ve simgeler
 - `vercel.json`: Vercel yayın ayarları (güvenlik başlıkları)
-- `package.json`: proje bilgisi ve yerel çalıştırma komutu (bağımlılık yok, derleme adımı yok)
+- `package.json`: proje bilgisi, `npm start` ve `npm test` komutları (bağımlılık yok, derleme adımı yok)
+- `tests/run.js`: otomatik testler (`npm test`)
+- `HANDOFF.md`: projeyi devralacak geliştirici veya yapay zekâ için ayrıntılı devir notu
 
 ## Bilgisayarında çalıştırma
 
 `index.html` dosyasına çift tıklaman yeterli. Alternatif olarak klasörde `npm start` çalıştırabilirsin (Node.js 18 veya üstü gerekir).
+
+## Test
+
+`npm test` (Node.js 18+) sahte bir tarayıcı ortamıyla temel akışları kontrol eder. Gerçek telefon testinin yerini tutmaz, ayrıntılı kontrol listesi `HANDOFF.md` içindedir.
 
 ## GitHub'a yükleme
 
@@ -64,7 +70,7 @@ Yazma yetkilerini her tablo için satır bazlı güvenlik kuralıyla (RLS) sın�
 
 Doğrudan arama özelliği yalnızca Premium üyelere açıktır. Üye olmayan biri "Ara" düğmesine dokununca üyelik ekranı açılır.
 
-- Plan adları ve fiyatlar `index.html` içinde `PLANS` satırındadır (şu an tek plan: 3.099 ₺ yıllık). Plan eklemek veya fiyatı değiştirmek için bu satırı düzenle.
+- Plan adları ve fiyatlar `index.html` içinde `PLANS` satırındadır (şu an iki plan: 299 ₺ aylık ve 3.099 ₺ yıllık). Fiyatı değiştirmek veya plan eklemek için bu satırı düzenle. Gerçek ödemede aylık plan yinelenen ödeme (abonelik) olarak ayarlanacak, şu an test modunda 30 günlük üyelik açar.
 - **Satın alma şu an simüle edilir**: "Premium'a geç" düğmesi gerçek ödeme almaz, üyeliği doğrudan açar. Gerçek ödeme için `openPaywall` içindeki `buy` işlemine ödeme sağlayıcısı (iyzico, PayTR veya Stripe) bağlanacak.
 - Profildeki "Üyeliği sıfırla (test)" düğmesi test için üyeliği kapatır.
 - Telefon numarası profilden girilir ve ilanlara eklenir. Örnek ilanlardaki numaralar sahte (`0000 000 00 xx`) değerlerdir.
@@ -77,7 +83,7 @@ Yük kalemleri ve birimleri, ilanda küçük fotoğraf, puan ve yorum, rota alar
 
 ## Bilinen sınırlar
 
-- Şehirler arası mesafeler yaklaşık bir tablodan gelir, gerçek rota hesabı değildir.
+- 81 ilin mesafeleri yaklaşıktır (ilk 12 şehir elle girilmiş tablodan, diğerleri koordinattan hesaplanır), gerçek rota hesabı değildir.
 - Mazot fiyatı varsayılanı (95 ₺/L) 4 Ekim 2026 İstanbul fiyatıdır. Hesap ekranından değiştirilebilir.
 - Piyasa fiyatı karşılaştırması yalnızca uygulamadaki ilanlardan hesaplanır.
 - Belge rozeti "Belgeli" kişinin beyanıdır, "Onaylı" ise yöneticinin onayıdır.

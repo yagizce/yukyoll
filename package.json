@@ -5,7 +5,8 @@
   "description": "Yük sahipleri ve taşıyıcıları buluşturan yük pazarı (statik uygulama)",
   "scripts": {
     "start": "npx --yes serve .",
-    "dev": "npx --yes serve ."
+    "dev": "npx --yes serve .",
+    "test": "node tests/run.js"
   },
   "engines": {
     "node": ">=18"
