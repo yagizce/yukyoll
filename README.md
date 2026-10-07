@@ -9,6 +9,7 @@ Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarl
 - `vercel.json`: Vercel yayın ayarları (güvenlik başlıkları)
 - `package.json`: proje bilgisi, `npm start` ve `npm test` komutları (bağımlılık yok, derleme adımı yok)
 - `tests/run.js`: otomatik testler (`npm test`)
+- `sw.js`: servis çalışanı, uygulamanın internet olmadan da açılmasını sağlar
 - `HANDOFF.md`: projeyi devralacak geliştirici veya yapay zekâ için ayrıntılı devir notu
 
 ## Bilgisayarında çalıştırma

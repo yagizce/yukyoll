@@ -24,9 +24,10 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 | `vercel.json` | Güvenlik başlıkları |
 | `package.json` | `npm start` (yerel sunucu), `npm test` |
 | `tests/run.js` | Otomatik testler (Node, bağımlılık yok) |
+| `sw.js` | Servis çalışanı: önce ağ, ağ yoksa kayıtlı kopya (çevrimdışı açılış). Yalnızca https ve Claude dışı adreste kaydolur |
 
 - Çalıştır: `npm start` veya `index.html`'i tarayıcıda aç.
-- Test: `npm test` (şu an 43 kontrol). **Her değişiklikten sonra çalıştır.** Testler sahte bir DOM kullanır, gerçek tarayıcı/telefon testinin yerini tutmaz.
+- Test: `npm test` (şu an 65 kontrol). **Her değişiklikten sonra çalıştır.** Testler sahte bir DOM kullanır, gerçek tarayıcı/telefon testinin yerini tutmaz.
 - Yayın: GitHub'a gönder, Vercel "Other" preset, build komutu yok.
 - Aynı dosya Claude'un artifact ortamında da yayınlanır. Orada `claude.use("db")` ile ortak veritabanı çalışır. Vercel'de `claude` yoktur, uygulama **yerel moda** (localStorage) düşer. Bu davranışı bozma.
 
@@ -52,15 +53,15 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 | `pods/<loadId>_<bidder>` | img (teslim fotoğrafı) | Storage kovası |
 | `ratings` | k, to, by, stars, text, ts | `ratings` |
 | `premium/<uid>` | until, plan | `subscriptions` (yalnızca sunucu yazar) |
-| `reports` | kind(l/t), tid, reason, note, by, ts | `reports` |
+| `reports` | kind(l/t/u: ilan/boş araç/kullanıcı), tid, reason, note, by, ts | `reports` |
 | `data/users/<uid>/prefs` | favs, calc, alerts, blocked | `profiles.prefs` jsonb |
 
 `stage`: 0 Kabul, 1 Yüklendi, 2 Teslim edildi (fotoğraflı), 3 Yük sahibi onayladı.
 
 ## 6. Özellik durumu
-**Tamam (arayüz + akış):** ilan listesi, filtre (araç/kasa/şehir/tonaj/ücret/ödeme/gün/puan/kayıtlı/belgeli), 81 il, boş araç ilanları, ilan verme (kalemler, fotoğraf, fiyat önerisi), harita üzerinde rota, piyasa fiyatı karşılaştırma, yakıt hesabı, teklif ve karşı teklif, mesajlaşma, teslim kanıtı, puan/yorum, dönüş yükü önerisi, rota alarmı, bildirimler, ilan düzenle/kapat/sil, ilan ve teklif süresi (yük 14 gün, boş araç 7 gün, teklif 3 gün), favoriler, belge rozeti ve yönetici onayı, Premium arama kapısı, paylaşma (derin bağlantı `#l=<id>`), ilk açılış tanıtımı, şikayet/engelleme/yardım, yükleniyor/çevrimdışı/hata durumları.
+**Tamam (arayüz + akış):** ilan listesi, filtre (araç/kasa/şehir/tonaj/ücret/ödeme/gün/puan/kayıtlı/belgeli), 81 il, boş araç ilanları, ilan verme (kalemler, fotoğraf, fiyat önerisi), harita üzerinde rota, piyasa fiyatı karşılaştırma, yakıt hesabı, teklif ve karşı teklif, mesajlaşma, teslim kanıtı, puan/yorum, dönüş yükü önerisi, rota alarmı, bildirimler, ilan düzenle/kapat/sil, ilan ve teklif süresi (yük 14 gün, boş araç 7 gün, teklif 3 gün), favoriler, belge rozeti ve yönetici onayı, Premium arama kapısı, paylaşma (derin bağlantı `#l=<id>`), ilk açılış tanıtımı, şikayet/engelleme/yardım, yükleniyor/çevrimdışı/hata durumları, herkese açık profil sayfası (yorumlar, aktif ilan, teslim sayısı), taşıyıcı "Kazancım" özeti, liste sayfalama (20'şerli) ve puana göre sıralama, tema tercihinin kalıcılığı, temel erişilebilirlik (dialog rolü, Escape, aria-live, klavyeyle kaydet), çevrimdışı açılış (servis çalışanı).
 **Simüle:** örnek ilanlara verilen teklifler uygulama içinde yanıtlanır (`simulate`), örnek ilanların teslimi otomatik onaylanır, satın alma (`openPaywall` içindeki `buy`) gerçek ödeme almaz.
-**Yok:** gerçek giriş, ödeme/abonelik, push bildirim, gerçek harita/mesafe, çok dilli arayüz, erişilebilirlik denetimi.
+**Yok:** gerçek giriş, ödeme/abonelik, push bildirim, gerçek harita/mesafe, çok dilli arayüz, tam erişilebilirlik denetimi (sheet açılınca odak yönetimi ve odak kapanı yok, kontrast ölçülmedi).
 
 ## 7. Güvenlik ve mahremiyet: dikkat
 - **Premium kontrolü yalnızca arayüzde.** Telefon numaraları `loads/trucks/carriers` belgelerinde herkesin okuyabileceği alanda durur; üyelik bilgisi (`prem`) kullanıcının kendi tarayıcısında değiştirilebilir. Gerçekte: üyelik sunucuda ödeme webhook'uyla yazılmalı, numara yalnızca aktif üyeye sunucudan verilmeli.
@@ -77,7 +78,9 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 - `B12` + `D` yalnızca ilk 12 şehir için elle girilmiş gerçek mesafe tablosudur; diğer çiftler `LL` koordinatlarından kuş uçuşu × 1,3 ile **yaklaşık** hesaplanır. Gerçek yol mesafesi için harita servisi gerekir.
 - Mazot fiyatı varsayılanı 95 ₺/L (4 Ekim 2026, İstanbul) ve piyasa karşılaştırması yalnızca uygulamadaki ilanlardan hesaplanır.
 - Örnek ilan telefonları sahte (`0000 000 00 xx`). `SUPPORT_MAIL="destek@example.com"` yer tutucudur.
-- localStorage anahtarları: `yy2` (veri), `yy-seen` (okunan bildirimler), `yy-onb` (tanıtım görüldü), `yy-role` (rol).
+- localStorage anahtarları: `yy2` (veri), `yy-seen` (okunan bildirimler), `yy-onb` (tanıtım görüldü), `yy-role` (rol), `yy-theme` (tema).
+- Servis çalışanı eski sürümde takılı kalmasın diye ağ öncelikli çalışır. `sw.js` içindeki `V` sürüm adını önbellek yapısını değiştirdiğinde artır. Vercel'de `sw.js` için `no-cache` başlığı vardır.
+- Profil sayfasındaki yorum metni bulutta `clean()` ile kaçışlıdır, yerel modda gösterirken `esc` uygulanır. Bu ayrım bozulursa çift kaçış veya XSS olur.
 - Artifact sürümü tek dosya ve kendine yeterli olmak zorunda. Dosyayı birden çok dosyaya bölersen Claude'daki yayın kırılır. Bölmek istersen build adımı ekleyip `index.html`'i üretmelisin.
 - `render()` her çağrıda `innerHTML` yeniden yazdığı için yazılan formlar silinir. Form içindeki alanları etkileyecek yerde `soft()` veya hedefli güncelleme kullan.
 
@@ -102,61 +105,62 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 - İki farklı hesapla (bulut sürümünde): teklif, karşı teklif, kabul, mesaj, teslim, puan.
 
 ## 11. Kod haritası (otomatik üretildi)
-`db.doc(...)` / `db.collection(...)` çağrılarının bulunduğu satırlar (veri katmanı taşınırken değiştirilecek yerler): 261, 262, 264, 290, 296, 304, 306, 333, 361, 380, 391, 392, 395, 397, 403, 404, 407, 410, 415, 476, 482, 516, 525, 528, 572, 573, 574, 575, 576, 577, 578
+`db.doc(...)` / `db.collection(...)` çağrılarının bulunduğu satırlar (veri katmanı taşınırken değiştirilecek yerler): 263, 264, 266, 292, 298, 306, 308, 335, 363, 382, 404, 405, 408, 410, 416, 417, 420, 423, 428, 489, 495, 530, 539, 542, 589, 590, 591, 592, 593, 594, 595
 
 Fonksiyonlar:
-- `F0` (satır 213)
-- `match` (satır 217)
-- `fcount` (satır 227)
-- `activeChips` (satır 228)
-- `rmF` (satır 229)
-- `openFilter` (satır 233)
-- `oup` (satır 261)
-- `postTruck` (satır 262)
-- `rebuild` (satır 263)
-- `savePrefs` (satır 264)
-- `dist` (satır 268)
-- `mkt` (satır 269)
-- `sugg` (satır 271)
-- `mapSVG` (satır 282)
-- `patchIt` (satır 290)
-- `openEdit` (satır 291)
-- `askDel` (satır 295)
-- `openCounter` (satır 298)
-- `listBind` (satır 303)
-- `notifs` (satır 311)
-- `bell` (satır 314)
-- `openBell` (satır 315)
-- `deep` (satır 322)
-- `shareLoad` (satır 324)
-- `openRate` (satır 330)
-- `myRate` (satır 335)
-- `addAlert` (satır 336)
-- `setRole` (satır 339)
-- `openOnb` (satır 341)
-- `itemsUI` (satır 354)
-- `openPaywall` (satır 357)
-- `callTo` (satır 363)
-- `savePhone` (satır 367)
-- `openReport` (satır 378)
-- `blockUser` (satır 382)
-- `setStage` (satır 391)
-- `shrink` (satır 393)
-- `pickImg` (satır 394)
-- `sendPod` (satır 395)
-- `showImg` (satır 396)
-- `showPod` (satır 397)
-- `docPhoto` (satır 403)
-- `viewDoc` (satır 404)
-- `setCar` (satır 407)
-- `carBind` (satır 408)
-- `save` (satır 414)
-- `simulate` (satır 415)
-- `toast` (satır 423)
-- `render` (satır 424)
-- `openLoad` (satır 506)
-- `openTruck` (satır 518)
-- `openChat` (satır 519)
-- `openCalc` (satır 532)
-- `closeSheet` (satır 552)
-- `setNav` (satır 554)
+- `F0` (satır 215)
+- `match` (satır 219)
+- `fcount` (satır 229)
+- `activeChips` (satır 230)
+- `rmF` (satır 231)
+- `openFilter` (satır 235)
+- `oup` (satır 263)
+- `postTruck` (satır 264)
+- `rebuild` (satır 265)
+- `savePrefs` (satır 266)
+- `dist` (satır 270)
+- `mkt` (satır 271)
+- `sugg` (satır 273)
+- `mapSVG` (satır 284)
+- `patchIt` (satır 292)
+- `openEdit` (satır 293)
+- `askDel` (satır 297)
+- `openCounter` (satır 300)
+- `listBind` (satır 305)
+- `notifs` (satır 313)
+- `bell` (satır 316)
+- `openBell` (satır 317)
+- `deep` (satır 324)
+- `shareLoad` (satır 326)
+- `openRate` (satır 332)
+- `myRate` (satır 337)
+- `addAlert` (satır 338)
+- `setRole` (satır 341)
+- `openOnb` (satır 343)
+- `itemsUI` (satır 356)
+- `openPaywall` (satır 359)
+- `callTo` (satır 365)
+- `savePhone` (satır 369)
+- `openReport` (satır 380)
+- `blockUser` (satır 384)
+- `openProfile` (satır 391)
+- `setStage` (satır 404)
+- `shrink` (satır 406)
+- `pickImg` (satır 407)
+- `sendPod` (satır 408)
+- `showImg` (satır 409)
+- `showPod` (satır 410)
+- `docPhoto` (satır 416)
+- `viewDoc` (satır 417)
+- `setCar` (satır 420)
+- `carBind` (satır 421)
+- `save` (satır 427)
+- `simulate` (satır 428)
+- `toast` (satır 436)
+- `render` (satır 437)
+- `openLoad` (satır 520)
+- `openTruck` (satır 532)
+- `openChat` (satır 533)
+- `openCalc` (satır 546)
+- `closeSheet` (satır 566)
+- `setNav` (satır 568)
