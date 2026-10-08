@@ -1,9 +1,16 @@
-# HANDOFF: YükYol (Opus için devir notu)
+# HANDOFF: NakGo (Opus için devir notu)
 
 Bu dosya, projeyi devralacak yapay zekâ asistanı (Opus) ve geliştirici için yazıldı. Önce bu dosyayı, sonra `README.md`'yi oku, ardından `npm test` çalıştır.
 
 ## 1. Ürün
-YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet, panelvan, tanker, lowbed, konteyner) buluşturan, **telefon ekranı için tasarlanmış** bir yük pazarı. Yükal ve Qmove gibi uygulamalardan esinlenildi. Türkiye'de, Türkçe kullanılacak. Şu an **geliştirme/prototip aşaması**: arayüz ve akışlar tamam, gerçek giriş, ödeme ve gerçek veritabanı yok.
+NakGo, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet, panelvan, tanker, lowbed, konteyner) buluşturan, **telefon ekranı için tasarlanmış** bir yük pazarı. Yükal ve Qmove gibi uygulamalardan esinlenildi. Türkiye'de, Türkçe kullanılacak. Şu an **geliştirme/prototip aşaması**: arayüz ve akışlar tamam, gerçek giriş, ödeme ve gerçek veritabanı yok.
+
+## 1b. Marka
+- Adı **NakGo** (eski çalışma adı YükYol, kodda kalmadı). Renkler: lacivert `#12395f`, amber `#f2b01e`.
+- Logo (v2): gradyanlı amber zemin üzerinde lacivert tır; kasasında ">>" okları ("Go"), ayrı kabin (cam, far, egzoz), üç tekerlek (arkada tandem), altta kesikli yol çizgisi. Kaynak SVG `icons/icon.svg`; başlıktaki ve açılış ekranındaki logo aynı çizimin `index.html` içine gömülü halidir (maske kimlikleri `mkh`/`mks`). PNG simgeler `icons/` altında (192, 512, maskable 512, iPhone 180). Logoyu değiştirirsen hepsini güncelle.
+- `brand/` klasöründe logo dosyaları vardır: `logo-mark.svg` (yalnızca simge), `logo-horizontal(.svg/.png)` (simge + NakGo yazısı), `logo-horizontal-light` (lacivert zemin için beyaz yazılı), `logo-vertical`. Yazı SVG'lerde yola çevrilmiştir (font gerekmez). Hepsi `brand/gen.py` ile üretilir (Python, fontTools ve Playwright/Chromium gerekir; Poppins Bold fontunu kullanır). `python3 brand/gen.py <çıktı_klasörü>`.
+- Açılış ekranı (splash): `index.html` içinde `#splash`. Oturum başına bir kez ~1,5 sn gösterilir (`sessionStorage` anahtarı `ng-splash`), hareket azaltma tercihinde kısa ve hareketsizdir.
+- localStorage anahtarları (`yy2`, `yy-seen`, `yy-onb`, `yy-role`, `yy-theme`) eski adın kısaltmasıdır, verileri silmemek için bilerek değiştirilmedi.
 
 ## 2. Ürün sahibinin kararları ve tercihleri (bunlara uy)
 - Dil: arayüz ve tüm metinler Türkçe. Sade, kısa cümleler.
@@ -24,10 +31,11 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 | `vercel.json` | Güvenlik başlıkları |
 | `package.json` | `npm start` (yerel sunucu), `npm test` |
 | `tests/run.js` | Otomatik testler (Node, bağımlılık yok) |
+| `tests/shots.py` | Gerçek Chromium ile ekran görüntüsü alır (Playwright gerekir). Görsel değişikliklerden sonra çalıştır ve görüntülere bak |
 | `sw.js` | Servis çalışanı: önce ağ, ağ yoksa kayıtlı kopya (çevrimdışı açılış). Yalnızca https ve Claude dışı adreste kaydolur |
 
 - Çalıştır: `npm start` veya `index.html`'i tarayıcıda aç.
-- Test: `npm test` (şu an 65 kontrol). **Her değişiklikten sonra çalıştır.** Testler sahte bir DOM kullanır, gerçek tarayıcı/telefon testinin yerini tutmaz.
+- Test: `npm test` (şu an 85 kontrol). **Her değişiklikten sonra çalıştır.** Testler sahte bir DOM kullanır, gerçek tarayıcı/telefon testinin yerini tutmaz.
 - Yayın: GitHub'a gönder, Vercel "Other" preset, build komutu yok.
 - Aynı dosya Claude'un artifact ortamında da yayınlanır. Orada `claude.use("db")` ile ortak veritabanı çalışır. Vercel'de `claude` yoktur, uygulama **yerel moda** (localStorage) düşer. Bu davranışı bozma.
 
@@ -59,7 +67,7 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 `stage`: 0 Kabul, 1 Yüklendi, 2 Teslim edildi (fotoğraflı), 3 Yük sahibi onayladı.
 
 ## 6. Özellik durumu
-**Tamam (arayüz + akış):** ilan listesi, filtre (araç/kasa/şehir/tonaj/ücret/ödeme/gün/puan/kayıtlı/belgeli), 81 il, boş araç ilanları, ilan verme (kalemler, fotoğraf, fiyat önerisi), harita üzerinde rota, piyasa fiyatı karşılaştırma, yakıt hesabı, teklif ve karşı teklif, mesajlaşma, teslim kanıtı, puan/yorum, dönüş yükü önerisi, rota alarmı, bildirimler, ilan düzenle/kapat/sil, ilan ve teklif süresi (yük 14 gün, boş araç 7 gün, teklif 3 gün), favoriler, belge rozeti ve yönetici onayı, Premium arama kapısı, paylaşma (derin bağlantı `#l=<id>`), ilk açılış tanıtımı, şikayet/engelleme/yardım, yükleniyor/çevrimdışı/hata durumları, herkese açık profil sayfası (yorumlar, aktif ilan, teslim sayısı), taşıyıcı "Kazancım" özeti, liste sayfalama (20'şerli) ve puana göre sıralama, tema tercihinin kalıcılığı, temel erişilebilirlik (dialog rolü, Escape, aria-live, klavyeyle kaydet), çevrimdışı açılış (servis çalışanı).
+**Tamam (arayüz + akış):** ilan listesi, filtre (araç/kasa/şehir/tonaj/ücret/ödeme/gün/puan/kayıtlı/belgeli), 81 il, boş araç ilanları, ilan verme (kalemler, fotoğraf, fiyat önerisi), harita üzerinde rota, piyasa fiyatı karşılaştırma, yakıt hesabı, teklif ve karşı teklif, mesajlaşma, teslim kanıtı, puan/yorum, dönüş yükü önerisi, rota alarmı, bildirimler, ilan düzenle/kapat/sil, ilan ve teklif süresi (yük 14 gün, boş araç 7 gün, teklif 3 gün), favoriler, belge rozeti ve yönetici onayı, Premium arama kapısı, paylaşma (derin bağlantı `#l=<id>`), ilk açılış tanıtımı, şikayet/engelleme/yardım, yükleniyor/çevrimdışı/hata durumları, herkese açık profil sayfası (yorumlar, aktif ilan, teslim sayısı), taşıyıcı "Kazancım" özeti, liste sayfalama (20'şerli) ve puana göre sıralama, tema tercihinin kalıcılığı, temel erişilebilirlik (dialog rolü, Escape, aria-live, klavyeyle kaydet), çevrimdışı açılış (servis çalışanı), "Yakınımda" (tarayıcı konumu, il merkezine kuş uçuşu mesafe, 100/250/500 km yarıçap; konum saklanmaz, sunucuya gitmez), iki ilanı yan yana karşılaştırma (ilan detayında "Karşılaştır", en iyi değerler yeşil), taşıyıcı için son 8 haftalık kazanç grafiği (`doneAt` teslim onay zamanı).
 **Simüle:** örnek ilanlara verilen teklifler uygulama içinde yanıtlanır (`simulate`), örnek ilanların teslimi otomatik onaylanır, satın alma (`openPaywall` içindeki `buy`) gerçek ödeme almaz.
 **Yok:** gerçek giriş, ödeme/abonelik, push bildirim, gerçek harita/mesafe, çok dilli arayüz, tam erişilebilirlik denetimi (sheet açılınca odak yönetimi ve odak kapanı yok, kontrast ölçülmedi).
 
@@ -94,7 +102,10 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 7. **Kalite:** gerçek tarayıcı testleri (Playwright), erişilebilirlik (kontrast, odak, ekran okuyucu), performans (liste sayfalama, 1000+ ilan), çok sayıda ilanda arama.
 8. **Kod düzeni:** `index.html`'i `src/` altında modüllere böl (veri, çizim, özellikler), build ile tek dosya üret; Vercel build komutunu buna göre ayarla.
 
-## 10. Gerçek cihaz test listesi (ürün sahibi yapacak)
+## 10. Test notları
+`npm test` mantığı kontrol eder; görünümü kontrol etmez. Görünüm için `python3 tests/shots.py` ile ekran görüntüsü al (390×844). Gerçek cihaz testi yine gereklidir.
+
+## 10b. Gerçek cihaz test listesi (ürün sahibi yapacak)
 - iPhone Safari ve Android Chrome: tüm sekmeler, kaydırma, klavye açılınca form, yazı alanına dokununca yakınlaşma olmaması.
 - Fotoğraf: ilan fotoğrafı, belge fotoğrafı, teslim fotoğrafı (kameradan çekme dahil).
 - Arama: Premium'da "Şimdi ara" gerçekten `tel:` açıyor mu, Premium değilken üyelik ekranı çıkıyor mu.
@@ -105,62 +116,68 @@ YükYol, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet
 - İki farklı hesapla (bulut sürümünde): teklif, karşı teklif, kabul, mesaj, teslim, puan.
 
 ## 11. Kod haritası (otomatik üretildi)
-`db.doc(...)` / `db.collection(...)` çağrılarının bulunduğu satırlar (veri katmanı taşınırken değiştirilecek yerler): 263, 264, 266, 292, 298, 306, 308, 335, 363, 382, 404, 405, 408, 410, 416, 417, 420, 423, 428, 489, 495, 530, 539, 542, 589, 590, 591, 592, 593, 594, 595
+`db.doc(...)` / `db.collection(...)` çağrılarının bulunduğu satırlar (veri katmanı taşınırken değiştirilecek yerler): 281, 282, 284, 310, 316, 324, 326, 353, 381, 400, 445, 446, 449, 451, 457, 458, 461, 464, 469, 530, 536, 571, 580, 583, 632, 633, 634, 635, 636, 637, 638
 
 Fonksiyonlar:
-- `F0` (satır 215)
-- `match` (satır 219)
-- `fcount` (satır 229)
-- `activeChips` (satır 230)
-- `rmF` (satır 231)
-- `openFilter` (satır 235)
-- `oup` (satır 263)
-- `postTruck` (satır 264)
-- `rebuild` (satır 265)
-- `savePrefs` (satır 266)
-- `dist` (satır 270)
-- `mkt` (satır 271)
-- `sugg` (satır 273)
-- `mapSVG` (satır 284)
-- `patchIt` (satır 292)
-- `openEdit` (satır 293)
-- `askDel` (satır 297)
-- `openCounter` (satır 300)
-- `listBind` (satır 305)
-- `notifs` (satır 313)
-- `bell` (satır 316)
-- `openBell` (satır 317)
-- `deep` (satır 324)
-- `shareLoad` (satır 326)
-- `openRate` (satır 332)
-- `myRate` (satır 337)
-- `addAlert` (satır 338)
-- `setRole` (satır 341)
-- `openOnb` (satır 343)
-- `itemsUI` (satır 356)
-- `openPaywall` (satır 359)
-- `callTo` (satır 365)
-- `savePhone` (satır 369)
-- `openReport` (satır 380)
-- `blockUser` (satır 384)
-- `openProfile` (satır 391)
-- `setStage` (satır 404)
-- `shrink` (satır 406)
-- `pickImg` (satır 407)
-- `sendPod` (satır 408)
-- `showImg` (satır 409)
-- `showPod` (satır 410)
-- `docPhoto` (satır 416)
-- `viewDoc` (satır 417)
-- `setCar` (satır 420)
-- `carBind` (satır 421)
-- `save` (satır 427)
-- `simulate` (satır 428)
-- `toast` (satır 436)
-- `render` (satır 437)
-- `openLoad` (satır 520)
-- `openTruck` (satır 532)
-- `openChat` (satır 533)
-- `openCalc` (satır 546)
-- `closeSheet` (satır 566)
-- `setNav` (satır 568)
+- `F0` (satır 233)
+- `match` (satır 237)
+- `fcount` (satır 247)
+- `activeChips` (satır 248)
+- `rmF` (satır 249)
+- `openFilter` (satır 253)
+- `oup` (satır 281)
+- `postTruck` (satır 282)
+- `rebuild` (satır 283)
+- `savePrefs` (satır 284)
+- `dist` (satır 288)
+- `mkt` (satır 289)
+- `sugg` (satır 291)
+- `mapSVG` (satır 302)
+- `patchIt` (satır 310)
+- `openEdit` (satır 311)
+- `askDel` (satır 315)
+- `openCounter` (satır 318)
+- `listBind` (satır 323)
+- `notifs` (satır 331)
+- `bell` (satır 334)
+- `openBell` (satır 335)
+- `deep` (satır 342)
+- `shareLoad` (satır 344)
+- `openRate` (satır 350)
+- `myRate` (satır 355)
+- `addAlert` (satır 356)
+- `setRole` (satır 359)
+- `openOnb` (satır 361)
+- `itemsUI` (satır 374)
+- `openPaywall` (satır 377)
+- `callTo` (satır 383)
+- `savePhone` (satır 387)
+- `openReport` (satır 398)
+- `blockUser` (satır 402)
+- `openProfile` (satır 409)
+- `nearestCity` (satır 422)
+- `toggleNear` (satır 423)
+- `toggleCmp` (satır 429)
+- `openCompare` (satır 431)
+- `weekly` (satır 438)
+- `weekChart` (satır 440)
+- `setStage` (satır 445)
+- `shrink` (satır 447)
+- `pickImg` (satır 448)
+- `sendPod` (satır 449)
+- `showImg` (satır 450)
+- `showPod` (satır 451)
+- `docPhoto` (satır 457)
+- `viewDoc` (satır 458)
+- `setCar` (satır 461)
+- `carBind` (satır 462)
+- `save` (satır 468)
+- `simulate` (satır 469)
+- `toast` (satır 477)
+- `render` (satır 478)
+- `openLoad` (satır 561)
+- `openTruck` (satır 573)
+- `openChat` (satır 574)
+- `openCalc` (satır 587)
+- `closeSheet` (satır 607)
+- `setNav` (satır 609)

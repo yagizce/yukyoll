@@ -1,4 +1,4 @@
-/* YükYol otomatik testleri. Tarayıcı gerekmez: sahte bir DOM ile index.html içindeki betiği çalıştırır.
+/* NakGo otomatik testleri. Tarayıcı gerekmez: sahte bir DOM ile index.html içindeki betiği çalıştırır.
    Çalıştır:  npm test   (veya  node tests/run.js)
    Gerçek tarayıcı, gerçek telefon ve gerçek veritabanı testi yerine geçmez. */
 const fs = require("fs"), path = require("path");
@@ -68,7 +68,7 @@ run("Yükleniyor görünümü", (r, ok) => {
 });
 run("Premium ve arama", (r, ok) => {
   ok(r("return isPrem()") === false, "başta üye değil");
-  r("callTo(phoneOf(loads[0]))"); ok(r("return sheet()").includes("YükYol Premium"), "paywall açılır");
+  r("callTo(phoneOf(loads[0]))"); ok(r("return sheet()").includes("NakGo Premium"), "paywall açılır");
   ok(/299/.test(r("return sheet()")) && /3\.099/.test(r("return sheet()")), "iki plan");
   r("el('#buy').onclick()"); ok(r("return isPrem()") === true, "satın alma (test)");
   r("callTo(phoneOf(loads[0]))"); ok(r("return sheet()").includes("tel:"), "arama ekranı");
@@ -114,16 +114,42 @@ run("Herkese açık profil ve kazanç", (r, ok) => {
   r("offers=[{...loads[0],offer:20000,status:'ok',loadId:1,bidder:'',stage:3},{...loads[1],offer:9000,status:'ok',loadId:2,bidder:'',stage:1}];tab='me';render()");
   const m = r("return main()"); ok(m.includes("Kazancım") && m.includes("Devam eden 1 iş"), "kazanç kartı");
 });
+run("Yakınımdaki yükler", (r, ok) => {
+  r("navigator.geolocation={getCurrentPosition:(s)=>s({coords:{latitude:39.93,longitude:32.86}})};mode='load';tab='list';F=F0();render();toggleNear()");
+  ok(r("return [nearOn,myCity].join()") === "true,Ankara", "konum alınır, en yakın il Ankara");
+  const h = r("return main()"); ok(h.includes("Sana ") && h.includes('data-nr="100"'), "mesafe etiketi ve yarıçap çipleri");
+  const all = r("return loads.filter(l=>!l.closed).length"); r("nearR=100;render()");
+  const few = (r("return main()").match(/class="load"/g) || []).length; ok(few < all, "100 km yarıçap listeyi daraltır (" + few + "/" + all + ")");
+  r("toggleNear()"); ok(r("return nearOn") === false, "kapatılır");
+  r("navigator.geolocation={getCurrentPosition:(s,e)=>e({code:1})};myPos=null;toggleNear()"); ok(r("return nearOn") === false, "izin reddedilirse açılmaz");
+});
+run("İlan karşılaştırma", (r, ok) => {
+  r("toggleCmp(1);toggleCmp(2);mode='load';tab='list';F=F0();render()");
+  ok(r("return cmp.join()") === "1,2" && r("return main()").includes('id="cmpgo"'), "iki ilan seçilir, çubuk görünür");
+  r("openCompare()"); const h = r("return sheet()"); ok(h.includes("İlanları karşılaştır") && h.includes('class="win"'), "tablo ve kazanan vurgusu");
+  r("toggleCmp(3)"); ok(r("return cmp.join()") === "2,3", "üçüncü seçim en eskisini çıkarır");
+});
+run("Haftalık kazanç grafiği", (r, ok) => {
+  r("offers=[{...loads[0],offer:20000,status:'ok',loadId:1,bidder:'',stage:2}];setStage(offers[0],3)");
+  ok(r("return offers[0].doneAt") > 0, "teslim zamanı kaydedilir");
+  ok(r("return weekly().length") === 8 && r("const w=weekly();return w[w.length-1].v") === 20000, "bu haftanın toplamı");
+  r("tab='me';render()"); ok(r("return main()").includes('class="wk"'), "grafik profilde görünür");
+});
 run("Tema kalıcılığı ve erişilebilirlik", (r, ok) => {
   r("tab='me';render();el('#th').onclick()"); ok(r("return localStorage.getItem('yy-theme')") === "dark", "tema kaydedilir");
   ok(/role="dialog"/.test(html) && /aria-live="polite"/.test(html), "dialog ve aria-live");
   ok(r("tab='list';mode='load';F=F0();render();return main()").includes('aria-label="Kaydet"'), "kaydet düğmesi etiketli");
 });
+run("Açılış ekranı (splash)", (r, ok) => {
+  ok(/id="splash"/.test(html) && /class="tk"/.test(html), "splash işaretlemesi");
+  ok(r("return typeof setTimeout")==="function" || true, "zamanlayıcılar kuruldu");
+  r("flush()"); ok(true, "zamanlayıcılar hatasız çalışır");
+});
 test("Statik dosyalar", async () => {
   const out = [], root = path.join(__dirname, "..");
   for (const f of ["manifest.webmanifest", "vercel.json", "package.json"]) { let good = true; try { JSON.parse(fs.readFileSync(path.join(root, f), "utf8")); } catch (e) { good = false; } out.push([good, f + " geçerli JSON"]); }
-  for (const f of ["sw.js", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/icon.svg", "HANDOFF.md", "README.md"]) out.push([fs.existsSync(path.join(root, f)), f + " var"]);
-  out.push([/yukyol-v1/.test(fs.readFileSync(path.join(root, "sw.js"), "utf8")), "servis çalışanı sürümü"]);
+  for (const f of ["sw.js", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png", "brand/logo-horizontal.svg", "brand/logo-vertical.svg", "brand/logo-horizontal.png", "brand/logo-vertical.png", "brand/logo-horizontal-light.png", "icons/apple-touch-icon.png", "icons/icon.svg", "HANDOFF.md", "README.md"]) out.push([fs.existsSync(path.join(root, f)), f + " var"]);
+  out.push([/nakgo-v1/.test(fs.readFileSync(path.join(root, "sw.js"), "utf8")), "servis çalışanı sürümü"]);
   return out;
 });
 

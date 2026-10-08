@@ -1,4 +1,4 @@
-# YükYol
+# NakGo
 
 Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarlanmış yük pazarı prototipi. Tek dosyalı statik uygulama: derleme adımı yok.
 
@@ -8,7 +8,8 @@ Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarl
 - `manifest.webmanifest`, `icons/`: ana ekrana eklenebilir uygulama (PWA) ayarları ve simgeler
 - `vercel.json`: Vercel yayın ayarları (güvenlik başlıkları)
 - `package.json`: proje bilgisi, `npm start` ve `npm test` komutları (bağımlılık yok, derleme adımı yok)
-- `tests/run.js`: otomatik testler (`npm test`)
+- `tests/run.js`: otomatik testler (`npm test`), `tests/shots.py`: ekran görüntüsü alma (isteğe bağlı, Playwright gerekir)
+- `brand/`: logo dosyaları (simge, yatay, dikey, açık/koyu zemin; SVG ve PNG)
 - `sw.js`: servis çalışanı, uygulamanın internet olmadan da açılmasını sağlar
 - `HANDOFF.md`: projeyi devralacak geliştirici veya yapay zekâ için ayrıntılı devir notu
 
@@ -22,7 +23,7 @@ Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarl
 
 ## GitHub'a yükleme
 
-1. github.com'da yeni bir depo (repository) oluştur, örneğin `yukyol`.
+1. github.com'da yeni bir depo (repository) oluştur, örneğin `nakgo`.
 2. Bu klasörün içindeki tüm dosyaları depoya yükle (tarayıcıdan "Add file → Upload files" ile sürükleyebilirsin) ya da:
 
 ```
@@ -30,17 +31,19 @@ git init
 git add .
 git commit -m "İlk sürüm"
 git branch -M main
-git remote add origin https://github.com/KULLANICI_ADIN/yukyol.git
+git remote add origin https://github.com/KULLANICI_ADIN/nakgo.git
 git push -u origin main
 ```
 
 ## Vercel'e yayınlama
 
 1. vercel.com'a GitHub hesabınla giriş yap.
-2. **Add New → Project** de ve `yukyol` deposunu seç (Import).
+2. **Add New → Project** de ve `nakgo` deposunu seç (Import).
 3. **Framework Preset: Other** seçili kalsın. Build Command, Output Directory ve Install Command alanlarını boş bırak (derleme adımı yok, `package.json` içinde `build` komutu bilerek tanımlı değil).
-4. **Deploy**'a bas. Birkaç saniye sonra `https://yukyol-....vercel.app` adresinde yayında olur.
+4. **Deploy**'a bas. Birkaç saniye sonra `https://nakgo-....vercel.app` adresinde yayında olur.
 5. Depoya her yeni değişiklik gönderdiğinde Vercel otomatik yeniden yayınlar.
+
+Not: GitHub'da `yukyol` adıyla bir depon varsa adını değiştirmek zorunda değilsin, uygulama adı depo adından bağımsızdır (GitHub'da istersen Settings → General → Repository name ile yeniden adlandırabilirsin).
 
 Telefonda siteyi açıp tarayıcı menüsünden "Ana ekrana ekle" dersen uygulama gibi açılır.
 
