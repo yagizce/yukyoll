@@ -1,0 +1,22 @@
+{
+  "appId": "com.nakgo.app",
+  "appName": "NakGo",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "never"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "backgroundColor": "#12395f"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#12395f",
+      "overlaysWebView": true
+    }
+  }
+}

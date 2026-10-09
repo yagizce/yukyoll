@@ -2,3 +2,5 @@
 node_modules
 .DS_Store
 tests/shots/
+__pycache__/
+www/

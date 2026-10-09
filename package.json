@@ -6,7 +6,11 @@
   "scripts": {
     "start": "npx --yes serve .",
     "dev": "npx --yes serve .",
-    "test": "node tests/run.js"
+    "test": "node tests/run.js",
+    "test:e2e": "python3 tests/e2e.py",
+    "test:shots": "python3 tests/shots.py",
+    "logo": "python3 brand/generate.py",
+    "mobile:prepare": "node mobile/prepare-web.js"
   },
   "engines": {
     "node": ">=18"
