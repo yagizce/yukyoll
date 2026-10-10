@@ -1,4 +1,4 @@
-/* Ortak tasarım sistemi ve geniş ekran düzeni */
+/* Ortak tasarım sistemi ve telefon düzeni */
 
 :root { --space:16px; --radius:16px; }
 body { line-height:1.45; }
@@ -47,26 +47,13 @@ textarea:focus { outline:2px solid var(--brand-ink); outline-offset:2px; }
 .itrow { flex-wrap:wrap; }
 .itrow input[data-in] { flex-basis:100%; }
 .itrow input[data-iq],.itrow select { min-width:0; flex:1; }
-@media (min-width:768px) {
- #app { max-width:1080px; }
- header { padding-left:28px; padding-right:28px; }
- #main { padding:24px 28px; }
- .listing-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
- .listing-grid .load { margin:0; }
- .listing-grid .empty { grid-column:1/-1; }
- .route-search h2 { font-size:32px; }
- .route-fields { max-width:720px; }
- .profile-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:start; }
- #main[data-screen=post] { padding-left:max(28px,calc((100% - 780px)/2)); padding-right:max(28px,calc((100% - 780px)/2)); }
- .sheet { align-items:center; justify-content:center; }
- .sheet>div { max-width:640px; border-radius:22px; }
- .toast { position:fixed; bottom:24px; max-width:600px; }
- .off { flex:none; }
-}
+.sheet { justify-content:center; }
+.sheet>div { max-width:430px; }
+.off { flex:none; }
 
 /* Mobil uygulama kabuğu: menü ve birincil işlemler başparmak hizasında. */
 :root { --nav-height:calc(78px + env(safe-area-inset-bottom,0px)); --app-gradient:linear-gradient(115deg,#00565f 0%,#008c91 74%,#10b9aa 100%); }
-#app { background:var(--bg); overflow:hidden; }
+#app { max-width:430px; background:var(--bg); overflow:hidden; }
 header { background:var(--app-gradient); padding-top:calc(12px + env(safe-area-inset-top,0px)); padding-bottom:12px; gap:10px; flex:none; }
 header h1 { font-size:24px; letter-spacing:-1px; }
 header p { font-size:10px; color:#e0ffff; }
@@ -179,14 +166,4 @@ nav button[data-t=post] { background:linear-gradient(145deg,#ffe68b,#ffd34e); co
 .toast { bottom:calc(var(--nav-height) + 80px); }
 #app[data-keyboard=true] { --nav-height:0px; }
 #app[data-keyboard=true] nav { display:none; }
-@media (min-width:768px) {
- .route-search { display:flex; align-items:center; justify-content:space-between; gap:32px; padding:24px; }
- .route-search h2 { font-size:30px; margin-bottom:0; }
- .route-fields { flex:1; max-width:560px; }
- nav { padding-left:max(20px,calc((100% - 600px)/2)); padding-right:max(20px,calc((100% - 600px)/2)); }
- .list-actions,.form-dock { padding-left:28px; padding-right:28px; }
- .form-dock { justify-content:center; }
- .form-dock .draft-state { max-width:280px; }
- .toast { bottom:calc(var(--nav-height) + 80px); }
-}
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }

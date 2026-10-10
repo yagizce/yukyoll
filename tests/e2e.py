@@ -217,7 +217,11 @@ with sync_playwright() as p:
             for screen in ('list','post','mine','me'):
                 page.click(f'nav [data-t={screen}]')
                 check(prefix+screen+" yatay taşmaz",page.evaluate("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('#main').scrollWidth<=document.querySelector('#main').clientWidth+1"))
-            if width==1280: check(prefix+"masaüstü geniş alanı kullanır",page.locator('#app').bounding_box()['width']>1000)
+            if width==1280:
+                page.click('nav [data-t=list]');first=page.locator('.listing-grid>.load').nth(0).bounding_box();second=page.locator('.listing-grid>.load').nth(1).bounding_box()
+                check(prefix+"geniş ekranda da 430 px tek sütunlu telefon düzeni",page.locator('#app').bounding_box()['width']==430 and abs(first['x']-second['x'])<1 and second['y']>first['y'])
+                page.evaluate('openLoad(loads[0].id)')
+                check(prefix+"detay penceresi telefon genişliğini aşmaz",page.locator('#sheetBody').bounding_box()['width']<=430)
             matrix.close()
     check("matris sayfa hatası yok",not errors)
     b.close()
