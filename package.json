@@ -6,16 +6,15 @@
   "scripts": {
     "start": "npx --yes serve .",
     "dev": "npx --yes serve .",
-    "bundle": "node bundle.js",
-    "test": "node bundle.js --check && node dev.js lint && node run.js",
-    "test:e2e": "python e2e.py",
-    "test:shots": "python e2e.py --shots",
+    "bundle": "node tools/bundle.js",
+    "test": "node tools/bundle.js --check && node tools/dev.js lint && node tests/run.js",
+    "test:e2e": "python tests/e2e.py",
+    "test:shots": "python tests/e2e.py --shots",
     "test:all": "npm test && npm run test:e2e",
-    "lint": "node dev.js lint",
-    "map": "node dev.js map",
-    "new": "node dev.js new",
-    "logo": "python logo.py",
-    "mobile:prepare": "node dev.js www"
+    "lint": "node tools/dev.js lint",
+    "map": "node tools/dev.js map",
+    "logo": "node tools/brand.js",
+    "mobile:prepare": "node tools/dev.js www"
   },
   "engines": {
     "node": ">=18"

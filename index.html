@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- DİKKAT: index.html, index.template.html ve NN-*.js/css kaynaklarından üretilir (npm run bundle). -->
+<!-- DİKKAT: index.html, src/index.template.html ve tools/project.js içindeki JS/CSS kaynaklarından üretilir (npm run bundle). -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
@@ -752,52 +752,6 @@ header p {
   line-height:2;
 }
 
-.fuel {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  padding:12px 14px;
-  margin:0 0 12px;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:14px;
-  color:var(--ink);
-  font:inherit;
-  text-align:left;
-  cursor:pointer;
-  box-shadow:var(--shadow);
-}
-
-.fuel .ic {
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  background:var(--accent);
-  color:var(--on-accent);
-  display:grid;
-  place-items:center;
-  flex:none;
-}
-
-.fuel b {
-  display:block;
-  font-size:15px;
-}
-
-.fuel span span {
-  font-size:12.5px;
-  color:var(--mute);
-}
-
-.fuel em {
-  margin-left:auto;
-  font-style:normal;
-  font-weight:800;
-  font-size:13px;
-  color:var(--mute);
-}
-
 .th {
   width:48px;
   height:48px;
@@ -900,10 +854,6 @@ header p {
   box-shadow:0 8px 24px rgba(0,0,0,.25);
   font-size:14px;
   font-weight:700;
-}
-
-.fuel em {
-  white-space:nowrap;
 }
 
 /* ----- Teklifler, teslim aşamaları, mesajlaşma ----- */
@@ -1651,18 +1601,6 @@ header p {
   animation:drive .8s .1s cubic-bezier(.2,.8,.2,1) both;
 }
 
-.splash .c1 {
-  animation:blink 1.1s .6s ease-in-out infinite;
-}
-
-.splash .c2 {
-  animation:blink 1.1s .8s ease-in-out infinite;
-}
-
-.splash .wm {
-  animation:rise .55s .3s both;
-}
-
 .splash p {
   color:#fff;
   opacity:.8;
@@ -1708,12 +1646,6 @@ header p {
   from {
     transform:translateX(-34px);
     opacity:0;
-  }
-}
-
-@keyframes blink {
-  50% {
-    opacity:.35;
   }
 }
 
@@ -1877,15 +1809,87 @@ header p { opacity:1; }
 
 @media (min-width:768px) { #app { box-shadow:0 0 0 1px var(--line),0 16px 60px rgba(0,0,0,.08); } }
 @media (max-width:375px) { .route-title { font-size:17px; } .route-search h2 { font-size:23px; } .detail-summary .route { font-size:21px; } .listing-search .chip { padding:10px; } }
+
+/* Ortak tasarım sistemi ve geniş ekran düzeni */
+
+:root { --space:16px; --radius:16px; }
+body { line-height:1.45; }
+main { min-height:0; scroll-padding-bottom:100px; }
+input,select,textarea { min-height:48px; }
+textarea { width:100%; padding:13px 14px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--ink); font:500 16px 'Archivo',sans-serif; resize:vertical; }
+textarea:focus { outline:2px solid var(--brand-ink); outline-offset:2px; }
+.row>* { min-width:0; }
+.chip, .bell { min-height:44px; }
+.chip { overflow-wrap:anywhere; }
+.route, .price, .kv, .detail-top b { overflow-wrap:anywhere; }
+.meta { flex-wrap:wrap; gap:8px; }
+.off { background:var(--card); color:var(--ink); border-bottom:2px solid var(--bad); }
+.logo { background:transparent; }
+.logo svg { width:44px; height:44px; border:1px solid rgba(255,255,255,.3); border-radius:12px; }
+.splash .tile svg { width:84px; height:84px; }
+.splash .tile { background:transparent; box-shadow:none; }
+.wordmark { font-size:38px; letter-spacing:-1.5px; color:#fff; margin-top:16px; }
+.screen-heading { margin:0 0 22px; }
+.screen-heading h2 { font-size:26px; line-height:1.25; letter-spacing:-.8px; margin:6px 0; }
+.screen-heading p { font-size:14px; color:var(--mute); }
+.form-steps { display:flex; list-style:none; gap:6px; margin:16px 0; }
+.form-steps li { flex:1; min-width:0; padding:10px 6px; border-radius:10px; background:var(--card); border:1px solid var(--line); font-size:12px; color:var(--mute); }
+.form-steps li[aria-current=step] { border-color:var(--brand-ink); background:var(--tag-bg); color:var(--tag-ink); font-weight:800; }
+.form-section { padding:4px 16px 20px; border:1px solid var(--line); border-radius:var(--radius); background:var(--card); }
+[hidden] { display:none !important; }
+.form-dock { display:flex; align-items:center; gap:8px; position:sticky; bottom:-24px; background:var(--bg); border-top:1px solid var(--line); padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px)); margin-top:18px; }
+.form-dock .btn { margin:0; width:auto; min-width:110px; }
+.draft-state { flex:1; font-size:11px; color:var(--mute); }
+.profile-group h2 { font-size:17px; margin:12px 0; }
+.profile-panel { background:var(--card); border:1px solid var(--line); padding:14px; border-radius:var(--radius); margin-bottom:12px; }
+.profile-panel summary { cursor:pointer; color:var(--brand-ink); font-weight:700; min-height:28px; }
+.profile-panel[open] summary { margin-bottom:16px; }
+.profile-panel .load { box-shadow:none; }
+.toast { width:max-content; max-width:calc(100% - 32px); white-space:normal; text-align:center; border-radius:16px; }
+.sheet { position:fixed; bottom:var(--keyboard-inset,0px); }
+.sheet>div { max-height:var(--detail-height,90dvh); }
+.chat-detail #msgs { min-height:0; max-height:none; flex:1; overflow:auto; padding:16px; margin:0; }
+.chat-detail .demo-note { margin:12px 16px 0; flex:none; }
+.chat-composer { display:flex; gap:8px; padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--line); background:var(--card); flex:none; }
+.chat-composer input { flex:1; min-width:0; }
+.chat-composer .btn { margin:0; width:auto; padding:12px; }
+.detail-top { gap:12px; }
+.detail-top>span,.detail-top>b { min-width:0; flex:1; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.itrow { flex-wrap:wrap; }
+.itrow input[data-in] { flex-basis:100%; }
+.itrow input[data-iq],.itrow select { min-width:0; flex:1; }
+@media (min-width:768px) {
+ #app { max-width:1240px; display:grid; grid-template-areas:'header header' 'nav main'; grid-template-columns:180px minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); }
+ header { grid-area:header; padding:22px 28px; }
+ #main { grid-area:main; padding:28px; }
+ nav { grid-area:nav; display:flex; flex-direction:column; border-top:0; border-right:1px solid var(--line); padding:20px 12px; gap:8px; }
+ nav button { flex:none; flex-direction:row; justify-content:flex-start; text-align:left; gap:12px; padding:14px 12px; border-radius:12px; font-size:14px; }
+ nav button.on { background:var(--tag-bg); }
+ nav button.on::before { display:none; }
+ nav button[data-t=post] { background:var(--accent); color:var(--on-accent); }
+ .listing-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+ .listing-grid .load { margin:0; }
+ .listing-grid .empty { grid-column:1/-1; }
+ .route-search h2 { font-size:32px; }
+ .route-fields { max-width:720px; }
+ .profile-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:start; }
+ #main[data-screen=post] { padding-left:max(28px,calc((100% - 780px)/2)); padding-right:max(28px,calc((100% - 780px)/2)); }
+ .sheet { align-items:center; justify-content:center; }
+ .sheet>div { max-width:640px; border-radius:22px; }
+ .toast { position:fixed; bottom:24px; max-width:600px; }
+ .off { position:absolute; top:92px; left:180px; right:0; z-index:3; }
+}
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="splash" class="splash" aria-hidden="true"><div class="tile"><svg viewBox="0 0 64 64"><g transform="translate(32 32) scale(1.04) translate(-34.3 -36.5)"><g class="tk"><defs><mask id="mks"><rect width="64" height="64" fill="#fff"/><circle cx="16.5" cy="46.5" r="6.5" fill="#000"/><circle cx="27.5" cy="46.5" r="6.5" fill="#000"/><circle cx="50" cy="46.5" r="6.5" fill="#000"/></mask></defs><rect x="10" y="18" width="29" height="22" rx="2.5" fill="#007f83"/><path d="M10 20.5A2.5 2.5 0 0 1 12.5 18h24A2.5 2.5 0 0 1 39 20.5V22H10z" fill="#21aaa5"/><path class="c1" d="M18 25l6 5.5-6 5.5" fill="none" stroke="#ffd34e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path class="c2" d="M26 25l6 5.5-6 5.5" fill="none" stroke="#ffe7a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="39" y="35" width="3" height="3.2" fill="#007f83"/><rect x="43.4" y="19.5" width="1.9" height="6" rx=".95" fill="#007f83"/><path d="M42 40V27a3 3 0 0 1 3-3h5.6a3 3 0 0 1 2.4 1.2l5.6 8.2V40z" fill="#007f83"/><path d="M45.6 27.4h4.4l3.8 5.2h-8.2z" fill="#fff4d6"/><circle cx="57.3" cy="36.6" r="1.2" fill="#ffd34e"/><rect x="10" y="40" width="48.6" height="3.4" rx="1.7" fill="#007f83" mask="url(#mks)"/><circle cx="16.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="16.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="16.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="27.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="27.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="27.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="50" cy="46.5" r="5.2" fill="#007f83"/><circle cx="50" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="50" cy="46.5" r="2" fill="#fff4d6"/><path d="M7 54h50" stroke="#007f83" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="7 4"/></g></g></svg></div><svg class="wm" viewBox="0 0 290 80" width="180" height="50"><path transform="translate(0 64)" d="M58 0H43.6L19.6 -36.4V0H5.2V-59H19.6L43.6 -22.4V-59H58ZM86.2 -47.5Q91.1 -47.5 94.9 -45.5Q98.6 -43.5 100.6 -40.2V-46.9H115V0H100.6V-6.6Q98.5 -3.4 94.8 -1.3Q91.1 0.7 86.1 0.7Q80.4 0.7 75.7 -2.3Q71 -5.3 68.2 -10.8Q65.5 -16.3 65.5 -23.5Q65.5 -30.7 68.2 -36.2Q71 -41.7 75.7 -44.6Q80.4 -47.5 86.2 -47.5ZM90.4 -35Q86.1 -35 83.1 -32Q80.1 -28.9 80.1 -23.5Q80.1 -18.1 83.1 -15Q86.1 -11.8 90.4 -11.8Q94.7 -11.8 97.7 -15Q100.6 -18.1 100.6 -23.4Q100.6 -28.8 97.7 -31.9Q94.7 -35 90.4 -35ZM154.1 0 139.8 -19.7V0H125.4V-62.2H139.8V-27.8L154 -46.9H171.7L152.2 -23.4L171.9 0ZM216.5 -40.3Q214.9 -43.3 211.9 -44.8Q208.9 -46.4 204.9 -46.4Q197.9 -46.4 193.7 -41.8Q189.5 -37.2 189.5 -29.6Q189.5 -21.4 193.9 -16.8Q198.3 -12.3 206.1 -12.3Q211.3 -12.3 215 -15Q218.7 -17.6 220.3 -22.7H202.1V-33.3H233.4V-19.9Q231.8 -14.5 227.9 -9.9Q224.1 -5.3 218.2 -2.4Q212.4 0.4 205 0.4Q196.2 0.4 189.4 -3.4Q182.5 -7.2 178.7 -14Q174.9 -20.8 174.9 -29.6Q174.9 -38.3 178.7 -45.2Q182.5 -52 189.3 -55.8Q196.1 -59.6 204.9 -59.6Q215.5 -59.6 222.7 -54.5Q230 -49.4 232.3 -40.3ZM238.5 -23.4Q238.5 -30.7 241.7 -36.2Q244.9 -41.7 250.4 -44.6Q255.9 -47.5 262.8 -47.5Q269.7 -47.5 275.3 -44.6Q280.8 -41.7 284 -36.2Q287.2 -30.7 287.2 -23.4Q287.2 -16.2 284 -10.7Q280.7 -5.2 275.1 -2.3Q269.6 0.7 262.7 0.7Q255.8 0.7 250.3 -2.3Q244.8 -5.2 241.6 -10.7Q238.5 -16.1 238.5 -23.4ZM272.6 -23.4Q272.6 -29.1 269.8 -32.1Q267 -35.1 262.8 -35.1Q258.6 -35.1 255.9 -32.1Q253.1 -29.1 253.1 -23.4Q253.1 -17.8 255.8 -14.8Q258.6 -11.8 262.7 -11.8Q266.8 -11.8 269.7 -14.8Q272.6 -17.8 272.6 -23.4Z" fill="#fff"/></svg><p>Yükünü bul, aracını doldur.</p></div>
-  <header><div class="logo"><svg width="44" height="44" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) scale(1.04) translate(-34.3 -36.5)"><defs><mask id="mkh"><rect width="64" height="64" fill="#fff"/><circle cx="16.5" cy="46.5" r="6.5" fill="#000"/><circle cx="27.5" cy="46.5" r="6.5" fill="#000"/><circle cx="50" cy="46.5" r="6.5" fill="#000"/></mask></defs><rect x="10" y="18" width="29" height="22" rx="2.5" fill="#007f83"/><path d="M10 20.5A2.5 2.5 0 0 1 12.5 18h24A2.5 2.5 0 0 1 39 20.5V22H10z" fill="#21aaa5"/><path d="M18 25l6 5.5-6 5.5" fill="none" stroke="#ffd34e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 25l6 5.5-6 5.5" fill="none" stroke="#ffe7a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="39" y="35" width="3" height="3.2" fill="#007f83"/><rect x="43.4" y="19.5" width="1.9" height="6" rx=".95" fill="#007f83"/><path d="M42 40V27a3 3 0 0 1 3-3h5.6a3 3 0 0 1 2.4 1.2l5.6 8.2V40z" fill="#007f83"/><path d="M45.6 27.4h4.4l3.8 5.2h-8.2z" fill="#fff4d6"/><circle cx="57.3" cy="36.6" r="1.2" fill="#ffd34e"/><rect x="10" y="40" width="48.6" height="3.4" rx="1.7" fill="#007f83" mask="url(#mkh)"/><circle cx="16.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="16.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="16.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="27.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="27.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="27.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="50" cy="46.5" r="5.2" fill="#007f83"/><circle cx="50" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="50" cy="46.5" r="2" fill="#fff4d6"/><path d="M7 54h50" stroke="#007f83" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="7 4"/></g></svg></div><div><h1>NakGo</h1><p id="sub">Yükünü bul, aracını doldur.</p></div><button class="bell" id="thh" aria-label="Temayı değiştir" title="Temayı değiştir"></button><button class="bell" id="bell" aria-label="Bildirimler"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg><b id="bc"></b></button></header>
-  <div id="off" class="off" role="status">İnternet bağlantısı yok. Değişiklikler kaydedilmeyebilir.</div>
+  <div id="splash" class="splash" aria-hidden="true"><div class="tile"><svg class="tk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#007f83"/><polygon points="14,47 14,17 23,17 40,38 40,17 49,17 49,47 40,47 23,26 23,47" fill="#ffd34e"/></svg></div><strong class="wordmark">NakGo</strong><p>Yükünü bul, aracını doldur.</p></div>
+  <header><div class="logo"><svg class="tk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#007f83"/><polygon points="14,47 14,17 23,17 40,38 40,17 49,17 49,47 40,47 23,26 23,47" fill="#ffd34e"/></svg></div><div><h1>NakGo</h1><p id="sub">Yükünü bul, aracını doldur.</p></div><button class="bell" id="thh" aria-label="Temayı değiştir" title="Temayı değiştir"></button><button class="bell" id="bell" aria-label="Bildirimler"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg><b id="bc"></b></button></header>
+  <div id="off" class="off" role="status">İnternet bağlantısı yok. Yerel demo cihazında kullanılabilir; ortak veriler için bağlantı gerekir.</div>
   <main id="main"></main>
-  <nav id="nav">
+  <nav id="nav" aria-label="Ana menü">
     <button data-t="list" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>İlanlar</span></button>
     <button data-t="post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>İlan ver</span></button>
     <button data-t="mine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L3 13V3h10l7.6 7.6a2 2 0 010 2.8z"/><circle cx="7.5" cy="7.5" r="1"/></svg><span>Tekliflerim</span></button>
@@ -2819,11 +2823,12 @@ function itemsUI() {
         d.className = "itrow";
         d.innerHTML = `<input data-in placeholder="Kalem" maxlength="40"><input data-iq type="number" inputmode="decimal" placeholder="Miktar"><select data-iu>${["ton", "kg", "palet", "koli", "adet", "m³"].map(u => `<option>${u}</option>`).join("")}</select><button class="chip" type="button" data-ix aria-label="Kaldır">×</button>`;
         box.appendChild(d);
-        d.querySelector("[data-ix]").onclick = () => d.remove();
+        d.querySelector("[data-ix]").onclick = () => { d.remove(); capturePostDraft(); };
     };
     $("#addit").onclick = add;
     $("#ph").onclick = () => pickImg(u => {
         postImg = u;
+        capturePostDraft();
         $("#phs").innerHTML = `<img class="th" src="${u}" alt="">`;
     }, 200, 22000);
 }
@@ -3052,7 +3057,7 @@ function openChat(key, who) {
         $("#msgs").innerHTML = msgs.map(x => `<div class="bub ${x.me ? "me" : ""}">${esc(x.t)}</div>`).join("");
         $("#msgs").scrollTop = 1e5;
     };
-    B.innerHTML = `<b style="font-size:17px">${who}</b><div id="msgs"></div><div class="row" style="margin-top:8px"><input id="mi" placeholder="Mesaj yaz" maxlength="500"><button class="chip on" id="ms" style="flex:none">Gönder</button></div><button class="btn alt" id="close">Kapat</button>`;
+    B.innerHTML = `<div class="load-detail chat-detail"><div class="detail-top"><b>${who}</b><button class="chip detail-close" id="close" aria-label="Sohbeti kapat">Kapat ×</button></div>${!live ? '<p class="demo-note"><b>Demo sohbet</b> · Mesajlar cihazında tutulur; yanıtlar simüledir.</p>' : ""}<div id="msgs" role="log" aria-live="polite" aria-label="Mesajlar"></div><div class="chat-composer"><label class="sr-only" for="mi">Mesajın</label><input id="mi" placeholder="Mesaj yaz" maxlength="500"><button class="btn" id="ms">Gönder</button></div></div>`;
     if (unChat) {
         unChat();
         unChat = null;
@@ -3063,6 +3068,7 @@ function openChat(key, who) {
             draw();
         }, () => { });
     draw();
+    syncDetailViewport();
     $("#sheet").classList.add("open");
     $("#close").onclick = closeSheet;
     const send = () => {
@@ -3365,7 +3371,7 @@ function savePhone() {
     toast("Numara kaydedildi");
 }
 
-const phoneCard = () => `<div class="load" style="cursor:default"><b>Telefon numaram</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 10px">Numaranı yalnızca Premium üyeler arama ekranında görür.</p><input id="myph" inputmode="tel" placeholder="05xx xxx xx xx" value="${esc(myCar.phone || "")}"><button class="chip on" id="phs2" style="margin-top:10px">Kaydet</button></div>`;
+const phoneCard = () => `<div class="load" style="cursor:default"><b>Telefon numaram</b><p style="font-size:12.5px;color:var(--mute);margin:6px 0 10px">Arama ekranı Premium erişimi gerektirir. Demo verileri bu cihazda saklanır.</p><input id="myph" inputmode="tel" placeholder="05xx xxx xx xx" value="${esc(myCar.phone || "")}"><button class="chip on" id="phs2" style="margin-top:10px">Kaydet</button></div>`;
 
 const cOk = c => !!(c.lic && c.src && c.kb && c.ruh);
 
@@ -3478,7 +3484,7 @@ const reportsCard = () => {
 
 const blockedCard = () => blocked.length ? `<div class="load" style="cursor:default"><b>Engellenenler</b>${blocked.map(u => `<div class="kv"><span style="color:var(--ink);font-weight:700">${nm(u)}</span><button class="chip" data-ub="${esc(u)}">Kaldır</button></div>`).join("")}</div>` : "";
 
-const helpCard = () => `<div class="load" style="cursor:default"><b>Yardım ve destek</b>${FAQ.map(([q, a]) => `<details class="faq"><summary>${q}</summary><p>${a}</p></details>`).join("")}<a class="chip" href="mailto:${SUPPORT_MAIL}" style="display:inline-block;margin-top:12px;text-decoration:none">Bize yaz</a></div>`;
+const helpCard = () => `<div class="load" style="cursor:default"><b>Yardım ve destek</b>${FAQ.map(([q, a]) => `<details class="faq"><summary>${q}</summary><p>${a}</p></details>`).join("")}${SUPPORT_MAIL.endsWith("@example.com") ? '<p class="estimate-note">Destek iletişim adresi henüz tanımlanmadı.</p>' : `<a class="chip" href="mailto:${SUPPORT_MAIL}" style="display:inline-block;margin-top:12px;text-decoration:none">Bize yaz</a>`}</div>`;
 
 /**
  * Premium, öne çıkan ilan ve istatistik
@@ -3525,6 +3531,10 @@ function callTo(phone) {
         return openPaywall("Doğrudan arama");
     const B = $("#sheetBody");
     B.dataset.k = "";
+    if (/^0000/.test(phone)) {
+        B.innerHTML = `<b>Örnek telefon</b><p class="demo-note">Bu demo ilanda gerçek telefon numarası bulunmuyor. Kendi ilanında profilinden numara ekleyebilirsin.</p><button class="btn alt" id="close">Kapat</button>`;
+        $("#close").onclick=closeSheet; $("#sheet").classList.add("open"); return;
+    }
     const num = String(phone).replace(/[^\d+]/g, "");
     B.innerHTML = `<b style="font-size:19px">Ara</b><p class="callnum">${esc(phone)}</p><a class="btn" href="tel:${num}" style="display:block;text-align:center;text-decoration:none">Şimdi ara</a><button class="btn alt" id="cp">Numarayı kopyala</button><button class="btn alt" id="close">Kapat</button>`;
     $("#cp").onclick = () => {
@@ -3691,11 +3701,10 @@ function statsOf(l) {
 // ===== Araçlar =====
 // Yakıt hesabı, tema, paylaşma ve derin bağlantı, çevrimdışı uyarısı.
 
-const fuelCard = () => `<button class="fuel" id="fc"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 012-2h6a2 2 0 012 2v16M3 21h12M7 8h4M14 9h2a2 2 0 012 2v5a1.5 1.5 0 003 0V9l-3-3"/></svg></span><span><b>Yakıt hesabı</b><span>Yakıt maliyeti ve net kazanç</span></span><em>${calc.fuel} ₺/L</em></button>`;
 
 const APPURL = (() => {
     try {
-        return /(claude\.ai|claudeusercontent)/.test(location.host) ? "https://claude.ai/artifact/HFcno9RoAwySpHtUaJsVJG" : location.origin + location.pathname;
+        return location.origin + location.pathname;
     }
     catch (e) {
         return "";
@@ -3761,7 +3770,7 @@ function openCalc() {
     <label>Araç tipi</label><select id="cv"><option value="" hidden>Özel</option>${vehicles.map(v => `<option ${v === cur ? "selected" : ""}>${v}</option>`).join("")}</select>
     <div class="row">${num("km", "Mesafe", "km")}${num("fare", "Navlun", "₺")}</div>
     <details class="more"><summary>Diğer ayarlar</summary>
-      <p style="font-size:12px;color:var(--mute);margin-top:12px">Mazot: İstanbul pompa fiyatı, 4 Ekim 2026. Fiyat değişirse buradan güncelle.</p><div class="row">${num("fuel", "Mazot", "₺/L")}${num("cons", "Tüketim", "L/100km")}</div>
+      <p style="font-size:12px;color:var(--mute);margin-top:12px">Mazot fiyatı hesaplama varsayımıdır; güncel pompa fiyatına göre değiştir.</p><div class="row">${num("fuel", "Mazot", "₺/L")}${num("cons", "Tüketim", "L/100km")}</div>
       <div class="row">${num("toll", "Otoyol", "₺")}${num("other", "Diğer", "₺")}</div>
       <label class="chk"><input type="checkbox" id="bk" ${calc.back ? "checked" : ""}>Dönüşte boş döneceğim</label>
     </details>`;
@@ -3808,16 +3817,91 @@ const soft = () => {
         render();
 };
 
-function render() {
-    const m = $("#main");
-    save();
-    bell();
+
+const demoNotice = () => !cloud ? `<p class="demo-note"><b>Demo modu</b> · Veriler bu cihazda tutulur. Yanıtlar ve test satın almaları simüledir; gerçek işlem yapılmaz.</p>` : "";
+const screenHeading = (title, note) => `<div class="screen-heading"><span class="eyebrow">NAKGO</span><h2>${title}</h2><p>${note}</p></div>`;
+
+/**
+ * İlan taslağı ve adımları
+ * Mevcut yayınlama işlevlerini ve kimliklerini koruyarak formu gruplar.
+ */
+let postStep = 0;
+function getPostDrafts() {
+    try { return JSON.parse(localStorage.getItem("ng-post-drafts") || "{}"); } catch (e) { return {}; }
+}
+function capturePostDraft() {
+    if (tab !== "post" || !document.querySelectorAll) return;
+    const fields = {};
+    document.querySelectorAll('#main input[id], #main select[id], #main textarea[id]').forEach(e => fields[e.id] = e.value);
+    const items = [...document.querySelectorAll('#its .itrow')].map(e => ({n:e.querySelector('[data-in]').value,q:e.querySelector('[data-iq]').value,u:e.querySelector('[data-iu]').value}));
+    const drafts = getPostDrafts(); drafts[postMode] = {fields, items, image: postImg, step: postStep};
+    try { localStorage.setItem("ng-post-drafts", JSON.stringify(drafts)); } catch (e) { toast("Taslak için cihazda yer kalmadı"); }
+}
+function clearPostDraft() {
+    const drafts=getPostDrafts(); delete drafts[postMode];
+    try { localStorage.setItem("ng-post-drafts",JSON.stringify(drafts)); } catch(e) { }
+}
+function initPostWizard(m) {
+    // Sahte DOM testi yerine gerçek DOM'da uygulanır.
+    if (!m.insertAdjacentHTML) return;
+    const draft=getPostDrafts()[postMode];
+    postStep=draft ? Math.max(0,Math.min(2,+draft.step||0)) : 0;
+    if (draft) {
+        for(const [id,value] of Object.entries(draft.fields||{})) { const e=m.querySelector('#'+id); if(e)e.value=value; }
+        if(postMode==='load') {
+            for(const item of (draft.items||[]).slice(0,6)) { $('#addit').onclick(); const e=$('#its').lastElementChild; e.querySelector('[data-in]').value=item.n; e.querySelector('[data-iq]').value=item.q; e.querySelector('[data-iu]').value=item.u; }
+            if(imgOk(draft.image)){postImg=draft.image;$('#phs').innerHTML=`<img class="th" src="${postImg}" alt="Taslak yük fotoğrafı">`;}
+            sugg();
+        }
+    }
+    const start1=postMode==='load'?$('#c').previousElementSibling:$('#v').closest('.row');
+    const start2=postMode==='load'?$('#n').previousElementSibling:$('#d').previousElementSibling;
+    const nodes=[...m.children].filter(e=>!e.classList.contains('seg'));
+    const groups=[0,1,2].map(i=>{const s=document.createElement('section');s.className='form-section';s.dataset.step=i; m.appendChild(s);return s;});
+    let step=0;for(const e of nodes){if(e===start1)step=1;if(e===start2)step=2;groups[step].appendChild(e);}
+    m.insertAdjacentHTML('afterbegin',screenHeading('İlan oluştur',draft?'Kaydedilmiş taslağına devam ediyorsun.':'Güzergâhı seç, bilgileri ekle ve yayınla.')+demoNotice()+`<ol class="form-steps"><li>1 · Güzergâh</li><li>2 · ${postMode==='load'?'Yük ve taşıma':'Araç'}</li><li>3 · ${postMode==='load'?'Ücret ve ekler':'Müsaitlik'}</li></ol>`);
+    m.insertAdjacentHTML('beforeend','<div class="form-dock"><button class="chip" id="post-prev">Geri</button><span class="draft-state" role="status">Taslak cihazında korunur</span><button class="btn" id="post-next">Devam →</button></div>');
+    const show=()=>{groups.forEach((e,i)=>e.hidden=i!==postStep);m.querySelectorAll('.form-steps li').forEach((e,i)=>e.setAttribute('aria-current',i===postStep?'step':'false'));$('#post-prev').hidden=postStep===0;$('#post-next').hidden=postStep===2;m.scrollTop=0;capturePostDraft();};
+    $('#post-prev').onclick=()=>{postStep--;show();};
+    $('#post-next').onclick=()=>{
+        if(postStep===0&&$('#f').value===$('#t').value)return toast('Çıkış ve varış şehri farklı olmalı');
+        if(postStep===1&&(!(+$('#w').value>0)||(postMode==='load'&&!$('#c').value.trim())))return toast('Yük bilgilerini ve pozitif tonajı gir');
+        postStep++;show();
+    };
+    m.oninput=capturePostDraft;m.onchange=capturePostDraft;
+    m.querySelectorAll('input[id],select[id],textarea[id]').forEach(e=>{const label=e.previousElementSibling;if(label&&label.tagName==='LABEL')label.htmlFor=e.id;});
+    show();
+}
+
+/**
+ * Pencere ve gezinti
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
+
+function closeSheet() {
+    if (unChat) {
+        unChat();
+        unChat = null;
+    }
+    $("#sheetBody").dataset.k = "";
+    $("#sheet").classList.remove("open");
+}
+
+function setNav() {
+    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
+}
+
+/**
+ * İlan ekranı
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
+
+function renderListings(m) {
     const SEG = `<div class="seg"><button data-md="load" class="${mode === "load" ? "on" : ""}">Yükler</button><button data-md="truck" class="${mode === "truck" ? "on" : ""}">Boş araçlar</button></div>`;
     const segBind = () => m.querySelectorAll("[data-md]").forEach(b => b.onclick = () => {
         mode = b.dataset.md;
         render();
     });
-    if (tab === "list") {
         const isT = mode === "truck";
         const ok = x => !x.closed && !expired(x, isT ? "truck" : "load") && !(x.uid && blocked.includes(x.uid)) && (!nearOn || !nearR || dKm(x) <= nearR) && match(x, isT) && (!q || (x.from + x.to + (x.cargo || x.who)).toLocaleLowerCase("tr").includes(q.toLocaleLowerCase("tr")));
         let items = isT ? trucks.filter(ok) : sortL(loads.filter(ok));
@@ -3838,7 +3922,7 @@ function render() {
         m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
     ${nearRow()}${ac.length ? `<div class="chips active-filters wrap">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
     <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" aria-label="İlanları sırala" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
-    ${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
+    <div class="listing-grid">${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}</div>${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
         segBind();
         m.querySelectorAll("[data-fav]").forEach(b => b.onclick = e => {
             e.stopPropagation();
@@ -3909,12 +3993,19 @@ function render() {
                 }
             };
         });
-    }
-    if (tab === "post") {
+}
+
+/**
+ * İlan oluşturma ekranı
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
+
+function renderPost(m) {
         const opt = a => a.map(c => `<option>${c}</option>`).join("");
         const PS = `<div class="seg"><button data-pm="load" class="${postMode === "load" ? "on" : ""}">Yük ilanı</button><button data-pm="truck" class="${postMode === "truck" ? "on" : ""}">Boş araç ilanı</button></div>`;
         const pb = () => m.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => {
             postMode = b.dataset.pm;
+            try { localStorage.setItem("ng-post-mode",postMode); } catch(e) { }
             render();
         });
         if (postMode === "truck") {
@@ -3926,12 +4017,15 @@ function render() {
                 if (!(+$("#w").value > 0))
                     return toast("Boş kapasiteyi gir");
                 postTruck({ id: "t" + Date.now(), who: "Ben (Yağız)", from: $("#f").value, to: $("#t").value, veh: $("#v").value, cap: +$("#w").value, body: $("#bd").value, date: $("#d").value, rate: "Yeni" });
+                clearPostDraft();
+                F = F0(); q = ""; nearOn = false;
                 mode = "truck";
                 tab = "list";
                 setNav();
                 render();
                 toast("Boş araç ilanı yayınlandı");
             };
+            initPostWizard(m);
             return;
         }
         m.innerHTML = PS + `<label>Nereden</label><select id="f">${opt2(cities, "İstanbul")}</select>
@@ -3942,7 +4036,7 @@ function render() {
     <div class="row"><div><label>Kasa tipi</label><select id="b">${opt(bodies)}</select></div>
     <div><label>Ödeme</label><select id="y">${opt(["Peşin", "Teslimde nakit", "15 gün vade", "30 gün vade"])}</select></div></div>
     <label>Yükleme günü</label><select id="d">${opt(["Bugün", "Yarın", "Bu hafta"])}</select>
-    <label>Not (isteğe bağlı)</label><input id="n" placeholder="Yükleme saati, özel koşullar">
+    <label>Not (isteğe bağlı)</label><textarea id="n" maxlength="1000" rows="3" placeholder="Yükleme saati, özel koşullar"></textarea>
     <label>Teklif edilen ücret (₺)</label><input id="p" type="number" min="0" placeholder="15000">
     <div id="sg"></div><label>Yük kalemleri (isteğe bağlı)</label><div id="its"></div><button class="chip" id="addit" type="button" style="margin-top:8px">+ Kalem ekle</button><label>Fotoğraf (isteğe bağlı)</label><div style="display:flex;align-items:center;gap:10px"><button class="chip" id="ph" type="button">Fotoğraf ekle</button><span id="phs"></span></div><button class="btn" id="go">İlanı yayınla</button>`;
         pb();
@@ -3971,14 +4065,23 @@ function render() {
             if (!cloud)
                 l.mine = true;
             loads.unshift(l);
+            clearPostDraft();
+            F = F0(); q = ""; nearOn = false;
             tab = "list";
             setNav();
             render();
             toast("İlan yayınlandı");
         };
-    }
-    if (tab === "mine") {
-        m.innerHTML = incHTML() + (offers.length ? offers.map(o => `<div class="load" style="cursor:default"><div class="route">${o.from}<i></i>${o.to}</div>
+        initPostWizard(m);
+}
+
+/**
+ * Teklifler ve işler ekranı
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
+
+function renderOffers(m) {
+        m.innerHTML = screenHeading("Teklifler ve işler", "Yanıtları takip et, taşımanı ve teslim belgelerini yönet.") + demoNotice() + incHTML() + (offers.length ? offers.map(o => `<div class="load" style="cursor:default">${routeTitle(o)}
     <div class="meta"><span class="st ${o.status === "ok" ? "ok" : o.status === "no" ? "no" : ""}">${offerExp(o) ? "Süresi doldu" : STT[o.status]}${o.status === "counter" ? ": " + fmt(o.counter) : ""}</span><span class="price">${fmt(o.offer)}</span></div><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">${o.status === "counter" ? `<button class="chip on" data-ca="${o.id}">Karşı teklifi kabul et</button>` : ""}${o.status === "wait" || o.status === "counter" ? `<button class="chip" data-c="${o.id}">Geri çek</button>` : ""}<button class="chip" data-chat="o${o.id}_${o.bidder || ""}" data-who="${o.owner || (o.uid ? nm(o.uid) : "Yük sahibi")}">Mesaj</button>${callChip('data-cl="' + o.id + '"')}</div>${o.status === "ok" ? stageUI(o) + retHTML(o) : ""}</div>`).join("") : `<div class="empty">Henüz teklif vermedin. İlanlar sekmesinden bir yük seç.</div>`);
         m.querySelectorAll("[data-c]").forEach(b => b.onclick = () => {
             const o0 = offers.find(o => o.id === +b.dataset.c);
@@ -4028,15 +4131,27 @@ function render() {
         m.querySelectorAll("[data-bu]").forEach(b => b.onclick = () => blockUser((incoming[+b.dataset.bu] || {}).bidder));
         m.querySelectorAll("[data-rt]").forEach(b => b.onclick = () => openRate(offers.find(o => o.id === +b.dataset.rt), "carrier"));
         m.querySelectorAll("[data-ir2]").forEach(b => b.onclick = () => openRate(incoming[+b.dataset.ir2], "owner"));
-    }
-    if (tab === "me") {
+}
+
+/**
+ * Profil ekranı
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
+
+function renderProfile(m) {
+
         m.innerHTML = `<div style="display:flex;gap:14px;align-items:center"><div class="avatar">${(myName || "Y")[0].toUpperCase()}</div><div><b style="font-size:18px">${myName || "Yağız"}${vbadge(appr[me || "local"] === true ? 2 : cOk(myCar) ? 1 : 0)}</b><div style="color:var(--mute);font-size:14px">Taşıyıcı ve yük sahibi${myRate()}</div></div></div>
     <div class="stat"><div><b>${loads.length}</b><span>Açık ilan</span></div><div><b>${offers.length}</b><span>Verdiğim teklif</span></div></div>
-    ${premCard()}${earnCard()}${phoneCard()}${roleCard()}${myListHTML()}${featSumCard()}${alertsCard()}${carCard()}${adminCard()}${reportsCard()}${blockedCard()}${installCard()}${helpCard()}`;
+    ${demoNotice()}<div class="profile-grid"><section class="profile-group"><h2>İlanlarım ve hareketlerim</h2>${myListHTML()}${featSumCard()}${alertsCard()}${earnCard()}</section><section class="profile-group"><h2>Üyelik</h2>${premCard()}<details class="profile-panel"><summary>İletişim ve tercihler</summary>${phoneCard()}${roleCard()}</details><details class="profile-panel"><summary>Araç ve belgeler</summary>${carCard()}</details><details class="profile-panel"><summary>Güvenlik ve destek</summary>${adminCard()}${reportsCard()}${blockedCard()}${installCard()}${helpCard()}</details></section></div>`;
         carBind();
         listBind();
-    }
+
 }
+
+/**
+ * İlan detayları
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
 
 function syncDetailViewport() {
     if (typeof window === "undefined" || !window || !window.visualViewport)
@@ -4105,7 +4220,9 @@ function openLoad(id) {
 
 function openTruck(id) {
     const t = trucks.find(x => x.id === id);
-    $("#sheetBody").innerHTML = `<div class="route">${t.from}<i></i>${t.to}</div>${mapSVG(t.from, t.to)}<div style="margin-top:10px">${[["Taşıyıcı", (t.who || nm(t.uid)) + (lvT(t) === 2 ? " ✓ Onaylı" : vok(t) ? " ✓ Belgeli" : "") + " · " + starTxt(t)], ["Araç", t.veh + " · " + t.body], ["Boş kapasite", t.cap + " ton"], ["Müsait", t.date]].map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("")}</div><button class="btn" id="mg">Mesaj gönder</button><button class="btn alt" id="call">Taşıyıcıyı ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button><div class="chips" style="margin-top:14px"><button class="chip" id="pf">Profili gör</button><button class="chip" id="rp">Şikayet et</button>${t.uid && t.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div><button class="btn alt" id="close">Kapat</button>`;
+    if (!t) return toast("İlan bulunamadı");
+    $("#sheetBody").innerHTML = `<div class="load-detail"><div class="detail-top"><span>Boş araç ilanı</span><button class="chip detail-close" id="close">Kapat ×</button></div><div class="detail-scroll">${routeTitle(t)}${demoNotice()}<section class="detail-group"><h2>Araç ve taşıyıcı</h2>${mapSVG(t.from, t.to)}<div style="margin-top:10px">${[["Taşıyıcı", (t.who || nm(t.uid)) + (lvT(t) === 2 ? " ✓ Onaylı" : vok(t) ? " ✓ Belgeli" : "") + " · " + starTxt(t)], ["Araç", t.veh + " · " + t.body], ["Boş kapasite", t.cap + " ton"], ["Müsait", t.date]].map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("")}</div></section><button class="btn" id="mg">Mesaj gönder</button><button class="btn alt" id="call">Taşıyıcıyı ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button><div class="chips" style="margin-top:14px"><button class="chip" id="pf">Profili gör</button><button class="chip" id="rp">Şikayet et</button>${t.uid && t.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div></div></div>`;
+    syncDetailViewport();
     $("#sheet").classList.add("open");
     $("#close").onclick = closeSheet;
     $("#mg").onclick = () => openChat("t" + id, t.who || nm(t.uid));
@@ -4116,17 +4233,18 @@ function openTruck(id) {
         $("#bk2").onclick = () => blockUser(t.uid);
 }
 
-function closeSheet() {
-    if (unChat) {
-        unChat();
-        unChat = null;
-    }
-    $("#sheetBody").dataset.k = "";
-    $("#sheet").classList.remove("open");
-}
+/**
+ * Ekran yönlendiricisi
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
 
-function setNav() {
-    document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
+function render() {
+ const m = $("#main"); save(); bell();
+ m.dataset.screen = tab;
+ if(tab === "list") renderListings(m);
+ else if(tab === "post") renderPost(m);
+ else if(tab === "mine") renderOffers(m);
+ else if(tab === "me") renderProfile(m);
 }
 
 /**
@@ -4148,6 +4266,7 @@ $("#sheet").onclick = e => {
 };
 
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+    capturePostDraft();
     tab = b.dataset.t;
     setNav();
     render();
@@ -4311,6 +4430,11 @@ else if (role === "carrier") {
     postMode = "truck";
 }
 
+try {
+    const savedPostMode=localStorage.getItem("ng-post-mode");
+    if(savedPostMode === "load" || savedPostMode === "truck") postMode=savedPostMode;
+} catch(e) { }
+
 render();
 
 deep();
@@ -4323,6 +4447,30 @@ catch (e) { }
 
 // Ortak veritabanı varsa bağlan (yoksa uygulama yerel modda kalır).
 initCloud();
+
+// Pencere açılışında odağı içeride tut; kapanışta çağıran düğmeye geri dön.
+try {
+    const sh = $("#sheet"), body = $("#sheetBody");
+    let previousFocus = null, wasOpen = false;
+    new MutationObserver(() => {
+        const open = sh.classList.contains("open");
+        if (open && !wasOpen) {
+            previousFocus = document.activeElement;
+            body.setAttribute("aria-label", body.querySelector("h2,b,.detail-top")?.textContent || "NakGo penceresi");
+            body.setAttribute("tabindex", "-1");
+            (body.querySelector("#close,#cx,button,input") || body).focus();
+        } else if (!open && wasOpen && previousFocus?.isConnected) previousFocus.focus();
+        wasOpen = open;
+    }).observe(sh, {attributes:true,attributeFilter:["class"]});
+    document.addEventListener("keydown", e => {
+        if(e.key !== "Tab" || !sh.classList.contains("open")) return;
+        const focusables=[...body.querySelectorAll('button,input,select,textarea,a[href],summary,[tabindex="0"]')].filter(el=>el.getClientRects().length&&!el.disabled);
+        if(!focusables.length){e.preventDefault();body.focus();return;}
+        const first=focusables[0],last=focusables.at(-1);
+        if(e.shiftKey&&(document.activeElement===first||document.activeElement===body)){e.preventDefault();last.focus();}
+        else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    });
+} catch(e) { }
 </script>
 </body>
 </html>
