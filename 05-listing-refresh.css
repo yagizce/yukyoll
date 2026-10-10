@@ -1,0 +1,85 @@
+/* Mobil ilan arama, kartlar ve yük detayı */
+
+.route-search { margin-bottom:20px; }
+.eyebrow { color:var(--brand-ink); font-size:10px; font-weight:800; letter-spacing:1.4px; }
+.route-search h2 { margin:7px 0 16px; font-size:25px; line-height:1.2; letter-spacing:-.8px; }
+.route-fields { display:grid; grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr); gap:6px; align-items:end; }
+.route-fields>div { min-width:0; }
+.route-fields label { margin:0 0 7px; color:var(--ink); }
+.route-fields select { font-size:14px; padding:13px 28px 13px 11px; background-position:right 9px center; text-overflow:ellipsis; }
+.route-swap { width:36px; height:46px; border:0; border-radius:12px; background:var(--tag-bg); color:var(--brand-ink); font-size:23px; cursor:pointer; }
+.demo-note { padding:10px 12px; margin-bottom:15px; border:1px solid var(--line); border-radius:10px; color:var(--mute); font-size:12px; line-height:1.5; }
+.demo-note b { color:var(--brand-ink); }
+.listing-search { align-items:center; }
+.listing-search input { min-width:0; }
+.active-filters { flex-wrap:wrap; }
+.active-filters .chip { max-width:100%; white-space:normal; text-align:left; }
+.route-title { gap:8px; line-height:1.3; font-size:19px; }
+.route-title>span { min-width:0; flex:1; overflow-wrap:anywhere; }
+.route-title>span:last-child { text-align:right; }
+.route-title i { flex:0 0 28px; margin:0 5px; }
+.listing-label { margin-bottom:10px; }
+.listing-price { display:flex; flex-wrap:wrap; gap:4px 12px; align-items:baseline; margin:13px 0; }
+.listing-price .price { color:var(--brand-ink); font-size:25px; line-height:1.1; overflow-wrap:anywhere; }
+.listing-price>span:last-child { color:var(--mute); font-size:11px; font-weight:500; }
+.cargo-line { display:flex; gap:10px; align-items:center; font-size:14px; line-height:1.5; }
+.cargo-line>span { min-width:0; overflow-wrap:anywhere; }
+.cargo-line b { font-weight:600; }
+.listing-spec { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; color:var(--mute); font-size:12px; line-height:1.5; }
+.load-date { color:var(--ink); }
+.listing-footer { margin-top:13px; padding-top:10px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; align-items:center; }
+.listing-trust { color:var(--ink); font-size:12px; font-weight:700; min-width:0; }
+.listing-trust>span:last-child { display:block; color:var(--mute); font-weight:400; margin-top:4px; }
+.load .fav { display:inline-grid; place-items:center; margin:0; min-width:44px; height:44px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--mute); padding:0; cursor:pointer; font-size:25px; }
+.load .fav.on { background:var(--tag-bg); color:var(--brand-ink); }
+.load.feat { border-color:var(--accent); }
+.market-stats { margin-top:26px; }
+.market-stats h2 { font-size:13px; color:var(--mute); margin:0 0 10px; }
+.market-stats .hero { background:var(--card); color:var(--ink); border:1px solid var(--line); box-shadow:none; margin:0; }
+.market-stats .hero span { color:var(--mute); opacity:1; }
+.market-stats .hero b { color:var(--brand-ink); }
+.market-stats .hero div+div { border-color:var(--line); }
+.logo { background:var(--accent); }
+header p { opacity:1; }
+.seg button { min-height:44px; }
+
+/* İçerik ayrı kayar; kapatma ve teklif alanı görünür kalır. */
+.sheet:has(.load-detail) { bottom:var(--keyboard-inset,0px); }
+.sheet>div:has(.load-detail) { padding:0; max-height:100%; overflow:hidden; }
+.sheet>div:has(.load-detail)::before { display:none; }
+.load-detail { display:flex; flex-direction:column; height:var(--detail-height,86dvh); max-height:100%; min-height:0; }
+.detail-top { display:flex; justify-content:space-between; align-items:center; flex:none; padding:12px 16px; background:var(--card); border-bottom:1px solid var(--line); font-size:13px; font-weight:700; }
+.detail-id { color:var(--mute); font-weight:400; }
+.detail-close { min-height:44px; padding:8px 13px; }
+.detail-close span { font-size:18px; margin-left:5px; }
+.detail-scroll { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:18px 16px 20px; scroll-padding:16px; }
+.detail-summary { margin-bottom:18px; }
+.detail-summary .route { font-size:24px; }
+.detail-summary .listing-price .price { font-size:32px; }
+.summary-tags { display:flex; gap:8px; flex-wrap:wrap; }
+.detail-group { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px; }
+.detail-group h2 { font-size:15px; color:var(--brand-ink); margin-bottom:7px; }
+.detail-group .kv { font-size:13px; gap:12px; }
+.detail-group .kv>span { min-width:0; overflow-wrap:anywhere; }
+.detail-group .kv>span:first-child { flex:1; }
+.detail-group .kv>span:last-child { flex:1.2; }
+.detail-group .kv:last-child { border-bottom:0; }
+.detail-note,.estimate-note { font-size:12px; line-height:1.6; color:var(--mute); margin-top:12px; overflow-wrap:anywhere; }
+.detail-calc { margin-top:12px; min-height:44px; }
+.detail-route .map { margin:10px 0 0; }
+.owner-summary { display:flex; gap:10px; align-items:center; margin:12px 0; }
+.owner-summary>div { min-width:0; font-size:14px; overflow-wrap:anywhere; }
+.owner-summary p { color:var(--mute); font-size:12px; margin-top:5px; }
+.owner-avatar { display:grid; place-items:center; width:42px; height:42px; flex:none; border-radius:12px; background:var(--tag-bg); color:var(--brand-ink); font-weight:800; }
+.detail-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.detail-actions .chip { white-space:normal; max-width:100%; min-height:44px; }
+.offer-dock { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:end; gap:10px; padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px)); background:var(--card); border-top:1px solid var(--line); flex:none; }
+.offer-dock>div { min-width:0; }
+.offer-dock label { margin:0 0 6px; font-size:12px; color:var(--ink); }
+.offer-input { position:relative; }
+.offer-input input { padding:13px 28px 13px 12px; border-color:var(--brand-ink); min-width:0; height:48px; }
+.offer-input>span { position:absolute; right:12px; top:14px; color:var(--mute); pointer-events:none; }
+.offer-dock .btn { margin:0; min-height:48px; padding:12px 8px; font-size:15px; box-shadow:none; }
+
+@media (min-width:768px) { #app { box-shadow:0 0 0 1px var(--line),0 16px 60px rgba(0,0,0,.08); } }
+@media (max-width:375px) { .route-title { font-size:17px; } .route-search h2 { font-size:23px; } .detail-summary .route { font-size:21px; } .listing-search .chip { padding:10px; } }

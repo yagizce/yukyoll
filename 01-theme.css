@@ -3,20 +3,20 @@
 /* ----- Renk ve tema değişkenleri (açık/koyu tema) ----- */
 
 :root {
-  --bg:#f3f4ef;
+  --bg:#f3f8f7;
   --card:#fff;
-  --ink:#14263d;
-  --mute:#6b7585;
-  --line:#e3e6df;
-  --brand:#12395f;
-  --brand-ink:#12395f;
+  --ink:#173234;
+  --mute:#52696b;
+  --line:#dce8e5;
+  --brand:#007f83;
+  --brand-ink:#00696d;
   --on-brand:#fff;
-  --accent:#f2b01e;
-  --on-accent:#2a1f00;
+  --accent:#ffd34e;
+  --on-accent:#302600;
   --ok:#1f7a4d;
   --bad:#c0392b;
-  --tag-bg:#e6edf5;
-  --tag-ink:#12395f;
+  --tag-bg:#e5f3f1;
+  --tag-ink:#00696d;
   --shadow:0 1px 2px rgba(18,57,95,.06),0 4px 14px rgba(18,57,95,.06);
   box-sizing:border-box;
 }
@@ -26,14 +26,14 @@
     --bg:#101722;
     --card:#172233;
     --ink:#eef1f5;
-    --mute:#98a6b8;
+    --mute:#a7b8c0;
     --line:#263449;
-    --brand:#2a62a0;
-    --brand-ink:#9cc3f0;
+    --brand:#075b60;
+    --brand-ink:#75ddd5;
     --ok:#4cc38a;
     --bad:#ff7b6b;
-    --tag-bg:#22344d;
-    --tag-ink:#b9d3f2;
+    --tag-bg:#1b393e;
+    --tag-ink:#a2e6df;
     --shadow:none;
   }
 }
@@ -42,14 +42,14 @@
   --bg:#101722;
   --card:#172233;
   --ink:#eef1f5;
-  --mute:#98a6b8;
+  --mute:#a7b8c0;
   --line:#263449;
-  --brand:#2a62a0;
-  --brand-ink:#9cc3f0;
+  --brand:#075b60;
+  --brand-ink:#75ddd5;
   --ok:#4cc38a;
   --bad:#ff7b6b;
-  --tag-bg:#22344d;
-  --tag-ink:#b9d3f2;
+  --tag-bg:#1b393e;
+  --tag-ink:#a2e6df;
   --shadow:none;
 }
 

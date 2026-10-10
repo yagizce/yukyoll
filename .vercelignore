@@ -1,0 +1,17 @@
+tests
+export
+www
+node_modules
+__pycache__
+*.md
+README*.txt
+*.py
+*.test.js
+??-*.js
+??-*.css
+index.template.html
+bundle.js
+dev.js
+run.js
+prepare-web.js
+download*

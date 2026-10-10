@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- DİKKAT: index.html, src/ klasöründen üretilir (npm run bundle). Elle düzenleme, src/ içindeki dosyaları düzenle. -->
+<!-- DİKKAT: index.html, index.template.html ve NN-*.js/css kaynaklarından üretilir (npm run bundle). -->
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>NakGo – Yük ve Araç Eşleştirme</title>
 <meta name="description" content="Yük sahipleri ve taşıyıcıları buluşturan yük pazarı">
-<meta name="theme-color" content="#12395f">
+<meta name="theme-color" content="#007f83">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -22,20 +22,20 @@
 /* ----- Renk ve tema değişkenleri (açık/koyu tema) ----- */
 
 :root {
-  --bg:#f3f4ef;
+  --bg:#f3f8f7;
   --card:#fff;
-  --ink:#14263d;
-  --mute:#6b7585;
-  --line:#e3e6df;
-  --brand:#12395f;
-  --brand-ink:#12395f;
+  --ink:#173234;
+  --mute:#52696b;
+  --line:#dce8e5;
+  --brand:#007f83;
+  --brand-ink:#00696d;
   --on-brand:#fff;
-  --accent:#f2b01e;
-  --on-accent:#2a1f00;
+  --accent:#ffd34e;
+  --on-accent:#302600;
   --ok:#1f7a4d;
   --bad:#c0392b;
-  --tag-bg:#e6edf5;
-  --tag-ink:#12395f;
+  --tag-bg:#e5f3f1;
+  --tag-ink:#00696d;
   --shadow:0 1px 2px rgba(18,57,95,.06),0 4px 14px rgba(18,57,95,.06);
   box-sizing:border-box;
 }
@@ -45,14 +45,14 @@
     --bg:#101722;
     --card:#172233;
     --ink:#eef1f5;
-    --mute:#98a6b8;
+    --mute:#a7b8c0;
     --line:#263449;
-    --brand:#2a62a0;
-    --brand-ink:#9cc3f0;
+    --brand:#075b60;
+    --brand-ink:#75ddd5;
     --ok:#4cc38a;
     --bad:#ff7b6b;
-    --tag-bg:#22344d;
-    --tag-ink:#b9d3f2;
+    --tag-bg:#1b393e;
+    --tag-ink:#a2e6df;
     --shadow:none;
   }
 }
@@ -61,14 +61,14 @@
   --bg:#101722;
   --card:#172233;
   --ink:#eef1f5;
-  --mute:#98a6b8;
+  --mute:#a7b8c0;
   --line:#263449;
-  --brand:#2a62a0;
-  --brand-ink:#9cc3f0;
+  --brand:#075b60;
+  --brand-ink:#75ddd5;
   --ok:#4cc38a;
   --bad:#ff7b6b;
-  --tag-bg:#22344d;
-  --tag-ink:#b9d3f2;
+  --tag-bg:#1b393e;
+  --tag-ink:#a2e6df;
   --shadow:none;
 }
 
@@ -1791,12 +1791,98 @@ header p {
     font-size:22px;
   }
 }
+
+/* Mobil ilan arama, kartlar ve yük detayı */
+
+.route-search { margin-bottom:20px; }
+.eyebrow { color:var(--brand-ink); font-size:10px; font-weight:800; letter-spacing:1.4px; }
+.route-search h2 { margin:7px 0 16px; font-size:25px; line-height:1.2; letter-spacing:-.8px; }
+.route-fields { display:grid; grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr); gap:6px; align-items:end; }
+.route-fields>div { min-width:0; }
+.route-fields label { margin:0 0 7px; color:var(--ink); }
+.route-fields select { font-size:14px; padding:13px 28px 13px 11px; background-position:right 9px center; text-overflow:ellipsis; }
+.route-swap { width:36px; height:46px; border:0; border-radius:12px; background:var(--tag-bg); color:var(--brand-ink); font-size:23px; cursor:pointer; }
+.demo-note { padding:10px 12px; margin-bottom:15px; border:1px solid var(--line); border-radius:10px; color:var(--mute); font-size:12px; line-height:1.5; }
+.demo-note b { color:var(--brand-ink); }
+.listing-search { align-items:center; }
+.listing-search input { min-width:0; }
+.active-filters { flex-wrap:wrap; }
+.active-filters .chip { max-width:100%; white-space:normal; text-align:left; }
+.route-title { gap:8px; line-height:1.3; font-size:19px; }
+.route-title>span { min-width:0; flex:1; overflow-wrap:anywhere; }
+.route-title>span:last-child { text-align:right; }
+.route-title i { flex:0 0 28px; margin:0 5px; }
+.listing-label { margin-bottom:10px; }
+.listing-price { display:flex; flex-wrap:wrap; gap:4px 12px; align-items:baseline; margin:13px 0; }
+.listing-price .price { color:var(--brand-ink); font-size:25px; line-height:1.1; overflow-wrap:anywhere; }
+.listing-price>span:last-child { color:var(--mute); font-size:11px; font-weight:500; }
+.cargo-line { display:flex; gap:10px; align-items:center; font-size:14px; line-height:1.5; }
+.cargo-line>span { min-width:0; overflow-wrap:anywhere; }
+.cargo-line b { font-weight:600; }
+.listing-spec { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; color:var(--mute); font-size:12px; line-height:1.5; }
+.load-date { color:var(--ink); }
+.listing-footer { margin-top:13px; padding-top:10px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px; align-items:center; }
+.listing-trust { color:var(--ink); font-size:12px; font-weight:700; min-width:0; }
+.listing-trust>span:last-child { display:block; color:var(--mute); font-weight:400; margin-top:4px; }
+.load .fav { display:inline-grid; place-items:center; margin:0; min-width:44px; height:44px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--mute); padding:0; cursor:pointer; font-size:25px; }
+.load .fav.on { background:var(--tag-bg); color:var(--brand-ink); }
+.load.feat { border-color:var(--accent); }
+.market-stats { margin-top:26px; }
+.market-stats h2 { font-size:13px; color:var(--mute); margin:0 0 10px; }
+.market-stats .hero { background:var(--card); color:var(--ink); border:1px solid var(--line); box-shadow:none; margin:0; }
+.market-stats .hero span { color:var(--mute); opacity:1; }
+.market-stats .hero b { color:var(--brand-ink); }
+.market-stats .hero div+div { border-color:var(--line); }
+.logo { background:var(--accent); }
+header p { opacity:1; }
+.seg button { min-height:44px; }
+
+/* İçerik ayrı kayar; kapatma ve teklif alanı görünür kalır. */
+.sheet:has(.load-detail) { bottom:var(--keyboard-inset,0px); }
+.sheet>div:has(.load-detail) { padding:0; max-height:100%; overflow:hidden; }
+.sheet>div:has(.load-detail)::before { display:none; }
+.load-detail { display:flex; flex-direction:column; height:var(--detail-height,86dvh); max-height:100%; min-height:0; }
+.detail-top { display:flex; justify-content:space-between; align-items:center; flex:none; padding:12px 16px; background:var(--card); border-bottom:1px solid var(--line); font-size:13px; font-weight:700; }
+.detail-id { color:var(--mute); font-weight:400; }
+.detail-close { min-height:44px; padding:8px 13px; }
+.detail-close span { font-size:18px; margin-left:5px; }
+.detail-scroll { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding:18px 16px 20px; scroll-padding:16px; }
+.detail-summary { margin-bottom:18px; }
+.detail-summary .route { font-size:24px; }
+.detail-summary .listing-price .price { font-size:32px; }
+.summary-tags { display:flex; gap:8px; flex-wrap:wrap; }
+.detail-group { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px; }
+.detail-group h2 { font-size:15px; color:var(--brand-ink); margin-bottom:7px; }
+.detail-group .kv { font-size:13px; gap:12px; }
+.detail-group .kv>span { min-width:0; overflow-wrap:anywhere; }
+.detail-group .kv>span:first-child { flex:1; }
+.detail-group .kv>span:last-child { flex:1.2; }
+.detail-group .kv:last-child { border-bottom:0; }
+.detail-note,.estimate-note { font-size:12px; line-height:1.6; color:var(--mute); margin-top:12px; overflow-wrap:anywhere; }
+.detail-calc { margin-top:12px; min-height:44px; }
+.detail-route .map { margin:10px 0 0; }
+.owner-summary { display:flex; gap:10px; align-items:center; margin:12px 0; }
+.owner-summary>div { min-width:0; font-size:14px; overflow-wrap:anywhere; }
+.owner-summary p { color:var(--mute); font-size:12px; margin-top:5px; }
+.owner-avatar { display:grid; place-items:center; width:42px; height:42px; flex:none; border-radius:12px; background:var(--tag-bg); color:var(--brand-ink); font-weight:800; }
+.detail-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.detail-actions .chip { white-space:normal; max-width:100%; min-height:44px; }
+.offer-dock { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:end; gap:10px; padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px)); background:var(--card); border-top:1px solid var(--line); flex:none; }
+.offer-dock>div { min-width:0; }
+.offer-dock label { margin:0 0 6px; font-size:12px; color:var(--ink); }
+.offer-input { position:relative; }
+.offer-input input { padding:13px 28px 13px 12px; border-color:var(--brand-ink); min-width:0; height:48px; }
+.offer-input>span { position:absolute; right:12px; top:14px; color:var(--mute); pointer-events:none; }
+.offer-dock .btn { margin:0; min-height:48px; padding:12px 8px; font-size:15px; box-shadow:none; }
+
+@media (min-width:768px) { #app { box-shadow:0 0 0 1px var(--line),0 16px 60px rgba(0,0,0,.08); } }
+@media (max-width:375px) { .route-title { font-size:17px; } .route-search h2 { font-size:23px; } .detail-summary .route { font-size:21px; } .listing-search .chip { padding:10px; } }
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="splash" class="splash" aria-hidden="true"><div class="tile"><svg viewBox="0 0 64 64"><g transform="translate(32 32) scale(1.04) translate(-34.3 -36.5)"><g class="tk"><defs><mask id="mks"><rect width="64" height="64" fill="#fff"/><circle cx="16.5" cy="46.5" r="6.5" fill="#000"/><circle cx="27.5" cy="46.5" r="6.5" fill="#000"/><circle cx="50" cy="46.5" r="6.5" fill="#000"/></mask></defs><rect x="10" y="18" width="29" height="22" rx="2.5" fill="#12395f"/><path d="M10 20.5A2.5 2.5 0 0 1 12.5 18h24A2.5 2.5 0 0 1 39 20.5V22H10z" fill="#2a5f99"/><path class="c1" d="M18 25l6 5.5-6 5.5" fill="none" stroke="#ffc93c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path class="c2" d="M26 25l6 5.5-6 5.5" fill="none" stroke="#ffe7a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="39" y="35" width="3" height="3.2" fill="#12395f"/><rect x="43.4" y="19.5" width="1.9" height="6" rx=".95" fill="#12395f"/><path d="M42 40V27a3 3 0 0 1 3-3h5.6a3 3 0 0 1 2.4 1.2l5.6 8.2V40z" fill="#12395f"/><path d="M45.6 27.4h4.4l3.8 5.2h-8.2z" fill="#fff4d6"/><circle cx="57.3" cy="36.6" r="1.2" fill="#ffc93c"/><rect x="10" y="40" width="48.6" height="3.4" rx="1.7" fill="#12395f" mask="url(#mks)"/><circle cx="16.5" cy="46.5" r="5.2" fill="#12395f"/><circle cx="16.5" cy="46.5" r="3.4" fill="none" stroke="#2a5f99" stroke-width=".8"/><circle cx="16.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="27.5" cy="46.5" r="5.2" fill="#12395f"/><circle cx="27.5" cy="46.5" r="3.4" fill="none" stroke="#2a5f99" stroke-width=".8"/><circle cx="27.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="50" cy="46.5" r="5.2" fill="#12395f"/><circle cx="50" cy="46.5" r="3.4" fill="none" stroke="#2a5f99" stroke-width=".8"/><circle cx="50" cy="46.5" r="2" fill="#fff4d6"/><path d="M7 54h50" stroke="#12395f" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="7 4"/></g></g></svg></div><svg class="wm" viewBox="0 0 290 80" width="180" height="50"><path transform="translate(0 64)" d="M58 0H43.6L19.6 -36.4V0H5.2V-59H19.6L43.6 -22.4V-59H58ZM86.2 -47.5Q91.1 -47.5 94.9 -45.5Q98.6 -43.5 100.6 -40.2V-46.9H115V0H100.6V-6.6Q98.5 -3.4 94.8 -1.3Q91.1 0.7 86.1 0.7Q80.4 0.7 75.7 -2.3Q71 -5.3 68.2 -10.8Q65.5 -16.3 65.5 -23.5Q65.5 -30.7 68.2 -36.2Q71 -41.7 75.7 -44.6Q80.4 -47.5 86.2 -47.5ZM90.4 -35Q86.1 -35 83.1 -32Q80.1 -28.9 80.1 -23.5Q80.1 -18.1 83.1 -15Q86.1 -11.8 90.4 -11.8Q94.7 -11.8 97.7 -15Q100.6 -18.1 100.6 -23.4Q100.6 -28.8 97.7 -31.9Q94.7 -35 90.4 -35ZM154.1 0 139.8 -19.7V0H125.4V-62.2H139.8V-27.8L154 -46.9H171.7L152.2 -23.4L171.9 0ZM216.5 -40.3Q214.9 -43.3 211.9 -44.8Q208.9 -46.4 204.9 -46.4Q197.9 -46.4 193.7 -41.8Q189.5 -37.2 189.5 -29.6Q189.5 -21.4 193.9 -16.8Q198.3 -12.3 206.1 -12.3Q211.3 -12.3 215 -15Q218.7 -17.6 220.3 -22.7H202.1V-33.3H233.4V-19.9Q231.8 -14.5 227.9 -9.9Q224.1 -5.3 218.2 -2.4Q212.4 0.4 205 0.4Q196.2 0.4 189.4 -3.4Q182.5 -7.2 178.7 -14Q174.9 -20.8 174.9 -29.6Q174.9 -38.3 178.7 -45.2Q182.5 -52 189.3 -55.8Q196.1 -59.6 204.9 -59.6Q215.5 -59.6 222.7 -54.5Q230 -49.4 232.3 -40.3ZM238.5 -23.4Q238.5 -30.7 241.7 -36.2Q244.9 -41.7 250.4 -44.6Q255.9 -47.5 262.8 -47.5Q269.7 -47.5 275.3 -44.6Q280.8 -41.7 284 -36.2Q287.2 -30.7 287.2 -23.4Q287.2 -16.2 284 -10.7Q280.7 -5.2 275.1 -2.3Q269.6 0.7 262.7 0.7Q255.8 0.7 250.3 -2.3Q244.8 -5.2 241.6 -10.7Q238.5 -16.1 238.5 -23.4ZM272.6 -23.4Q272.6 -29.1 269.8 -32.1Q267 -35.1 262.8 -35.1Q258.6 -35.1 255.9 -32.1Q253.1 -29.1 253.1 -23.4Q253.1 -17.8 255.8 -14.8Q258.6 -11.8 262.7 -11.8Q266.8 -11.8 269.7 -14.8Q272.6 -17.8 272.6 -23.4Z" fill="#fff"/></svg><p>Yükünü bul, aracını doldur.</p></div>
-  <header><div class="logo"><svg width="44" height="44" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) scale(1.04) translate(-34.3 -36.5)"><defs><mask id="mkh"><rect width="64" height="64" fill="#fff"/><circle cx="16.5" cy="46.5" r="6.5" fill="#000"/><circle cx="27.5" cy="46.5" r="6.5" fill="#000"/><circle cx="50" cy="46.5" r="6.5" fill="#000"/></mask></defs><rect x="10" y="18" width="29" height="22" rx="2.5" fill="#12395f"/><path d="M10 20.5A2.5 2.5 0 0 1 12.5 18h24A2.5 2.5 0 0 1 39 20.5V22H10z" fill="#2a5f99"/><path d="M18 25l6 5.5-6 5.5" fill="none" stroke="#ffc93c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 25l6 5.5-6 5.5" fill="none" stroke="#ffe7a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="39" y="35" width="3" height="3.2" fill="#12395f"/><rect x="43.4" y="19.5" width="1.9" height="6" rx=".95" fill="#12395f"/><path d="M42 40V27a3 3 0 0 1 3-3h5.6a3 3 0 0 1 2.4 1.2l5.6 8.2V40z" fill="#12395f"/><path d="M45.6 27.4h4.4l3.8 5.2h-8.2z" fill="#fff4d6"/><circle cx="57.3" cy="36.6" r="1.2" fill="#ffc93c"/><rect x="10" y="40" width="48.6" height="3.4" rx="1.7" fill="#12395f" mask="url(#mkh)"/><circle cx="16.5" cy="46.5" r="5.2" fill="#12395f"/><circle cx="16.5" cy="46.5" r="3.4" fill="none" stroke="#2a5f99" stroke-width=".8"/><circle cx="16.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="27.5" cy="46.5" r="5.2" fill="#12395f"/><circle cx="27.5" cy="46.5" r="3.4" fill="none" stroke="#2a5f99" stroke-width=".8"/><circle cx="27.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="50" cy="46.5" r="5.2" fill="#12395f"/><circle cx="50" cy="46.5" r="3.4" fill="none" stroke="#2a5f99" stroke-width=".8"/><circle cx="50" cy="46.5" r="2" fill="#fff4d6"/><path d="M7 54h50" stroke="#12395f" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="7 4"/></g></svg></div><div><h1>NakGo</h1><p id="sub">Yükünü bul, aracını doldur.</p></div><button class="bell" id="thh" aria-label="Temayı değiştir" title="Temayı değiştir"></button><button class="bell" id="bell" aria-label="Bildirimler"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg><b id="bc"></b></button></header>
+  <div id="splash" class="splash" aria-hidden="true"><div class="tile"><svg viewBox="0 0 64 64"><g transform="translate(32 32) scale(1.04) translate(-34.3 -36.5)"><g class="tk"><defs><mask id="mks"><rect width="64" height="64" fill="#fff"/><circle cx="16.5" cy="46.5" r="6.5" fill="#000"/><circle cx="27.5" cy="46.5" r="6.5" fill="#000"/><circle cx="50" cy="46.5" r="6.5" fill="#000"/></mask></defs><rect x="10" y="18" width="29" height="22" rx="2.5" fill="#007f83"/><path d="M10 20.5A2.5 2.5 0 0 1 12.5 18h24A2.5 2.5 0 0 1 39 20.5V22H10z" fill="#21aaa5"/><path class="c1" d="M18 25l6 5.5-6 5.5" fill="none" stroke="#ffd34e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path class="c2" d="M26 25l6 5.5-6 5.5" fill="none" stroke="#ffe7a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="39" y="35" width="3" height="3.2" fill="#007f83"/><rect x="43.4" y="19.5" width="1.9" height="6" rx=".95" fill="#007f83"/><path d="M42 40V27a3 3 0 0 1 3-3h5.6a3 3 0 0 1 2.4 1.2l5.6 8.2V40z" fill="#007f83"/><path d="M45.6 27.4h4.4l3.8 5.2h-8.2z" fill="#fff4d6"/><circle cx="57.3" cy="36.6" r="1.2" fill="#ffd34e"/><rect x="10" y="40" width="48.6" height="3.4" rx="1.7" fill="#007f83" mask="url(#mks)"/><circle cx="16.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="16.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="16.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="27.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="27.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="27.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="50" cy="46.5" r="5.2" fill="#007f83"/><circle cx="50" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="50" cy="46.5" r="2" fill="#fff4d6"/><path d="M7 54h50" stroke="#007f83" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="7 4"/></g></g></svg></div><svg class="wm" viewBox="0 0 290 80" width="180" height="50"><path transform="translate(0 64)" d="M58 0H43.6L19.6 -36.4V0H5.2V-59H19.6L43.6 -22.4V-59H58ZM86.2 -47.5Q91.1 -47.5 94.9 -45.5Q98.6 -43.5 100.6 -40.2V-46.9H115V0H100.6V-6.6Q98.5 -3.4 94.8 -1.3Q91.1 0.7 86.1 0.7Q80.4 0.7 75.7 -2.3Q71 -5.3 68.2 -10.8Q65.5 -16.3 65.5 -23.5Q65.5 -30.7 68.2 -36.2Q71 -41.7 75.7 -44.6Q80.4 -47.5 86.2 -47.5ZM90.4 -35Q86.1 -35 83.1 -32Q80.1 -28.9 80.1 -23.5Q80.1 -18.1 83.1 -15Q86.1 -11.8 90.4 -11.8Q94.7 -11.8 97.7 -15Q100.6 -18.1 100.6 -23.4Q100.6 -28.8 97.7 -31.9Q94.7 -35 90.4 -35ZM154.1 0 139.8 -19.7V0H125.4V-62.2H139.8V-27.8L154 -46.9H171.7L152.2 -23.4L171.9 0ZM216.5 -40.3Q214.9 -43.3 211.9 -44.8Q208.9 -46.4 204.9 -46.4Q197.9 -46.4 193.7 -41.8Q189.5 -37.2 189.5 -29.6Q189.5 -21.4 193.9 -16.8Q198.3 -12.3 206.1 -12.3Q211.3 -12.3 215 -15Q218.7 -17.6 220.3 -22.7H202.1V-33.3H233.4V-19.9Q231.8 -14.5 227.9 -9.9Q224.1 -5.3 218.2 -2.4Q212.4 0.4 205 0.4Q196.2 0.4 189.4 -3.4Q182.5 -7.2 178.7 -14Q174.9 -20.8 174.9 -29.6Q174.9 -38.3 178.7 -45.2Q182.5 -52 189.3 -55.8Q196.1 -59.6 204.9 -59.6Q215.5 -59.6 222.7 -54.5Q230 -49.4 232.3 -40.3ZM238.5 -23.4Q238.5 -30.7 241.7 -36.2Q244.9 -41.7 250.4 -44.6Q255.9 -47.5 262.8 -47.5Q269.7 -47.5 275.3 -44.6Q280.8 -41.7 284 -36.2Q287.2 -30.7 287.2 -23.4Q287.2 -16.2 284 -10.7Q280.7 -5.2 275.1 -2.3Q269.6 0.7 262.7 0.7Q255.8 0.7 250.3 -2.3Q244.8 -5.2 241.6 -10.7Q238.5 -16.1 238.5 -23.4ZM272.6 -23.4Q272.6 -29.1 269.8 -32.1Q267 -35.1 262.8 -35.1Q258.6 -35.1 255.9 -32.1Q253.1 -29.1 253.1 -23.4Q253.1 -17.8 255.8 -14.8Q258.6 -11.8 262.7 -11.8Q266.8 -11.8 269.7 -14.8Q272.6 -17.8 272.6 -23.4Z" fill="#fff"/></svg><p>Yükünü bul, aracını doldur.</p></div>
+  <header><div class="logo"><svg width="44" height="44" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) scale(1.04) translate(-34.3 -36.5)"><defs><mask id="mkh"><rect width="64" height="64" fill="#fff"/><circle cx="16.5" cy="46.5" r="6.5" fill="#000"/><circle cx="27.5" cy="46.5" r="6.5" fill="#000"/><circle cx="50" cy="46.5" r="6.5" fill="#000"/></mask></defs><rect x="10" y="18" width="29" height="22" rx="2.5" fill="#007f83"/><path d="M10 20.5A2.5 2.5 0 0 1 12.5 18h24A2.5 2.5 0 0 1 39 20.5V22H10z" fill="#21aaa5"/><path d="M18 25l6 5.5-6 5.5" fill="none" stroke="#ffd34e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 25l6 5.5-6 5.5" fill="none" stroke="#ffe7a3" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="39" y="35" width="3" height="3.2" fill="#007f83"/><rect x="43.4" y="19.5" width="1.9" height="6" rx=".95" fill="#007f83"/><path d="M42 40V27a3 3 0 0 1 3-3h5.6a3 3 0 0 1 2.4 1.2l5.6 8.2V40z" fill="#007f83"/><path d="M45.6 27.4h4.4l3.8 5.2h-8.2z" fill="#fff4d6"/><circle cx="57.3" cy="36.6" r="1.2" fill="#ffd34e"/><rect x="10" y="40" width="48.6" height="3.4" rx="1.7" fill="#007f83" mask="url(#mkh)"/><circle cx="16.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="16.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="16.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="27.5" cy="46.5" r="5.2" fill="#007f83"/><circle cx="27.5" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="27.5" cy="46.5" r="2" fill="#fff4d6"/><circle cx="50" cy="46.5" r="5.2" fill="#007f83"/><circle cx="50" cy="46.5" r="3.4" fill="none" stroke="#21aaa5" stroke-width=".8"/><circle cx="50" cy="46.5" r="2" fill="#fff4d6"/><path d="M7 54h50" stroke="#007f83" stroke-opacity=".28" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="7 4"/></g></svg></div><div><h1>NakGo</h1><p id="sub">Yükünü bul, aracını doldur.</p></div><button class="bell" id="thh" aria-label="Temayı değiştir" title="Temayı değiştir"></button><button class="bell" id="bell" aria-label="Bildirimler"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg><b id="bc"></b></button></header>
   <div id="off" class="off" role="status">İnternet bağlantısı yok. Değişiklikler kaydedilmeyebilir.</div>
   <main id="main"></main>
   <nav id="nav">
@@ -2401,6 +2487,11 @@ function F0() {
     return { veh: [], body: [], pay: [], date: [], from: "", to: "", tonMin: "", tonMax: "", priceMin: "", rate: 0, fav: false, ok: false };
 }
 
+function routeSearch() {
+    const field = (key, label) => `<div><label for="route-${key}">${label}</label><select id="route-${key}" data-route="${key}"><option value="">Tüm şehirler</option>${cities.map(c => `<option value="${c}" ${F[key] === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>`;
+    return `<section class="route-search" aria-labelledby="route-heading"><div class="route-search-heading"><span class="eyebrow">YÜK VE BOŞ ARAÇ PAZARI</span><h2 id="route-heading">Yoluna uygun ilanı bul.</h2></div><div class="route-fields">${field("from", "Nereden?")}<button class="route-swap" id="route-swap" aria-label="Çıkış ve varış şehirlerini değiştir" title="Güzergâhı ters çevir">⇄</button>${field("to", "Nereye?")}</div></section>`;
+}
+
 function match(x, isT) {
     if (F.veh.length && !F.veh.includes(x.veh))
         return 0;
@@ -2468,9 +2559,17 @@ function rmF(k, v) {
     render();
 }
 
-const lCard = l => `<button class="load ${isF(l) ? "feat" : ""}" data-id="${l.id}"><div class="route">${l.from}<i></i>${l.to}</div><div style="margin-top:6px;font-size:14px;display:flex;gap:10px;align-items:center">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="">` : ""}<span>${l.cargo} · ${l.ton} ton${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span></div><div class="meta"><span><span class="tag">${l.veh}</span> ${isF(l) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${l.date === "Bugün" ? '<span class="tag hot">Acil</span> ' : ""}&nbsp;${l.date}</span><span class="price">${fmt(l.price)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(l)}${l.km ? l.km + " km · " : ""}${l.body || ""}${ago(l) ? (l.km || l.body ? " · " : "") + ago(l) : ""}</span><span>${starTxt(l)} &nbsp;<span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(l.id)) ? "on" : ""}" data-fav="${l.id}">${favs.includes(String(l.id)) ? "♥" : "♡"}</span></span></div></button>`;
+const routeTitle = x => `<div class="route route-title"><span>${x.from}</span><i aria-hidden="true"></i><span>${x.to}</span></div>`;
 
-const tCard = t => `<button class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}"><div class="route">${t.from}<i></i>${t.to}</div><div style="margin-top:6px;font-size:14px">${t.who || nm(t.uid)}${vbadge(lvT(t))} · ${t.cap} ton boş kapasite</div><div class="meta"><span><span class="tag">${t.veh}</span> ${isF(t) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${t.date === "Bugün" ? '<span class="tag hot">Bugün</span> ' : ""}&nbsp;${t.date}</span><span>${starTxt(t)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(t)}${t.body}</span><span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</span></div></button>`;
+const lCard = l => `<article class="load ${isF(l) ? "feat" : ""}" data-id="${l.id}" role="button" tabindex="0" aria-label="${l.from} → ${l.to}, ${fmt(l.price)}, ilanı aç">
+    ${isF(l) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}${routeTitle(l)}
+    <div class="listing-price"><span class="price">${fmt(l.price)}</span><span>Taşıma ücreti</span></div>
+    <div class="cargo-line">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="Yük fotoğrafı">` : ""}<span><b>${l.cargo}</b> · ${l.ton} ton${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span></div>
+    <div class="listing-spec"><span>${l.veh} · ${l.body || "Kasa belirtilmedi"}</span><span class="load-date">Yükleme: <b>${l.date}</b></span></div>
+    <div class="listing-footer"><span class="listing-trust">${starTxt(l)}${vbadge(l.uid ? lvU(l.uid) : 0)}<span>${nearTxt(l)}${l.km ? "≈ " + l.km + " km" : ""}${ago(l) ? " · " + ago(l) : ""}</span></span><button type="button" aria-label="${favs.includes(String(l.id)) ? "Kaydı kaldır" : "Kaydet"}" aria-pressed="${favs.includes(String(l.id))}" class="fav ${favs.includes(String(l.id)) ? "on" : ""}" data-fav="${l.id}">${favs.includes(String(l.id)) ? "♥" : "♡"}</button></div>
+    </article>`;
+
+const tCard = t => `<button class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}">${routeTitle(t)}<div style="margin-top:6px;font-size:14px">${t.who || nm(t.uid)}${vbadge(lvT(t))} · ${t.cap} ton boş kapasite</div><div class="meta"><span><span class="tag">${t.veh}</span> ${isF(t) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${t.date === "Bugün" ? '<span class="tag hot">Bugün</span> ' : ""}&nbsp;${t.date}</span><span>${starTxt(t)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(t)}${t.body}</span><span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</span></div></button>`;
 
 function openFilter() {
     const isT = mode === "truck", B = $("#sheetBody");
@@ -3638,7 +3737,7 @@ function updTheme() {
     try {
         const m = document.querySelector('meta[name="theme-color"]');
         if (m)
-            m.content = isDark() ? "#2a62a0" : "#12395f";
+            m.content = isDark() ? "#075b60" : "#007f83";
     }
     catch (e) { }
 }
@@ -3736,10 +3835,10 @@ function render() {
         const kl = loads.filter(x => x.km), avg = kl.length ? Math.round(kl.reduce((a, x) => a + x.price / x.km, 0) / kl.length) : 0;
         const st = isT ? [[trucks.length, "boş araç"], [trucks.filter(x => x.date === "Bugün").length, "bugün müsait"], [Math.round(trucks.reduce((a, x) => a + x.cap, 0)), "ton kapasite"]] : [[loads.filter(x => !x.closed).length, "açık ilan"], [loads.filter(x => x.date === "Bugün").length, "bugün yükleme"], [avg, "ort. ₺/km"]];
         const hero = `<div class="hero">${st.map(([a, b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("")}</div>`;
-        m.innerHTML = SEG + hero + fuelCard() + `<div class="row" style="margin-bottom:12px"><input class="search" id="q" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
-    ${nearRow()}${ac.length ? `<div class="chips">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
-    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
-    ${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}${cmpBar()}`;
+        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
+    ${nearRow()}${ac.length ? `<div class="chips active-filters wrap">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
+    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" aria-label="İlanları sırala" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
+    ${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
         segBind();
         m.querySelectorAll("[data-fav]").forEach(b => b.onclick = e => {
             e.stopPropagation();
@@ -3758,7 +3857,16 @@ function render() {
             i.setSelectionRange(p, p);
         };
         $("#fb").onclick = openFilter;
-        $("#fc").onclick = openCalc;
+        m.querySelectorAll("[data-route]").forEach(e => e.onchange = () => {
+            F[e.dataset.route] = e.value;
+            render();
+            $("[data-route=\"" + e.dataset.route + "\"]").focus();
+        });
+        $("#route-swap").onclick = () => {
+            [F.from, F.to] = [F.to, F.from];
+            render();
+            $("#route-swap").focus();
+        };
         if ($("#al"))
             $("#al").onclick = addAlert;
         if ($("#more"))
@@ -3786,11 +3894,21 @@ function render() {
         if ($("#rs"))
             $("#rs").onclick = () => {
                 F = F0();
+                q = "";
+                nearOn = false;
                 render();
             };
         m.querySelectorAll("[data-x]").forEach(b => b.onclick = () => rmF(b.dataset.x, b.dataset.v));
         m.querySelectorAll("[data-tid]").forEach(b => b.onclick = () => openTruck(b.dataset.tid));
-        m.querySelectorAll("[data-id]").forEach(b => b.onclick = () => openLoad(+b.dataset.id));
+        m.querySelectorAll("[data-id]").forEach(b => {
+            b.onclick = () => openLoad(+b.dataset.id);
+            b.onkeydown = e => {
+                if (e.target === b && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    openLoad(+b.dataset.id);
+                }
+            };
+        });
     }
     if (tab === "post") {
         const opt = a => a.map(c => `<option>${c}</option>`).join("");
@@ -3920,13 +4038,37 @@ function render() {
     }
 }
 
+function syncDetailViewport() {
+    if (typeof window === "undefined" || !window || !window.visualViewport)
+        return;
+    const v = window.visualViewport, sheet = $("#sheet");
+    sheet.style.setProperty("--detail-height", Math.floor(v.height * .92) + "px");
+    sheet.style.setProperty("--keyboard-inset", Math.max(0, window.innerHeight - v.height - v.offsetTop) + "px");
+}
+
 function openLoad(id) {
     const l = loads.find(x => x.id === id);
+    if (!l)
+        return toast("İlan bulunamadı");
     track("v", id);
-    $("#sheetBody").innerHTML = `<div class="route">${l.from}<i></i>${l.to}</div>
-  ${imgOk(l.img) ? `<img class="ph" src="${l.img}" alt="Yük fotoğrafı">` : ""}${mapSVG(l.from, l.to)}<div style="margin-top:10px">${[["Yük", l.cargo], ...(Array.isArray(l.items) && l.items.length ? [["Kalemler", itemsTxt(l)]] : []), ["Ağırlık", l.ton + " ton"], ["Araç", l.veh], ["Yükleme", l.date], ["Mesafe", l.km ? l.km + " km" : "—"], ["Kasa tipi", l.body || "—"], ["Ödeme", l.pay || "—"], ["Yük sahibi", (l.owner || (l.uid ? nm(l.uid) : "Bireysel")) + (l.rate ? " · ★ " + l.rate : "")], ["Ücret", fmt(l.price) + " (" + perKm(l) + ")"], ["Yakıt sonrası tahmini", l.km ? fmt(Math.round(l.price - l.km * (CONS[l.veh] || 22) / 100 * calc.fuel)) : "—"], ["Piyasa", mk(l)]].map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("")}</div>
-  ${l.note ? `<p style="margin-top:12px;font-size:13px;color:var(--mute)">${l.note}</p>` : ""}<label>Teklifin (₺)</label><input id="o" type="number" value="${l.price}">
-  <button class="btn" id="send">Teklif ver</button><button class="btn alt" id="cc">Kâr hesapla</button><button class="btn alt" id="sh">Paylaş</button><button class="btn alt" id="call">Yük sahibini ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button><div class="chips" style="margin-top:14px"><button class="chip" id="pf">Profili gör</button><button class="chip" id="cp2">${cmp.includes(l.id) ? "Karşılaştırmadan çıkar" : "Karşılaştır"}</button><button class="chip" id="rp">Şikayet et</button>${l.uid && l.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div><button class="btn alt" id="close">Kapat</button>`;
+    const km = l.km || dist(l.from, l.to), fuelNet = km ? Math.round(l.price - km * (CONS[l.veh] || 22) / 100 * calc.fuel) : null;
+    const kv = rows => rows.map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("");
+    $("#sheetBody").innerHTML = `<div class="load-detail">
+      <div class="detail-top"><span>Yük ilanı <span class="detail-id">#${l.id}</span></span><button class="chip detail-close" id="close" aria-label="İlan detayını kapat">Kapat <span aria-hidden="true">×</span></button></div>
+      <div class="detail-scroll" tabindex="0" aria-label="İlan bilgileri">
+        <section class="detail-summary">${routeTitle(l)}<div class="listing-price"><strong class="price">${fmt(l.price)}</strong><span>Taşıma ücreti</span></div><div class="summary-tags"><span class="tag">Yükleme: ${l.date}</span>${isF(l) ? '<span class="tag ft">Öne çıkan</span>' : ""}</div></section>
+        ${!cloud ? '<p class="demo-note"><b>Demo modu</b> · Bu ekrandaki örnek ilanlar ve teklifler deneme amaçlıdır.</p>' : ""}
+        ${imgOk(l.img) ? `<img class="ph" src="${l.img}" alt="Yük fotoğrafı">` : ""}
+        <section class="detail-group"><h2>Yük bilgileri</h2>${kv([["Yük türü", l.cargo], ["Tonaj", l.ton + " ton"], ...(Array.isArray(l.items) && l.items.length ? [["Kalemler", itemsTxt(l)]] : []), ["Yükleme tarihi", l.date]])}${l.note ? `<p class="detail-note">${l.note}</p>` : ""}</section>
+        <section class="detail-group"><h2>Taşıma ve ödeme</h2>${kv([["Araç / kasa", l.veh + " · " + (l.body || "Belirtilmedi")], ["Ödeme şekli", l.pay || "Belirtilmedi"], ["Tahmini mesafe", km ? "≈ " + km + " km" : "Belirtilmedi"], ["Km başına ücret", km ? Math.round(l.price / km) + " ₺/km" : "—"], ["Yakıt sonrası tahmini kazanç", fuelNet !== null ? fmt(fuelNet) : "—"]])}<p class="estimate-note">Mesafe yaklaşık; kazanç yalnızca yakıt düşülerek hesaplanır (${calc.fuel} ₺/L). Otoyol ve diğer giderler dahil değildir.</p><button class="chip detail-calc" id="cc">Kâr hesapla</button></section>
+        <section class="detail-group detail-route"><h2>Güzergâh</h2>${mapSVG(l.from, l.to)}</section>
+        <section class="detail-group"><h2>Yük sahibi</h2><div class="owner-summary"><span class="owner-avatar" aria-hidden="true">${esc(String(l.owner || (l.uid ? nm(l.uid) : "Yük sahibi")).charAt(0))}</span><div><b>${l.owner || (l.uid ? nm(l.uid) : "Bireysel")}</b><p>${starTxt(l)} ${vbadge(l.uid ? lvU(l.uid) : 0)}</p></div></div><div class="detail-actions"><button class="chip" id="pf">Profili gör</button><button class="chip" id="call">Yük sahibini ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button></div></section>
+        <div class="detail-actions"><button class="chip" id="sh">Paylaş</button><button class="chip" id="cp2">${cmp.includes(l.id) ? "Karşılaştırmadan çıkar" : "Karşılaştır"}</button><button class="chip" id="rp">Şikayet et</button>${l.uid && l.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div>
+      </div>
+      <div class="offer-dock"><div><label for="o">Teklif tutarın</label><div class="offer-input"><input id="o" type="number" inputmode="numeric" min="1" step="1" value="${l.price}"><span aria-hidden="true">₺</span></div></div><button class="btn" id="send">Teklif ver <span aria-hidden="true">→</span></button></div>
+    </div>`;
+    $("#sheetBody").scrollTop = 0;
+    syncDetailViewport();
     $("#sheet").classList.add("open");
     $("#close").onclick = closeSheet;
     $("#sh").onclick = () => shareLoad(l);
@@ -4022,6 +4164,14 @@ try {
             toast("Bir şeyler ters gitti. Sorun sürerse sayfayı yenile.");
         }
     });
+}
+catch (e) { }
+
+try {
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", syncDetailViewport);
+        window.visualViewport.addEventListener("scroll", syncDetailViewport);
+    }
 }
 catch (e) { }
 

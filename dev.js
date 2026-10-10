@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-/* Geliştirme araçları (bağımlılıksız). Kullanım:  node tools/dev.js <komut>
+/* Geliştirme araçları (bağımlılıksız). Kullanım:  node dev.js <komut>
      lint                      kaynak denetimi: dosya adları, başlıklar, ad çakışmaları, yasaklı ifadeler, sözdizimi
      map [--write]             dosya ve işlev haritasını yazdırır (--write: docs/CODEMAP.md, git dışında tutulur)
      new <ad> "Başlık" "Açıklama"   yeni özellik modülü ve test iskeleti
      www                       web dosyalarını mobil kabuk için www/ klasörüne kopyalar (NAKGO_WWW ile değiştirilir)
    npm kısayolları package.json içindedir (npm run lint, map, new, mobile:prepare). */
 const fs = require("fs"), path = require("path"), vm = require("vm");
-const root = path.join(__dirname, "..");
-const read = f => fs.readFileSync(path.join(root, f), "utf8");
-const list = (d, e) => fs.readdirSync(path.join(root, d)).filter(f => f.endsWith(e)).sort();
+const root = __dirname;
+const read = f => fs.readFileSync(path.join(root, f), "utf8").replace(/\r\n/g, "\n");
+const list = e => fs.readdirSync(root).filter(f => /^\d{2}-/.test(f) && f.endsWith(e)).sort();
 
 // ---------- lint ----------
 const RUNNING = new Set(["01-state.js", "02-core.js", "99-init.js"]);   // üst düzeyde çalışan kod yazılabilen modüller
@@ -16,11 +16,11 @@ function lint() {
     const errors = [], warns = [];
   const RUNNING = new Set(["01-state.js", "02-core.js", "99-init.js"]);   // üst düzeyde çalışan kod yazılabilen modüller
   
-  const js = list("src/js", ".js"), css = list("src/css", ".css");
-  if (js.length < 5) errors.push("src/js altında modül bulunamadı");
+  const js = list(".js"), css = list(".css");
+  if (js.length < 5) errors.push("Depo kökünde modül bulunamadı");
   const names = {};
   for (const f of js) {
-    const s = read("src/js/" + f), where = "src/js/" + f;
+    const s = read(f), where = f;
     if (!/^\d{2}-[a-z0-9-]+\.js$/.test(f)) errors.push(`${where}: ad "NN-ad.js" biçiminde olmalı`);
     if (!/^\/\*\*\n \* .+\n \* .+\n \*\//.test(s)) errors.push(`${where}: başlık yorumu yok (/** Başlık, Açıklama */)`);
     if (/<\/script/i.test(s)) errors.push(`${where}: </script> içeremez`);
@@ -34,13 +34,13 @@ function lint() {
     if (s.split("\n").length > 900) warns.push(`${where}: ${s.split("\n").length} satır, bölmeyi düşün`);
   }
   for (const f of css) {
-    const s = read("src/css/" + f), where = "src/css/" + f;
+    const s = read(f), where = f;
     if (!/^\/\* .+ \*\/\n/.test(s)) errors.push(`${where}: başlık yorumu yok (/* Açıklama */)`);
     if ((s.match(/\{/g) || []).length !== (s.match(/\}/g) || []).length) errors.push(`${where}: süslü parantezler dengesiz`);
     if (/!important/.test(s) && !/motion/.test(f)) warns.push(`${where}: !important kullanılmış`);
   }
-  if (!fs.existsSync(path.join(root, "src/index.template.html"))) errors.push("src/index.template.html yok");
-  try { new vm.Script(js.map(f => read("src/js/" + f)).join("\n\n"), { filename: "bundle.js" }); } catch (e) { errors.push("Birleşik betikte sözdizimi hatası: " + e.message); }
+  if (!fs.existsSync(path.join(root, "index.template.html"))) errors.push("index.template.html yok");
+  try { new vm.Script(js.map(f => read(f)).join("\n\n"), { filename: "bundle.js" }); } catch (e) { errors.push("Birleşik betikte sözdizimi hatası: " + e.message); }
   
   warns.slice(0, 15).forEach(w => console.warn("uyarı: " + w));
   if (warns.length > 15) console.warn(`... ve ${warns.length - 15} uyarı daha`);
@@ -50,10 +50,10 @@ function lint() {
 
 // ---------- map ----------
 function map() {
-  let out = "# Kod haritası\n\nBu çıktı `npm run map` ile üretilir. Mimari için `docs/ARCHITECTURE.md`.\n\n## JavaScript modülleri (yükleme sırasıyla)\n\n";
+  let out = "# Kod haritası\n\nBu çıktı `npm run map` ile üretilir. Mimari için `ARCHITECTURE.md`.\n\n## JavaScript modülleri (yükleme sırasıyla)\n\n";
   const keys = new Set(), colls = new Set();
-  for (const f of list("src/js", ".js")) {
-    const s = read("src/js/" + f), h = /^\/\*\*\n \* (.+)\n \* (.+)\n \*\//.exec(s);
+  for (const f of list(".js")) {
+    const s = read(f), h = /^\/\*\*\n \* (.+)\n \* (.+)\n \*\//.exec(s);
     out += `### \`${f}\`: ${h ? h[1] : ""}\n\n${h ? h[2] : ""}\n\n`;
     const fns = [], vars = [];
     s.split("\n").forEach(line => {
@@ -69,7 +69,7 @@ function map() {
   }
   out += "## Tarayıcı depolama anahtarları\n\n" + [...keys].sort().map(k => `- \`${k}\``).join("\n") + "\n\n";
   out += "## Veritabanı koleksiyonları (bulut modu)\n\n" + [...colls].sort().map(k => `- \`${k}\``).join("\n") + "\n\n## CSS dosyaları\n\n";
-  for (const f of list("src/css", ".css")) { const m = /^\/\* (.+) \*\//.exec(read("src/css/" + f)); out += `- \`${f}\`: ${m ? m[1] : ""}\n`; }
+  for (const f of list(".css")) { const m = /^\/\* (.+) \*\//.exec(read(f)); out += `- \`${f}\`: ${m ? m[1] : ""}\n`; }
   if (process.argv.includes("--write")) { fs.mkdirSync(path.join(root, "docs"), { recursive: true }); fs.writeFileSync(path.join(root, "docs/CODEMAP.md"), out); console.log("docs/CODEMAP.md yazıldı"); }
   else process.stdout.write(out);
 }
@@ -78,14 +78,14 @@ function map() {
 function newModule() {
   const [name, title, desc] = process.argv.slice(3);
   if (!name || !/^[a-z0-9-]+$/.test(name) || !title || !desc) { console.error('Kullanım: npm run new -- ad "Başlık" "Açıklama"  (ad küçük harf, rakam ve tire)'); process.exit(1); }
-  const dir = path.join(root, "src/js"), used = fs.readdirSync(dir).map(f => +f.slice(0, 2)).filter(n => n >= 10 && n < 20);
+  const dir = root, used = fs.readdirSync(dir).map(f => +f.slice(0, 2)).filter(n => n >= 10 && n < 20);
   let n = 10; while (used.includes(n)) n++;
   if (n >= 20) { console.error("10-19 arasında boş numara kalmadı"); process.exit(1); }
   if (fs.readdirSync(dir).some(f => f.slice(3) === name + ".js")) { console.error("Bu adla bir modül zaten var"); process.exit(1); }
   const file = `${n}-${name}.js`;
   fs.writeFileSync(path.join(dir, file), `/**\n * ${title}\n * ${desc}\n */\n\n// Yalnızca function ve const tanımla. Çalışan kod 01-state, 02-core ve 99-init içinde olmalı.\n`);
-  fs.writeFileSync(path.join(root, "tests/unit", name + ".test.js"), `/* ${title} */\nmodule.exports = function register({ run }) {\n  run("${title}", (r, ok) => {\n    ok(true, "TODO: testi yaz");\n  });\n};\n`);
-  console.log(`Oluşturuldu: src/js/${file} ve tests/unit/${name}.test.js\nSonra: npm run bundle && npm test`);
+  fs.writeFileSync(path.join(root, name + ".test.js"), `/* ${title} */\nmodule.exports = function register({ run }) {\n  run("${title}", (r, ok) => {\n    ok(true, "TODO: testi yaz");\n  });\n};\n`);
+  console.log(`Oluşturuldu: ${file} ve ${name}.test.js\nSonra: npm run bundle && npm test`);
 }
 
 // ---------- www ----------

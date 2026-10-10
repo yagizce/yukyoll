@@ -13,10 +13,10 @@ import json, os, sys
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = sys.argv[1] if len(sys.argv) > 1 else ROOT
 os.makedirs(OUT, exist_ok=True)
-NAVY, NAVY2, CREAM, AMBER = "#12395f", "#2a5f99", "#fff4d6", "#ffc93c"
+NAVY, NAVY2, CREAM, AMBER = "#007f83", "#21aaa5", "#fff4d6", "#ffd34e"
 def _font():
     for p in (os.environ.get("NAKGO_FONT"), os.path.join(ROOT, "tools", "Poppins-Bold.ttf"), "/usr/share/fonts/truetype/google-fonts/Poppins-Bold.ttf"):
         if p and os.path.exists(p): return p
@@ -55,7 +55,7 @@ def truck(uid, wheel_ring=True):
 def mark(uid, scale=1.0):
     return f'<g transform="translate(32 32) scale({num(scale)}) translate(-34.3 -36.5)">{truck(uid)}</g>'
 
-GRAD = '<linearGradient id="g{u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd24f"/><stop offset="1" stop-color="#f0a30a"/></linearGradient>'
+GRAD = '<linearGradient id="g{u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd24f"/><stop offset="1" stop-color="#ffd34e"/></linearGradient>'
 def tile(uid, tx, ty, T, scale=1.0, full=False):
     rx = 0 if full else T * 15 / 64
     return (f'<defs>{GRAD.format(u=uid)}</defs><rect x="{num(tx)}" y="{num(ty)}" width="{num(T)}" height="{num(T)}" rx="{num(rx)}" fill="url(#g{uid})"/>'

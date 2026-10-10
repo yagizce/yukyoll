@@ -10,6 +10,11 @@ function F0() {
     return { veh: [], body: [], pay: [], date: [], from: "", to: "", tonMin: "", tonMax: "", priceMin: "", rate: 0, fav: false, ok: false };
 }
 
+function routeSearch() {
+    const field = (key, label) => `<div><label for="route-${key}">${label}</label><select id="route-${key}" data-route="${key}"><option value="">Tüm şehirler</option>${cities.map(c => `<option value="${c}" ${F[key] === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>`;
+    return `<section class="route-search" aria-labelledby="route-heading"><div class="route-search-heading"><span class="eyebrow">YÜK VE BOŞ ARAÇ PAZARI</span><h2 id="route-heading">Yoluna uygun ilanı bul.</h2></div><div class="route-fields">${field("from", "Nereden?")}<button class="route-swap" id="route-swap" aria-label="Çıkış ve varış şehirlerini değiştir" title="Güzergâhı ters çevir">⇄</button>${field("to", "Nereye?")}</div></section>`;
+}
+
 function match(x, isT) {
     if (F.veh.length && !F.veh.includes(x.veh))
         return 0;
@@ -77,9 +82,17 @@ function rmF(k, v) {
     render();
 }
 
-const lCard = l => `<button class="load ${isF(l) ? "feat" : ""}" data-id="${l.id}"><div class="route">${l.from}<i></i>${l.to}</div><div style="margin-top:6px;font-size:14px;display:flex;gap:10px;align-items:center">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="">` : ""}<span>${l.cargo} · ${l.ton} ton${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span></div><div class="meta"><span><span class="tag">${l.veh}</span> ${isF(l) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${l.date === "Bugün" ? '<span class="tag hot">Acil</span> ' : ""}&nbsp;${l.date}</span><span class="price">${fmt(l.price)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(l)}${l.km ? l.km + " km · " : ""}${l.body || ""}${ago(l) ? (l.km || l.body ? " · " : "") + ago(l) : ""}</span><span>${starTxt(l)} &nbsp;<span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(l.id)) ? "on" : ""}" data-fav="${l.id}">${favs.includes(String(l.id)) ? "♥" : "♡"}</span></span></div></button>`;
+const routeTitle = x => `<div class="route route-title"><span>${x.from}</span><i aria-hidden="true"></i><span>${x.to}</span></div>`;
 
-const tCard = t => `<button class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}"><div class="route">${t.from}<i></i>${t.to}</div><div style="margin-top:6px;font-size:14px">${t.who || nm(t.uid)}${vbadge(lvT(t))} · ${t.cap} ton boş kapasite</div><div class="meta"><span><span class="tag">${t.veh}</span> ${isF(t) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${t.date === "Bugün" ? '<span class="tag hot">Bugün</span> ' : ""}&nbsp;${t.date}</span><span>${starTxt(t)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(t)}${t.body}</span><span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</span></div></button>`;
+const lCard = l => `<article class="load ${isF(l) ? "feat" : ""}" data-id="${l.id}" role="button" tabindex="0" aria-label="${l.from} → ${l.to}, ${fmt(l.price)}, ilanı aç">
+    ${isF(l) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}${routeTitle(l)}
+    <div class="listing-price"><span class="price">${fmt(l.price)}</span><span>Taşıma ücreti</span></div>
+    <div class="cargo-line">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="Yük fotoğrafı">` : ""}<span><b>${l.cargo}</b> · ${l.ton} ton${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span></div>
+    <div class="listing-spec"><span>${l.veh} · ${l.body || "Kasa belirtilmedi"}</span><span class="load-date">Yükleme: <b>${l.date}</b></span></div>
+    <div class="listing-footer"><span class="listing-trust">${starTxt(l)}${vbadge(l.uid ? lvU(l.uid) : 0)}<span>${nearTxt(l)}${l.km ? "≈ " + l.km + " km" : ""}${ago(l) ? " · " + ago(l) : ""}</span></span><button type="button" aria-label="${favs.includes(String(l.id)) ? "Kaydı kaldır" : "Kaydet"}" aria-pressed="${favs.includes(String(l.id))}" class="fav ${favs.includes(String(l.id)) ? "on" : ""}" data-fav="${l.id}">${favs.includes(String(l.id)) ? "♥" : "♡"}</button></div>
+    </article>`;
+
+const tCard = t => `<button class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}">${routeTitle(t)}<div style="margin-top:6px;font-size:14px">${t.who || nm(t.uid)}${vbadge(lvT(t))} · ${t.cap} ton boş kapasite</div><div class="meta"><span><span class="tag">${t.veh}</span> ${isF(t) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${t.date === "Bugün" ? '<span class="tag hot">Bugün</span> ' : ""}&nbsp;${t.date}</span><span>${starTxt(t)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(t)}${t.body}</span><span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</span></div></button>`;
 
 function openFilter() {
     const isT = mode === "truck", B = $("#sheetBody");

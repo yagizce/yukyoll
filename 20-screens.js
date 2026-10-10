@@ -52,7 +52,7 @@ function updTheme() {
     try {
         const m = document.querySelector('meta[name="theme-color"]');
         if (m)
-            m.content = isDark() ? "#2a62a0" : "#12395f";
+            m.content = isDark() ? "#075b60" : "#007f83";
     }
     catch (e) { }
 }
@@ -150,10 +150,10 @@ function render() {
         const kl = loads.filter(x => x.km), avg = kl.length ? Math.round(kl.reduce((a, x) => a + x.price / x.km, 0) / kl.length) : 0;
         const st = isT ? [[trucks.length, "boş araç"], [trucks.filter(x => x.date === "Bugün").length, "bugün müsait"], [Math.round(trucks.reduce((a, x) => a + x.cap, 0)), "ton kapasite"]] : [[loads.filter(x => !x.closed).length, "açık ilan"], [loads.filter(x => x.date === "Bugün").length, "bugün yükleme"], [avg, "ort. ₺/km"]];
         const hero = `<div class="hero">${st.map(([a, b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("")}</div>`;
-        m.innerHTML = SEG + hero + fuelCard() + `<div class="row" style="margin-bottom:12px"><input class="search" id="q" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
-    ${nearRow()}${ac.length ? `<div class="chips">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
-    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
-    ${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}${cmpBar()}`;
+        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
+    ${nearRow()}${ac.length ? `<div class="chips active-filters wrap">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
+    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" aria-label="İlanları sırala" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
+    ${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
         segBind();
         m.querySelectorAll("[data-fav]").forEach(b => b.onclick = e => {
             e.stopPropagation();
@@ -172,7 +172,16 @@ function render() {
             i.setSelectionRange(p, p);
         };
         $("#fb").onclick = openFilter;
-        $("#fc").onclick = openCalc;
+        m.querySelectorAll("[data-route]").forEach(e => e.onchange = () => {
+            F[e.dataset.route] = e.value;
+            render();
+            $("[data-route=\"" + e.dataset.route + "\"]").focus();
+        });
+        $("#route-swap").onclick = () => {
+            [F.from, F.to] = [F.to, F.from];
+            render();
+            $("#route-swap").focus();
+        };
         if ($("#al"))
             $("#al").onclick = addAlert;
         if ($("#more"))
@@ -200,11 +209,21 @@ function render() {
         if ($("#rs"))
             $("#rs").onclick = () => {
                 F = F0();
+                q = "";
+                nearOn = false;
                 render();
             };
         m.querySelectorAll("[data-x]").forEach(b => b.onclick = () => rmF(b.dataset.x, b.dataset.v));
         m.querySelectorAll("[data-tid]").forEach(b => b.onclick = () => openTruck(b.dataset.tid));
-        m.querySelectorAll("[data-id]").forEach(b => b.onclick = () => openLoad(+b.dataset.id));
+        m.querySelectorAll("[data-id]").forEach(b => {
+            b.onclick = () => openLoad(+b.dataset.id);
+            b.onkeydown = e => {
+                if (e.target === b && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    openLoad(+b.dataset.id);
+                }
+            };
+        });
     }
     if (tab === "post") {
         const opt = a => a.map(c => `<option>${c}</option>`).join("");
@@ -334,13 +353,37 @@ function render() {
     }
 }
 
+function syncDetailViewport() {
+    if (typeof window === "undefined" || !window || !window.visualViewport)
+        return;
+    const v = window.visualViewport, sheet = $("#sheet");
+    sheet.style.setProperty("--detail-height", Math.floor(v.height * .92) + "px");
+    sheet.style.setProperty("--keyboard-inset", Math.max(0, window.innerHeight - v.height - v.offsetTop) + "px");
+}
+
 function openLoad(id) {
     const l = loads.find(x => x.id === id);
+    if (!l)
+        return toast("İlan bulunamadı");
     track("v", id);
-    $("#sheetBody").innerHTML = `<div class="route">${l.from}<i></i>${l.to}</div>
-  ${imgOk(l.img) ? `<img class="ph" src="${l.img}" alt="Yük fotoğrafı">` : ""}${mapSVG(l.from, l.to)}<div style="margin-top:10px">${[["Yük", l.cargo], ...(Array.isArray(l.items) && l.items.length ? [["Kalemler", itemsTxt(l)]] : []), ["Ağırlık", l.ton + " ton"], ["Araç", l.veh], ["Yükleme", l.date], ["Mesafe", l.km ? l.km + " km" : "—"], ["Kasa tipi", l.body || "—"], ["Ödeme", l.pay || "—"], ["Yük sahibi", (l.owner || (l.uid ? nm(l.uid) : "Bireysel")) + (l.rate ? " · ★ " + l.rate : "")], ["Ücret", fmt(l.price) + " (" + perKm(l) + ")"], ["Yakıt sonrası tahmini", l.km ? fmt(Math.round(l.price - l.km * (CONS[l.veh] || 22) / 100 * calc.fuel)) : "—"], ["Piyasa", mk(l)]].map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("")}</div>
-  ${l.note ? `<p style="margin-top:12px;font-size:13px;color:var(--mute)">${l.note}</p>` : ""}<label>Teklifin (₺)</label><input id="o" type="number" value="${l.price}">
-  <button class="btn" id="send">Teklif ver</button><button class="btn alt" id="cc">Kâr hesapla</button><button class="btn alt" id="sh">Paylaş</button><button class="btn alt" id="call">Yük sahibini ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button><div class="chips" style="margin-top:14px"><button class="chip" id="pf">Profili gör</button><button class="chip" id="cp2">${cmp.includes(l.id) ? "Karşılaştırmadan çıkar" : "Karşılaştır"}</button><button class="chip" id="rp">Şikayet et</button>${l.uid && l.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div><button class="btn alt" id="close">Kapat</button>`;
+    const km = l.km || dist(l.from, l.to), fuelNet = km ? Math.round(l.price - km * (CONS[l.veh] || 22) / 100 * calc.fuel) : null;
+    const kv = rows => rows.map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("");
+    $("#sheetBody").innerHTML = `<div class="load-detail">
+      <div class="detail-top"><span>Yük ilanı <span class="detail-id">#${l.id}</span></span><button class="chip detail-close" id="close" aria-label="İlan detayını kapat">Kapat <span aria-hidden="true">×</span></button></div>
+      <div class="detail-scroll" tabindex="0" aria-label="İlan bilgileri">
+        <section class="detail-summary">${routeTitle(l)}<div class="listing-price"><strong class="price">${fmt(l.price)}</strong><span>Taşıma ücreti</span></div><div class="summary-tags"><span class="tag">Yükleme: ${l.date}</span>${isF(l) ? '<span class="tag ft">Öne çıkan</span>' : ""}</div></section>
+        ${!cloud ? '<p class="demo-note"><b>Demo modu</b> · Bu ekrandaki örnek ilanlar ve teklifler deneme amaçlıdır.</p>' : ""}
+        ${imgOk(l.img) ? `<img class="ph" src="${l.img}" alt="Yük fotoğrafı">` : ""}
+        <section class="detail-group"><h2>Yük bilgileri</h2>${kv([["Yük türü", l.cargo], ["Tonaj", l.ton + " ton"], ...(Array.isArray(l.items) && l.items.length ? [["Kalemler", itemsTxt(l)]] : []), ["Yükleme tarihi", l.date]])}${l.note ? `<p class="detail-note">${l.note}</p>` : ""}</section>
+        <section class="detail-group"><h2>Taşıma ve ödeme</h2>${kv([["Araç / kasa", l.veh + " · " + (l.body || "Belirtilmedi")], ["Ödeme şekli", l.pay || "Belirtilmedi"], ["Tahmini mesafe", km ? "≈ " + km + " km" : "Belirtilmedi"], ["Km başına ücret", km ? Math.round(l.price / km) + " ₺/km" : "—"], ["Yakıt sonrası tahmini kazanç", fuelNet !== null ? fmt(fuelNet) : "—"]])}<p class="estimate-note">Mesafe yaklaşık; kazanç yalnızca yakıt düşülerek hesaplanır (${calc.fuel} ₺/L). Otoyol ve diğer giderler dahil değildir.</p><button class="chip detail-calc" id="cc">Kâr hesapla</button></section>
+        <section class="detail-group detail-route"><h2>Güzergâh</h2>${mapSVG(l.from, l.to)}</section>
+        <section class="detail-group"><h2>Yük sahibi</h2><div class="owner-summary"><span class="owner-avatar" aria-hidden="true">${esc(String(l.owner || (l.uid ? nm(l.uid) : "Yük sahibi")).charAt(0))}</span><div><b>${l.owner || (l.uid ? nm(l.uid) : "Bireysel")}</b><p>${starTxt(l)} ${vbadge(l.uid ? lvU(l.uid) : 0)}</p></div></div><div class="detail-actions"><button class="chip" id="pf">Profili gör</button><button class="chip" id="call">Yük sahibini ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button></div></section>
+        <div class="detail-actions"><button class="chip" id="sh">Paylaş</button><button class="chip" id="cp2">${cmp.includes(l.id) ? "Karşılaştırmadan çıkar" : "Karşılaştır"}</button><button class="chip" id="rp">Şikayet et</button>${l.uid && l.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div>
+      </div>
+      <div class="offer-dock"><div><label for="o">Teklif tutarın</label><div class="offer-input"><input id="o" type="number" inputmode="numeric" min="1" step="1" value="${l.price}"><span aria-hidden="true">₺</span></div></div><button class="btn" id="send">Teklif ver <span aria-hidden="true">→</span></button></div>
+    </div>`;
+    $("#sheetBody").scrollTop = 0;
+    syncDetailViewport();
     $("#sheet").classList.add("open");
     $("#close").onclick = closeSheet;
     $("#sh").onclick = () => shareLoad(l);

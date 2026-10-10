@@ -5,12 +5,12 @@ Ekran görüntüsü:  npm run test:shots   (390x844 görüntüleri tests/shots/ 
 import os, sys, threading, http.server, socketserver, functools
 from playwright.sync_api import sync_playwright
 
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+ROOT = os.path.dirname(os.path.abspath(__file__))
 
 def take_shots():
     out = os.path.join(ROOT, "tests", "shots"); os.makedirs(out, exist_ok=True); errs = []
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        b = p.chromium.launch(channel=os.environ.get("NAKGO_BROWSER_CHANNEL") or None)
         ctx = b.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=2, permissions=["geolocation"], geolocation={"latitude": 39.93, "longitude": 32.86}, locale="tr-TR")
         ctx.add_init_script("localStorage.setItem('yy-onb','1')")
         pg = ctx.new_page(); pg.on("pageerror", lambda e: errs.append(str(e)))
@@ -40,7 +40,7 @@ def check(name, cond):
     results.append(bool(cond)); print(("✓ " if cond else "✗ ") + name)
 
 with sync_playwright() as p:
-    b = p.chromium.launch()
+    b = p.chromium.launch(channel=os.environ.get("NAKGO_BROWSER_CHANNEL") or None)
     ctx = b.new_context(viewport={"width": 390, "height": 844}, locale="tr-TR", permissions=["geolocation"], geolocation={"latitude": 39.93, "longitude": 32.86})
     pg = ctx.new_page()
     pg.on("pageerror", lambda e: errors.append(str(e)))
@@ -66,7 +66,7 @@ with sync_playwright() as p:
     check("Escape ile alt pencere kapanır", pg.locator("#sheet.open").count() == 0)
 
     # 3) Yakıt hesabı
-    pg.click("#fc"); pg.wait_for_selector("#res")
+    pg.locator(".load[data-id]").first.click(); pg.click("#cc"); pg.wait_for_selector("#res")
     before = pg.inner_text("#res"); pg.fill('[data-k="km"]', "100"); after = pg.inner_text("#res")
     check("yakıt hesabı girdiye göre değişir", before != after and "₺" in after)
     pg.click("#cx"); pg.wait_for_timeout(200)

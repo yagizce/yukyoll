@@ -8,7 +8,7 @@
      };
    r("kod") uygulama kapsamında kod çalıştırır (durum korunur), ok(koşul, açıklama) bir kontrol kaydeder. */
 const fs = require("fs"), path = require("path");
-const ROOT = path.join(__dirname, "..");
+const ROOT = __dirname;
 const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const script = /<script>([\s\S]*?)<\/script>/.exec(html)[1];
 
@@ -39,7 +39,7 @@ const run = (name, steps, opts) => test(name, async () => {
 });
 
 const H = { fs, path, ROOT, html, script, boot, test, run, tests };
-for (const f of fs.readdirSync(path.join(__dirname, "unit")).filter(x => x.endsWith(".test.js")).sort()) require("./unit/" + f)(H);
+for (const f of fs.readdirSync(ROOT).filter(x => x.endsWith(".test.js")).sort()) require("./" + f)(H);
 
 (async () => {
   let fail = 0, total = 0;

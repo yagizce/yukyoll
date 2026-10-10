@@ -36,6 +36,14 @@ try {
 }
 catch (e) { }
 
+try {
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", syncDetailViewport);
+        window.visualViewport.addEventListener("scroll", syncDetailViewport);
+    }
+}
+catch (e) { }
+
 netUI();
 
 try {

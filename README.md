@@ -1,3 +1,6 @@
+> Güncel depo yapısı: kaynak JS/CSS modülleri, `index.template.html`, `bundle.js`, `dev.js` ve test dosyaları depo kökündedir. Aşağıdaki eski arşiv ağacındaki `src/`, `tools/` ve `docs/` yolları bu depoda geçerli değildir.
+> `npm run bundle` yayınlanan `index.html` dosyasını üretir; `npm test` kaynak uyumunu, lint ve hızlı testleri çalıştırır. `npm run test:e2e` için Python Playwright ve Chromium gerekir; kurulu Chrome için `NAKGO_BROWSER_CHANNEL=chrome` kullanılabilir. Yeni framework veya uygulama bağımlılığı eklenmedi.
+
 # NakGo
 
 Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarlanmış yük pazarı. Çerçevesiz, statik uygulama: yayına giden tek dosya `index.html`.
