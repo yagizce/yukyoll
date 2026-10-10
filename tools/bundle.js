@@ -12,7 +12,11 @@ function build() {
   const css = list(".css").map(f => read(f).trim()).join("\n\n");
   const js = list(".js").map(f => read(f).trim()).join("\n\n");
   if (/<\/script/i.test(js)) throw new Error("JS içinde </script> geçemez");
-  return tpl.replaceAll("/*@BRAND@*/", brand).replace("/*@CSS@*/", () => css).replace("/*@JS@*/", () => js);
+  let instance = 0;
+  return tpl.replaceAll("/*@BRAND@*/", () => {
+    const prefix = "mark" + (++instance) + "-";
+    return brand.replace(/id="([^"]+)"/g, (_, id) => `id="${prefix}${id}"`).replace(/url\(#([^)]+)\)/g, (_, id) => `url(#${prefix}${id})`);
+  }).replace("/*@CSS@*/", () => css).replace("/*@JS@*/", () => js);
 }
 
 if (require.main === module) {

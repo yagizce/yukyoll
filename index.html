@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>NakGo – Yük ve Araç Eşleştirme</title>
 <meta name="description" content="Yük sahipleri ve taşıyıcıları buluşturan yük pazarı">
-<meta name="theme-color" content="#007f83">
+<meta name="theme-color" content="#006970">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -22,54 +22,54 @@
 /* ----- Renk ve tema değişkenleri (açık/koyu tema) ----- */
 
 :root {
-  --bg:#f3f8f7;
+  --bg:#eef9f7;
   --card:#fff;
-  --ink:#173234;
-  --mute:#52696b;
-  --line:#dce8e5;
-  --brand:#007f83;
-  --brand-ink:#00696d;
+  --ink:#14343a;
+  --mute:#4f686c;
+  --line:#d2e7e3;
+  --brand:#007b80;
+  --brand-ink:#00616b;
   --on-brand:#fff;
   --accent:#ffd34e;
   --on-accent:#302600;
   --ok:#1f7a4d;
   --bad:#c0392b;
-  --tag-bg:#e5f3f1;
-  --tag-ink:#00696d;
+  --tag-bg:#dff4ef;
+  --tag-ink:#00616b;
   --shadow:0 1px 2px rgba(18,57,95,.06),0 4px 14px rgba(18,57,95,.06);
   box-sizing:border-box;
 }
 
 @media (prefers-color-scheme:dark) {
   :root:not([data-theme="light"]) {
-    --bg:#101722;
-    --card:#172233;
-    --ink:#eef1f5;
-    --mute:#a7b8c0;
-    --line:#263449;
-    --brand:#075b60;
-    --brand-ink:#75ddd5;
+    --bg:#0b1d22;
+    --card:#143137;
+    --ink:#edf9f7;
+    --mute:#abc7c7;
+    --line:#295057;
+    --brand:#00767c;
+    --brand-ink:#7ce7da;
     --ok:#4cc38a;
     --bad:#ff7b6b;
-    --tag-bg:#1b393e;
-    --tag-ink:#a2e6df;
-    --shadow:none;
+    --tag-bg:#1b4247;
+    --tag-ink:#a3eee3;
+    --shadow:0 6px 20px rgba(0,0,0,.14);
   }
 }
 
 :root[data-theme="dark"] {
-  --bg:#101722;
-  --card:#172233;
-  --ink:#eef1f5;
-  --mute:#a7b8c0;
-  --line:#263449;
-  --brand:#075b60;
-  --brand-ink:#75ddd5;
+  --bg:#0b1d22;
+  --card:#143137;
+  --ink:#edf9f7;
+  --mute:#abc7c7;
+  --line:#295057;
+  --brand:#00767c;
+  --brand-ink:#7ce7da;
   --ok:#4cc38a;
   --bad:#ff7b6b;
-  --tag-bg:#1b393e;
-  --tag-ink:#a2e6df;
-  --shadow:none;
+  --tag-bg:#1b4247;
+  --tag-ink:#a3eee3;
+  --shadow:0 6px 20px rgba(0,0,0,.14);
 }
 
 :root {
@@ -1810,7 +1810,7 @@ header p { opacity:1; }
 @media (min-width:768px) { #app { box-shadow:0 0 0 1px var(--line),0 16px 60px rgba(0,0,0,.08); } }
 @media (max-width:375px) { .route-title { font-size:17px; } .route-search h2 { font-size:23px; } .detail-summary .route { font-size:21px; } .listing-search .chip { padding:10px; } }
 
-/* Ortak tasarım sistemi ve geniş ekran düzeni */
+/* Ortak tasarım sistemi ve telefon düzeni */
 
 :root { --space:16px; --radius:16px; }
 body { line-height:1.45; }
@@ -1837,7 +1837,7 @@ textarea:focus { outline:2px solid var(--brand-ink); outline-offset:2px; }
 .form-steps li[aria-current=step] { border-color:var(--brand-ink); background:var(--tag-bg); color:var(--tag-ink); font-weight:800; }
 .form-section { padding:4px 16px 20px; border:1px solid var(--line); border-radius:var(--radius); background:var(--card); }
 [hidden] { display:none !important; }
-.form-dock { display:flex; align-items:center; gap:8px; position:sticky; bottom:-24px; background:var(--bg); border-top:1px solid var(--line); padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px)); margin-top:18px; }
+.form-dock { display:flex; align-items:center; gap:8px; position:absolute; left:0; right:0; bottom:var(--nav-height); background:var(--card); border-top:1px solid var(--line); padding:12px 16px; z-index:2; }
 .form-dock .btn { margin:0; width:auto; min-width:110px; }
 .draft-state { flex:1; font-size:11px; color:var(--mute); }
 .profile-group h2 { font-size:17px; margin:12px 0; }
@@ -1859,34 +1859,216 @@ textarea:focus { outline:2px solid var(--brand-ink); outline-offset:2px; }
 .itrow { flex-wrap:wrap; }
 .itrow input[data-in] { flex-basis:100%; }
 .itrow input[data-iq],.itrow select { min-width:0; flex:1; }
-@media (min-width:768px) {
- #app { max-width:1240px; display:grid; grid-template-areas:'header header' 'nav main'; grid-template-columns:180px minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); }
- header { grid-area:header; padding:22px 28px; }
- #main { grid-area:main; padding:28px; }
- nav { grid-area:nav; display:flex; flex-direction:column; border-top:0; border-right:1px solid var(--line); padding:20px 12px; gap:8px; }
- nav button { flex:none; flex-direction:row; justify-content:flex-start; text-align:left; gap:12px; padding:14px 12px; border-radius:12px; font-size:14px; }
- nav button.on { background:var(--tag-bg); }
- nav button.on::before { display:none; }
- nav button[data-t=post] { background:var(--accent); color:var(--on-accent); }
- .listing-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
- .listing-grid .load { margin:0; }
- .listing-grid .empty { grid-column:1/-1; }
- .route-search h2 { font-size:32px; }
- .route-fields { max-width:720px; }
- .profile-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:start; }
- #main[data-screen=post] { padding-left:max(28px,calc((100% - 780px)/2)); padding-right:max(28px,calc((100% - 780px)/2)); }
- .sheet { align-items:center; justify-content:center; }
- .sheet>div { max-width:640px; border-radius:22px; }
- .toast { position:fixed; bottom:24px; max-width:600px; }
- .off { position:absolute; top:92px; left:180px; right:0; z-index:3; }
-}
+.sheet { justify-content:center; }
+.sheet>div { max-width:430px; }
+.off { flex:none; }
+
+/* Mobil uygulama kabuğu: menü ve birincil işlemler başparmak hizasında. */
+:root { --nav-height:calc(78px + env(safe-area-inset-bottom,0px)); --app-gradient:linear-gradient(115deg,#00565f 0%,#008c91 74%,#10b9aa 100%); }
+#app { max-width:430px; background:var(--bg); overflow:hidden; }
+header { background:var(--app-gradient); padding-top:calc(12px + env(safe-area-inset-top,0px)); padding-bottom:12px; gap:10px; flex:none; }
+header h1 { font-size:24px; letter-spacing:-1px; }
+header p { font-size:10px; color:#e0ffff; }
+.logo { width:50px; height:50px; background:transparent; border-radius:16px; }
+.logo svg { width:50px; height:50px; border:0; border-radius:16px; }
+.bell { width:40px; min-height:40px; border:1px solid #ffffff30; background:#004f5866; }
+#thh+.bell { margin-left:0; }
+main { background:radial-gradient(ellipse at 100% 0%,var(--tag-bg),transparent 48%),var(--bg); }
+#main[data-screen=list],#main[data-screen=post] { padding-bottom:160px; scroll-padding-bottom:160px; }
+#main[data-screen=list][data-comparing=true] { padding-bottom:210px; scroll-padding-bottom:210px; }
+nav { flex:none; height:var(--nav-height); padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px)); gap:6px; border-radius:24px 24px 0 0; box-shadow:0 -6px 24px #003e4510; z-index:3; }
+nav button { justify-content:center; border-radius:16px; padding:7px 2px; gap:5px; font-size:10px; }
+nav button svg { width:23px; height:23px; }
+nav button.on { background:var(--tag-bg); color:var(--brand-ink); }
+nav button.on::before { display:none; }
+nav button[data-t=post] { background:linear-gradient(145deg,#ffe68b,#ffd34e); color:var(--on-accent); box-shadow:0 4px 14px #c9901630; transform:translateY(-4px); font-weight:800; }
+.list-actions { position:absolute; left:0; right:0; bottom:var(--nav-height); z-index:2; padding:10px 16px; background:var(--card); border-top:1px solid var(--line); box-shadow:0 -8px 24px #003e4508; }
+.list-controls { display:flex; gap:10px; align-items:center; max-width:720px; margin:auto; }
+.list-controls>* { flex:1; min-width:0; }
+.list-controls .chip { display:flex; align-items:center; justify-content:center; gap:8px; border-radius:14px; background:var(--tag-bg); color:var(--brand-ink); border-color:transparent; }
+.list-controls .chip.on { background:var(--brand); color:var(--on-brand); }
+.list-controls select { font-size:12px; min-height:44px; padding:10px 26px 10px 10px; background-position:right 9px center; border-radius:14px; }
+.list-controls .chip { font-size:12px; padding:10px 8px; gap:5px; }
+.list-controls .chip svg { width:16px; height:16px; }
+.dock-hint { font-size:12px; color:var(--mute); }
+.list-actions .cmpbar { position:static; box-shadow:none; margin:0 auto 10px; padding:0; border:0; max-width:720px; background:transparent; color:var(--ink); gap:8px; font-size:12px; }
+.list-actions .cmpbar .chip { padding:8px 12px; }
+.route-search { background:linear-gradient(0deg,#004d5666,transparent 75%),var(--app-gradient); padding:16px; border-radius:24px; color:#fff; position:relative; overflow:hidden; box-shadow:0 8px 20px #00686d20; margin-bottom:14px; }
+.route-search::before { content:""; position:absolute; width:170px; height:170px; right:-60px; top:-55px; border:22px solid #ffffff0d; border-radius:50%; pointer-events:none; }
+.route-search-heading,.route-fields { position:relative; }
+.route-search .eyebrow { color:#d4fffb; letter-spacing:1.2px; font-size:9px; }
+.route-search h2 { font-size:23px; line-height:1.2; margin:6px 0 14px; max-width:none; letter-spacing:-.7px; }
+.route-search h2 em { color:#ffe075; font-style:normal; }
+.route-fields { grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr); gap:4px; align-items:center; }
+.route-fields>div { background:#fff; border-radius:15px; padding-top:7px; }
+.route-fields label { color:#49696b; font-size:11px; margin:0 10px; }
+.route-fields select { background-color:#fff; color:#173234; border:0; min-height:40px; padding:8px 28px 10px 10px; font-size:13px; border-radius:15px; }
+.route-swap { width:30px; height:46px; background:#ffffff1f; color:#fff; border:1px solid #ffffff30; }
+.seg { padding:4px; border-radius:16px; background:var(--card); border:1px solid var(--line); }
+.seg button { border-radius:12px; }
+.seg button.on { background:var(--brand); color:#fff; box-shadow:0 3px 10px #007f8320; }
+.demo-note { font-size:10px; padding:8px 10px; background:var(--card); border-style:dashed; border-radius:12px; margin-bottom:12px; }
+.listing-search input { border-radius:16px; }
+.listing-count { font-size:12px; }
+.listing-count>span:last-child { font-size:10px; }
+.load { border-radius:22px; padding:18px; border-color:var(--line); box-shadow:var(--shadow); }
+.load.feat { border:1px solid var(--line); border-left:4px solid var(--accent); padding-left:15px; }
+.listing-price { padding:10px 12px; background:var(--tag-bg); border-radius:14px; margin:14px 0 12px; }
+.listing-price .price { font-size:27px; }
+.listing-label .tag { background:var(--accent); color:var(--on-accent); }
+.listing-spec { gap:6px; }
+.listing-spec>span { padding:4px 8px; border-radius:8px; background:var(--bg); }
+.load .fav { border-radius:50%; background:var(--bg); }
+.listing-footer { margin-top:14px; }
+.card-main { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:12px; margin:2px 0 16px; align-items:stretch; }
+.card-route { position:relative; display:flex; flex-direction:column; gap:16px; min-width:0; }
+.card-route>div { padding-left:20px; position:relative; min-width:0; }
+.card-route small { display:block; font-size:10px; color:var(--mute); font-weight:500; margin-bottom:2px; }
+.card-route b { display:block; font-size:18px; letter-spacing:-.5px; overflow-wrap:anywhere; line-height:1.2; }
+.card-route>div::before { content:""; position:absolute; top:20px; left:0; width:10px; height:10px; border-radius:50%; border:2px solid var(--brand-ink); background:var(--card); }
+.card-route>div:last-child::before { border-color:var(--accent); background:var(--accent); }
+.card-route i { position:absolute; left:4px; top:31px; bottom:18px; border-left:2px dashed var(--line); }
+.card-main .listing-price { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:5px; margin:0; padding:12px 10px; min-width:0; }
+.card-main .listing-price>span:first-child { color:var(--mute); font-size:10px; }
+.card-main .price { font-size:24px; line-height:1.2; letter-spacing:-.8px; }
+.card-main .price small { font-size:14px; letter-spacing:0; }
+.wide-price { grid-template-columns:minmax(0,1fr); }
+.wide-price .listing-price { flex-direction:row; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+.wide-price .price { font-size:27px; }
+.cargo-line { font-size:13px; gap:9px; }
+.cargo-line>span:not(.cargo-icon):not(.cargo-ton) { flex:1; }
+.cargo-icon { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:var(--tag-bg); color:var(--brand-ink); flex:none; }
+.cargo-icon svg { width:21px; height:21px; }
+.cargo-ton { color:var(--brand-ink); font-size:11px; flex:none; white-space:nowrap; }
+.cargo-ton b { font-weight:800; font-size:20px; }
+.cargo-line .th { width:34px; height:34px; flex:none; border-radius:11px; }
+.profile-cover { background:linear-gradient(115deg,#00565f,#007f83); border-radius:24px; padding:22px 18px; display:flex; gap:14px; align-items:center; color:#fff; }
+.profile-cover .avatar { background:var(--accent); color:var(--on-accent); box-shadow:0 4px 14px #00262d30; }
+.profile-cover .profile-caption { color:#e0fffc; font-size:12px; }
+.route i { border-color:var(--brand-ink); opacity:.9; }
+.detail-scroll { background:var(--bg); }
+.detail-top { background:var(--app-gradient); color:#fff; border:0; }
+.detail-id { color:#d4fffb; }
+.detail-close { background:#00485166; color:#fff; border-color:#ffffff40; border-radius:13px; }
+.detail-summary { padding:22px 16px 18px; background:var(--app-gradient); border-radius:22px; color:#fff; }
+.detail-summary .route { font-size:23px; }
+.detail-summary .route i { border-color:#bcf7f1; }
+.detail-summary .route i::before { background:#006970; border-color:#c5faf5; }
+.detail-summary .listing-price { background:#00454d66; padding:12px; margin:18px 0 12px; }
+.detail-summary .listing-price .price { color:#ffe075; font-size:32px; }
+.detail-summary .listing-price>span:last-child { color:#e0fffc; }
+.detail-summary .tag { background:#00454d88; color:#fff; padding:6px 10px; }
+.detail-summary .tag.ft { background:var(--accent); color:var(--on-accent); }
+.detail-group { border-radius:20px; }
+.offer-dock,.contact-dock { box-shadow:0 -6px 20px #003e4510; border-radius:22px 22px 0 0; }
+.contact-dock { padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px)); background:var(--card); flex:none; }
+.contact-dock .btn { margin:0; }
+.offer-dock .btn,.form-dock .btn,.contact-dock .btn { background:linear-gradient(140deg,#ffe68b,#ffd34e); border-radius:14px; }
+.screen-heading { padding:20px; background:linear-gradient(115deg,#00565f,#007f83); color:#fff; border-radius:24px; margin-bottom:18px; }
+.screen-heading h2 { margin:0 0 6px; }
+.screen-heading p { color:#e0fffc; font-size:12px; }
+.form-steps li { border-radius:13px; font-size:11px; padding:10px 6px; }
+.form-dock .btn { min-width:100px; max-width:150px; flex:1; }
+.form-dock .chip { border-radius:14px; }
+.draft-state { max-width:110px; }
+.form-section { border-radius:22px; }
+.splash { background:var(--app-gradient); }
+.splash .tile svg { width:108px; height:108px; }
+.splash .tile { width:108px; height:108px; }
+.toast { bottom:calc(var(--nav-height) + 80px); }
+#app[data-keyboard=true] { --nav-height:0px; }
+#app[data-keyboard=true] nav { display:none; }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="splash" class="splash" aria-hidden="true"><div class="tile"><svg class="tk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#007f83"/><polygon points="14,47 14,17 23,17 40,38 40,17 49,17 49,47 40,47 23,26 23,47" fill="#ffd34e"/></svg></div><strong class="wordmark">NakGo</strong><p>Yükünü bul, aracını doldur.</p></div>
-  <header><div class="logo"><svg class="tk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#007f83"/><polygon points="14,47 14,17 23,17 40,38 40,17 49,17 49,47 40,47 23,26 23,47" fill="#ffd34e"/></svg></div><div><h1>NakGo</h1><p id="sub">Yükünü bul, aracını doldur.</p></div><button class="bell" id="thh" aria-label="Temayı değiştir" title="Temayı değiştir"></button><button class="bell" id="bell" aria-label="Bildirimler"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg><b id="bc"></b></button></header>
+  <div id="splash" class="splash" aria-hidden="true"><div class="tile"><svg class="tk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark1-sea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#006d74"/><stop offset="1" stop-color="#20c9bd"/></linearGradient>
+    <linearGradient id="mark1-metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fcffff"/><stop offset="0.5" stop-color="#c9dfe0"/><stop offset="1" stop-color="#719da1"/></linearGradient>
+    <linearGradient id="mark1-cab" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3a0"/><stop offset="0.45" stop-color="#ffd34e"/><stop offset="1" stop-color="#df9a0a"/></linearGradient>
+    <linearGradient id="mark1-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#78bfc5"/><stop offset="0.45" stop-color="#264b56"/><stop offset="1" stop-color="#0d2935"/></linearGradient>
+  </defs>
+  <rect x="0" y="0" width="100" height="100" rx="24" fill="url(#mark1-sea)"/>
+  <circle cx="78" cy="22" r="18" fill="#ffffff" opacity="0.08"/>
+  <polygon points="10,83 76,69 93,76 32,93" fill="#004a51" opacity="0.28"/>
+  <polygon points="12,29 55,17 70,26 27,39" fill="#eff8f8"/>
+  <polygon points="12,29 27,39 27,70 12,60" fill="#8bafb3"/>
+  <polygon points="27,39 70,26 70,57 27,70" fill="url(#mark1-metal)"/>
+  <polygon points="31,42 68,31 68,33 31,44" fill="#ffffff" opacity="0.7"/>
+  <polygon points="31,49 68,38 68,40 31,51" fill="#ffffff" opacity="0.55"/>
+  <polygon points="31,56 68,45 68,47 31,58" fill="#ffffff" opacity="0.45"/>
+  <polygon points="27,67 70,54 70,58 27,71" fill="#007f83"/>
+  <polygon points="15,61 72,45 78,58 26,79 15,73" fill="#173c44"/>
+  <circle cx="25" cy="73" r="7" fill="#112b34"/>
+  <circle cx="25" cy="73" r="3.5" fill="url(#mark1-metal)"/>
+  <circle cx="38" cy="69" r="7" fill="#112b34"/>
+  <circle cx="38" cy="69" r="3.5" fill="url(#mark1-metal)"/>
+  <polygon points="51,36 72,30 88,41 67,49" fill="#fff1a0"/>
+  <polygon points="51,36 67,49 69,78 50,64" fill="#dfb02c"/>
+  <polygon points="67,49 88,41 92,70 72,82 69,78" fill="url(#mark1-cab)"/>
+  <polygon points="68,48 87,42 88,54 69,61" fill="url(#mark1-glass)"/>
+  <polygon points="70,49 84,45 76,55 70,57" fill="#bcf1ee" opacity="0.45"/>
+  <polygon points="54,41 63,48 64,59 54,52" fill="url(#mark1-glass)"/>
+  <polygon points="54,41 57,43 57,50 54,48" fill="#b6e2e2" opacity="0.6"/>
+  <polygon points="50,54 54,56 54,64 50,61" fill="#ffdd5b"/>
+  <polygon points="62,44 67,47 67,53 64,51" fill="#123c45"/>
+  <polygon points="89,47 93,46 94,52 90,53" fill="#123c45"/>
+  <polygon points="70,65 89,59 90,67 71,74" fill="#173943"/>
+  <polygon points="72,67 88,62 88,63 72,69" fill="#87a8ac"/>
+  <polygon points="72,71 88,66 88,67 72,73" fill="#87a8ac"/>
+  <polygon points="69,63 73,62 73,65 70,66" fill="#fffdec"/>
+  <polygon points="86,57 90,56 90,59 86,60" fill="#fffdec"/>
+  <polygon points="71,76 92,68 92,73 72,83" fill="url(#mark1-metal)"/>
+  <polygon points="77,76 85,72 85,74 77,78" fill="#ffffff"/>
+  <circle cx="57" cy="73" r="8" fill="#102c35"/>
+  <circle cx="57" cy="73" r="4" fill="url(#mark1-metal)"/>
+  <circle cx="57" cy="73" r="1.5" fill="#4d7076"/>
+</svg></div><strong class="wordmark">NakGo</strong><p>Yükünü bul, aracını doldur.</p></div>
+  <header><div class="logo"><svg class="tk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark2-sea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#006d74"/><stop offset="1" stop-color="#20c9bd"/></linearGradient>
+    <linearGradient id="mark2-metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fcffff"/><stop offset="0.5" stop-color="#c9dfe0"/><stop offset="1" stop-color="#719da1"/></linearGradient>
+    <linearGradient id="mark2-cab" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3a0"/><stop offset="0.45" stop-color="#ffd34e"/><stop offset="1" stop-color="#df9a0a"/></linearGradient>
+    <linearGradient id="mark2-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#78bfc5"/><stop offset="0.45" stop-color="#264b56"/><stop offset="1" stop-color="#0d2935"/></linearGradient>
+  </defs>
+  <rect x="0" y="0" width="100" height="100" rx="24" fill="url(#mark2-sea)"/>
+  <circle cx="78" cy="22" r="18" fill="#ffffff" opacity="0.08"/>
+  <polygon points="10,83 76,69 93,76 32,93" fill="#004a51" opacity="0.28"/>
+  <polygon points="12,29 55,17 70,26 27,39" fill="#eff8f8"/>
+  <polygon points="12,29 27,39 27,70 12,60" fill="#8bafb3"/>
+  <polygon points="27,39 70,26 70,57 27,70" fill="url(#mark2-metal)"/>
+  <polygon points="31,42 68,31 68,33 31,44" fill="#ffffff" opacity="0.7"/>
+  <polygon points="31,49 68,38 68,40 31,51" fill="#ffffff" opacity="0.55"/>
+  <polygon points="31,56 68,45 68,47 31,58" fill="#ffffff" opacity="0.45"/>
+  <polygon points="27,67 70,54 70,58 27,71" fill="#007f83"/>
+  <polygon points="15,61 72,45 78,58 26,79 15,73" fill="#173c44"/>
+  <circle cx="25" cy="73" r="7" fill="#112b34"/>
+  <circle cx="25" cy="73" r="3.5" fill="url(#mark2-metal)"/>
+  <circle cx="38" cy="69" r="7" fill="#112b34"/>
+  <circle cx="38" cy="69" r="3.5" fill="url(#mark2-metal)"/>
+  <polygon points="51,36 72,30 88,41 67,49" fill="#fff1a0"/>
+  <polygon points="51,36 67,49 69,78 50,64" fill="#dfb02c"/>
+  <polygon points="67,49 88,41 92,70 72,82 69,78" fill="url(#mark2-cab)"/>
+  <polygon points="68,48 87,42 88,54 69,61" fill="url(#mark2-glass)"/>
+  <polygon points="70,49 84,45 76,55 70,57" fill="#bcf1ee" opacity="0.45"/>
+  <polygon points="54,41 63,48 64,59 54,52" fill="url(#mark2-glass)"/>
+  <polygon points="54,41 57,43 57,50 54,48" fill="#b6e2e2" opacity="0.6"/>
+  <polygon points="50,54 54,56 54,64 50,61" fill="#ffdd5b"/>
+  <polygon points="62,44 67,47 67,53 64,51" fill="#123c45"/>
+  <polygon points="89,47 93,46 94,52 90,53" fill="#123c45"/>
+  <polygon points="70,65 89,59 90,67 71,74" fill="#173943"/>
+  <polygon points="72,67 88,62 88,63 72,69" fill="#87a8ac"/>
+  <polygon points="72,71 88,66 88,67 72,73" fill="#87a8ac"/>
+  <polygon points="69,63 73,62 73,65 70,66" fill="#fffdec"/>
+  <polygon points="86,57 90,56 90,59 86,60" fill="#fffdec"/>
+  <polygon points="71,76 92,68 92,73 72,83" fill="url(#mark2-metal)"/>
+  <polygon points="77,76 85,72 85,74 77,78" fill="#ffffff"/>
+  <circle cx="57" cy="73" r="8" fill="#102c35"/>
+  <circle cx="57" cy="73" r="4" fill="url(#mark2-metal)"/>
+  <circle cx="57" cy="73" r="1.5" fill="#4d7076"/>
+</svg></div><div><h1>NakGo</h1><p id="sub">Yükünü bul, aracını doldur.</p></div><button class="bell" id="thh" aria-label="Temayı değiştir" title="Temayı değiştir"></button><button class="bell" id="bell" aria-label="Bildirimler"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg><b id="bc"></b></button></header>
   <div id="off" class="off" role="status">İnternet bağlantısı yok. Yerel demo cihazında kullanılabilir; ortak veriler için bağlantı gerekir.</div>
   <main id="main"></main>
   <nav id="nav" aria-label="Ana menü">
@@ -2165,7 +2347,7 @@ const dec = t => {
 
 const imgOk = u => typeof u === "string" && u.length < 60000 && /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(u);
 
-const isDark = () => getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() === "#101722";
+const isDark = () => ["#0b1d22", "#101722"].includes(getComputedStyle(document.documentElement).getPropertyValue("--bg").trim());
 
 const opt2 = (a, d) => a.map(c => `<option ${c === d ? "selected" : ""}>${c}</option>`).join("");
 
@@ -2493,7 +2675,7 @@ function F0() {
 
 function routeSearch() {
     const field = (key, label) => `<div><label for="route-${key}">${label}</label><select id="route-${key}" data-route="${key}"><option value="">Tüm şehirler</option>${cities.map(c => `<option value="${c}" ${F[key] === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>`;
-    return `<section class="route-search" aria-labelledby="route-heading"><div class="route-search-heading"><span class="eyebrow">YÜK VE BOŞ ARAÇ PAZARI</span><h2 id="route-heading">Yoluna uygun ilanı bul.</h2></div><div class="route-fields">${field("from", "Nereden?")}<button class="route-swap" id="route-swap" aria-label="Çıkış ve varış şehirlerini değiştir" title="Güzergâhı ters çevir">⇄</button>${field("to", "Nereye?")}</div></section>`;
+    return `<section class="route-search" aria-labelledby="route-heading"><div class="route-search-heading"><span class="eyebrow">${mode === "truck" ? "BOŞ ARAÇLARI KEŞFET" : "YÜKLERİ KEŞFET"}</span><h2 id="route-heading">Rotanı seç, <em>yola çık.</em></h2></div><div class="route-fields">${field("from", "Nereden?")}<button class="route-swap" id="route-swap" aria-label="Çıkış ve varış şehirlerini değiştir" title="Güzergâhı ters çevir">⇄</button>${field("to", "Nereye?")}</div></section>`;
 }
 
 function match(x, isT) {
@@ -2565,15 +2747,17 @@ function rmF(k, v) {
 
 const routeTitle = x => `<div class="route route-title"><span>${x.from}</span><i aria-hidden="true"></i><span>${x.to}</span></div>`;
 
+const cardRoute = x => `<div class="card-route"><div><small>Nereden</small><b>${x.from}</b></div><i aria-hidden="true"></i><div><small>Nereye</small><b>${x.to}</b></div></div>`;
+const cargoIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9M7.5 5.5l9 5"/></svg>`;
+
 const lCard = l => `<article class="load ${isF(l) ? "feat" : ""}" data-id="${l.id}" role="button" tabindex="0" aria-label="${l.from} → ${l.to}, ${fmt(l.price)}, ilanı aç">
-    ${isF(l) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}${routeTitle(l)}
-    <div class="listing-price"><span class="price">${fmt(l.price)}</span><span>Taşıma ücreti</span></div>
-    <div class="cargo-line">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="Yük fotoğrafı">` : ""}<span><b>${l.cargo}</b> · ${l.ton} ton${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span></div>
+    ${isF(l) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}<div class="card-main ${l.price >= 1000000 ? "wide-price" : ""}">${cardRoute(l)}<div class="listing-price"><span>Taşıma ücreti</span><strong class="price">${fmt(l.price)}</strong></div></div>
+    <div class="cargo-line">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="Yük fotoğrafı">` : `<span class="cargo-icon">${cargoIcon}</span>`}<span><b>${l.cargo}</b>${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span><span class="cargo-ton"><b>${l.ton}</b> ton</span></div>
     <div class="listing-spec"><span>${l.veh} · ${l.body || "Kasa belirtilmedi"}</span><span class="load-date">Yükleme: <b>${l.date}</b></span></div>
     <div class="listing-footer"><span class="listing-trust">${starTxt(l)}${vbadge(l.uid ? lvU(l.uid) : 0)}<span>${nearTxt(l)}${l.km ? "≈ " + l.km + " km" : ""}${ago(l) ? " · " + ago(l) : ""}</span></span><button type="button" aria-label="${favs.includes(String(l.id)) ? "Kaydı kaldır" : "Kaydet"}" aria-pressed="${favs.includes(String(l.id))}" class="fav ${favs.includes(String(l.id)) ? "on" : ""}" data-fav="${l.id}">${favs.includes(String(l.id)) ? "♥" : "♡"}</button></div>
     </article>`;
 
-const tCard = t => `<button class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}">${routeTitle(t)}<div style="margin-top:6px;font-size:14px">${t.who || nm(t.uid)}${vbadge(lvT(t))} · ${t.cap} ton boş kapasite</div><div class="meta"><span><span class="tag">${t.veh}</span> ${isF(t) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${t.date === "Bugün" ? '<span class="tag hot">Bugün</span> ' : ""}&nbsp;${t.date}</span><span>${starTxt(t)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(t)}${t.body}</span><span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</span></div></button>`;
+const tCard = t => `<article class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}" role="button" tabindex="0" aria-label="${t.from} → ${t.to}, ${t.cap} ton boş araç, ilanı aç">${isF(t) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}<div class="card-main">${cardRoute(t)}<div class="listing-price"><span>Boş kapasite</span><strong class="price">${t.cap}<small> ton</small></strong></div></div><div class="cargo-line"><span class="cargo-icon">${cargoIcon}</span><span><b>${t.who || nm(t.uid)}</b>${vbadge(lvT(t))}</span></div><div class="listing-spec"><span>${t.veh} · ${t.body}</span><span>Müsait: <b>${t.date}</b></span></div><div class="listing-footer"><span class="listing-trust">${starTxt(t)}<span>${nearTxt(t)}</span></span><button type="button" aria-label="${favs.includes(String(t.id)) ? "Kaydı kaldır" : "Kaydet"}" aria-pressed="${favs.includes(String(t.id))}" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</button></div></article>`;
 
 function openFilter() {
     const isT = mode === "truck", B = $("#sheetBody");
@@ -2691,7 +2875,7 @@ function toggleNear() {
     }, e => toast(e && e.code === 1 ? "Konum izni verilmedi. Tarayıcı ayarlarından izin verebilirsin." : "Konum alınamadı"), { timeout: 10000, maximumAge: 600000 });
 }
 
-const nearRow = () => `<div class="chips"><button class="chip ${nearOn ? "on" : ""}" id="nr0">Yakınımda${nearOn && myCity ? " · " + myCity : ""}</button>${nearOn ? [100, 250, 500, 0].map(k => `<button class="chip ${nearR === k ? "on" : ""}" data-nr="${k}">${k ? k + " km" : "Tümü"}</button>`).join("") : ""}</div>`;
+const nearRow = () => nearOn ? `<div class="chips" aria-label="Yakınlık mesafesi">${[100, 250, 500, 0].map(k => `<button class="chip ${nearR === k ? "on" : ""}" data-nr="${k}">${k ? k + " km" : "Tümü"}</button>`).join("")}</div>` : "";
 
 function toggleCmp(id) {
     const i = cmp.indexOf(id);
@@ -3746,7 +3930,7 @@ function updTheme() {
     try {
         const m = document.querySelector('meta[name="theme-color"]');
         if (m)
-            m.content = isDark() ? "#075b60" : "#007f83";
+            m.content = "#006970";
     }
     catch (e) { }
 }
@@ -3819,7 +4003,7 @@ const soft = () => {
 
 
 const demoNotice = () => !cloud ? `<p class="demo-note"><b>Demo modu</b> · Veriler bu cihazda tutulur. Yanıtlar ve test satın almaları simüledir; gerçek işlem yapılmaz.</p>` : "";
-const screenHeading = (title, note) => `<div class="screen-heading"><span class="eyebrow">NAKGO</span><h2>${title}</h2><p>${note}</p></div>`;
+const screenHeading = (title, note) => `<div class="screen-heading"><h2>${title}</h2><p>${note}</p></div>`;
 
 /**
  * İlan taslağı ve adımları
@@ -3861,7 +4045,8 @@ function initPostWizard(m) {
     let step=0;for(const e of nodes){if(e===start1)step=1;if(e===start2)step=2;groups[step].appendChild(e);}
     m.insertAdjacentHTML('afterbegin',screenHeading('İlan oluştur',draft?'Kaydedilmiş taslağına devam ediyorsun.':'Güzergâhı seç, bilgileri ekle ve yayınla.')+demoNotice()+`<ol class="form-steps"><li>1 · Güzergâh</li><li>2 · ${postMode==='load'?'Yük ve taşıma':'Araç'}</li><li>3 · ${postMode==='load'?'Ücret ve ekler':'Müsaitlik'}</li></ol>`);
     m.insertAdjacentHTML('beforeend','<div class="form-dock"><button class="chip" id="post-prev">Geri</button><span class="draft-state" role="status">Taslak cihazında korunur</span><button class="btn" id="post-next">Devam →</button></div>');
-    const show=()=>{groups.forEach((e,i)=>e.hidden=i!==postStep);m.querySelectorAll('.form-steps li').forEach((e,i)=>e.setAttribute('aria-current',i===postStep?'step':'false'));$('#post-prev').hidden=postStep===0;$('#post-next').hidden=postStep===2;m.scrollTop=0;capturePostDraft();};
+    m.querySelector('.form-dock').appendChild($('#go'));
+    const show=()=>{groups.forEach((e,i)=>e.hidden=i!==postStep);m.querySelectorAll('.form-steps li').forEach((e,i)=>e.setAttribute('aria-current',i===postStep?'step':'false'));$('#post-prev').hidden=postStep===0;$('#post-next').hidden=postStep===2;$('#go').hidden=postStep!==2;m.scrollTop=0;capturePostDraft();};
     $('#post-prev').onclick=()=>{postStep--;show();};
     $('#post-next').onclick=()=>{
         if(postStep===0&&$('#f').value===$('#t').value)return toast('Çıkış ve varış şehri farklı olmalı');
@@ -3897,6 +4082,7 @@ function setNav() {
  */
 
 function renderListings(m) {
+    m.dataset.comparing = cmp.length ? "true" : "false";
     const SEG = `<div class="seg"><button data-md="load" class="${mode === "load" ? "on" : ""}">Yükler</button><button data-md="truck" class="${mode === "truck" ? "on" : ""}">Boş araçlar</button></div>`;
     const segBind = () => m.querySelectorAll("[data-md]").forEach(b => b.onclick = () => {
         mode = b.dataset.md;
@@ -3919,10 +4105,10 @@ function renderListings(m) {
         const kl = loads.filter(x => x.km), avg = kl.length ? Math.round(kl.reduce((a, x) => a + x.price / x.km, 0) / kl.length) : 0;
         const st = isT ? [[trucks.length, "boş araç"], [trucks.filter(x => x.date === "Bugün").length, "bugün müsait"], [Math.round(trucks.reduce((a, x) => a + x.cap, 0)), "ton kapasite"]] : [[loads.filter(x => !x.closed).length, "açık ilan"], [loads.filter(x => x.date === "Bugün").length, "bugün yükleme"], [avg, "ort. ₺/km"]];
         const hero = `<div class="hero">${st.map(([a, b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("")}</div>`;
-        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
+        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"></div>
     ${nearRow()}${ac.length ? `<div class="chips active-filters wrap">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
-    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" aria-label="İlanları sırala" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
-    <div class="listing-grid">${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}</div>${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
+    <div class="meta listing-count" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span><span>Yola çıkmaya hazır</span></div>
+    <div class="listing-grid">${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}</div><section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section><div class="list-actions" aria-label="İlan araçları">${cmpBar()}<div class="list-controls"><button class="chip ${n ? "on" : ""}" id="fb">${FI} Filtrele${n ? `<b class="bdg">${n}</b>` : ""}</button>${isT ? '<span class="dock-hint">Güzergâhına uygun araçlar</span>' : `<select id="s" aria-label="İlanları sırala"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}<button class="chip ${nearOn ? "on" : ""}" id="nr0" aria-pressed="${nearOn}" aria-label="Yakınımdaki ilanlar${nearOn && myCity ? ": " + myCity : ""}">Yakınımda</button></div></div>`;
         segBind();
         m.querySelectorAll("[data-fav]").forEach(b => b.onclick = e => {
             e.stopPropagation();
@@ -3983,7 +4169,10 @@ function renderListings(m) {
                 render();
             };
         m.querySelectorAll("[data-x]").forEach(b => b.onclick = () => rmF(b.dataset.x, b.dataset.v));
-        m.querySelectorAll("[data-tid]").forEach(b => b.onclick = () => openTruck(b.dataset.tid));
+        m.querySelectorAll("[data-tid]").forEach(b => {
+            b.onclick = () => openTruck(b.dataset.tid);
+            b.onkeydown = e => { if(e.target===b && (e.key==="Enter" || e.key===" ")){e.preventDefault();openTruck(b.dataset.tid);} };
+        });
         m.querySelectorAll("[data-id]").forEach(b => {
             b.onclick = () => openLoad(+b.dataset.id);
             b.onkeydown = e => {
@@ -4140,7 +4329,7 @@ function renderOffers(m) {
 
 function renderProfile(m) {
 
-        m.innerHTML = `<div style="display:flex;gap:14px;align-items:center"><div class="avatar">${(myName || "Y")[0].toUpperCase()}</div><div><b style="font-size:18px">${myName || "Yağız"}${vbadge(appr[me || "local"] === true ? 2 : cOk(myCar) ? 1 : 0)}</b><div style="color:var(--mute);font-size:14px">Taşıyıcı ve yük sahibi${myRate()}</div></div></div>
+        m.innerHTML = `<div class="profile-cover"><div class="avatar">${(myName || "Y")[0].toUpperCase()}</div><div><b style="font-size:18px">${myName || "Yağız"}${vbadge(appr[me || "local"] === true ? 2 : cOk(myCar) ? 1 : 0)}</b><div class="profile-caption">Taşıyıcı ve yük sahibi${myRate()}</div></div></div>
     <div class="stat"><div><b>${loads.length}</b><span>Açık ilan</span></div><div><b>${offers.length}</b><span>Verdiğim teklif</span></div></div>
     ${demoNotice()}<div class="profile-grid"><section class="profile-group"><h2>İlanlarım ve hareketlerim</h2>${myListHTML()}${featSumCard()}${alertsCard()}${earnCard()}</section><section class="profile-group"><h2>Üyelik</h2>${premCard()}<details class="profile-panel"><summary>İletişim ve tercihler</summary>${phoneCard()}${roleCard()}</details><details class="profile-panel"><summary>Araç ve belgeler</summary>${carCard()}</details><details class="profile-panel"><summary>Güvenlik ve destek</summary>${adminCard()}${reportsCard()}${blockedCard()}${installCard()}${helpCard()}</details></section></div>`;
         carBind();
@@ -4159,6 +4348,8 @@ function syncDetailViewport() {
     const v = window.visualViewport, sheet = $("#sheet");
     sheet.style.setProperty("--detail-height", Math.floor(v.height * .92) + "px");
     sheet.style.setProperty("--keyboard-inset", Math.max(0, window.innerHeight - v.height - v.offsetTop) + "px");
+    const app = $("#app");
+    app.dataset.keyboard = window.innerHeight - v.height - v.offsetTop > 120 ? "true" : "false";
 }
 
 function openLoad(id) {
@@ -4221,7 +4412,7 @@ function openLoad(id) {
 function openTruck(id) {
     const t = trucks.find(x => x.id === id);
     if (!t) return toast("İlan bulunamadı");
-    $("#sheetBody").innerHTML = `<div class="load-detail"><div class="detail-top"><span>Boş araç ilanı</span><button class="chip detail-close" id="close">Kapat ×</button></div><div class="detail-scroll">${routeTitle(t)}${demoNotice()}<section class="detail-group"><h2>Araç ve taşıyıcı</h2>${mapSVG(t.from, t.to)}<div style="margin-top:10px">${[["Taşıyıcı", (t.who || nm(t.uid)) + (lvT(t) === 2 ? " ✓ Onaylı" : vok(t) ? " ✓ Belgeli" : "") + " · " + starTxt(t)], ["Araç", t.veh + " · " + t.body], ["Boş kapasite", t.cap + " ton"], ["Müsait", t.date]].map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("")}</div></section><button class="btn" id="mg">Mesaj gönder</button><button class="btn alt" id="call">Taşıyıcıyı ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button><div class="chips" style="margin-top:14px"><button class="chip" id="pf">Profili gör</button><button class="chip" id="rp">Şikayet et</button>${t.uid && t.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div></div></div>`;
+    $("#sheetBody").innerHTML = `<div class="load-detail"><div class="detail-top"><span>Boş araç ilanı</span><button class="chip detail-close" id="close">Kapat ×</button></div><div class="detail-scroll"><section class="detail-summary">${routeTitle(t)}<div class="summary-tags" style="margin-top:14px"><span class="tag">${t.cap} ton boş kapasite</span><span class="tag">${t.date}</span></div></section>${demoNotice()}<section class="detail-group"><h2>Araç ve taşıyıcı</h2>${mapSVG(t.from, t.to)}<div style="margin-top:10px">${[["Taşıyıcı", (t.who || nm(t.uid)) + (lvT(t) === 2 ? " ✓ Onaylı" : vok(t) ? " ✓ Belgeli" : "") + " · " + starTxt(t)], ["Araç", t.veh + " · " + t.body], ["Boş kapasite", t.cap + " ton"], ["Müsait", t.date]].map(([a, b]) => `<div class="kv"><span>${a}</span><span>${b}</span></div>`).join("")}</div></section><button class="btn alt" id="call">Taşıyıcıyı ara${isPrem() ? "" : '<b class="pm">Premium</b>'}</button><div class="chips" style="margin-top:14px"><button class="chip" id="pf">Profili gör</button><button class="chip" id="rp">Şikayet et</button>${t.uid && t.uid !== me ? '<button class="chip" id="bk2">Engelle</button>' : ""}</div></div><div class="contact-dock"><button class="btn" id="mg">Mesaj gönder →</button></div></div>`;
     syncDetailViewport();
     $("#sheet").classList.add("open");
     $("#close").onclick = closeSheet;

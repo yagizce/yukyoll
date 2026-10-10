@@ -12,7 +12,7 @@ function F0() {
 
 function routeSearch() {
     const field = (key, label) => `<div><label for="route-${key}">${label}</label><select id="route-${key}" data-route="${key}"><option value="">Tüm şehirler</option>${cities.map(c => `<option value="${c}" ${F[key] === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>`;
-    return `<section class="route-search" aria-labelledby="route-heading"><div class="route-search-heading"><span class="eyebrow">YÜK VE BOŞ ARAÇ PAZARI</span><h2 id="route-heading">Yoluna uygun ilanı bul.</h2></div><div class="route-fields">${field("from", "Nereden?")}<button class="route-swap" id="route-swap" aria-label="Çıkış ve varış şehirlerini değiştir" title="Güzergâhı ters çevir">⇄</button>${field("to", "Nereye?")}</div></section>`;
+    return `<section class="route-search" aria-labelledby="route-heading"><div class="route-search-heading"><span class="eyebrow">${mode === "truck" ? "BOŞ ARAÇLARI KEŞFET" : "YÜKLERİ KEŞFET"}</span><h2 id="route-heading">Rotanı seç, <em>yola çık.</em></h2></div><div class="route-fields">${field("from", "Nereden?")}<button class="route-swap" id="route-swap" aria-label="Çıkış ve varış şehirlerini değiştir" title="Güzergâhı ters çevir">⇄</button>${field("to", "Nereye?")}</div></section>`;
 }
 
 function match(x, isT) {
@@ -84,15 +84,17 @@ function rmF(k, v) {
 
 const routeTitle = x => `<div class="route route-title"><span>${x.from}</span><i aria-hidden="true"></i><span>${x.to}</span></div>`;
 
+const cardRoute = x => `<div class="card-route"><div><small>Nereden</small><b>${x.from}</b></div><i aria-hidden="true"></i><div><small>Nereye</small><b>${x.to}</b></div></div>`;
+const cargoIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zM3 8l9 5 9-5M12 13v9M7.5 5.5l9 5"/></svg>`;
+
 const lCard = l => `<article class="load ${isF(l) ? "feat" : ""}" data-id="${l.id}" role="button" tabindex="0" aria-label="${l.from} → ${l.to}, ${fmt(l.price)}, ilanı aç">
-    ${isF(l) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}${routeTitle(l)}
-    <div class="listing-price"><span class="price">${fmt(l.price)}</span><span>Taşıma ücreti</span></div>
-    <div class="cargo-line">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="Yük fotoğrafı">` : ""}<span><b>${l.cargo}</b> · ${l.ton} ton${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span></div>
+    ${isF(l) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}<div class="card-main ${l.price >= 1000000 ? "wide-price" : ""}">${cardRoute(l)}<div class="listing-price"><span>Taşıma ücreti</span><strong class="price">${fmt(l.price)}</strong></div></div>
+    <div class="cargo-line">${imgOk(l.img) ? `<img class="th" src="${l.img}" alt="Yük fotoğrafı">` : `<span class="cargo-icon">${cargoIcon}</span>`}<span><b>${l.cargo}</b>${Array.isArray(l.items) && l.items.length ? " · " + l.items.length + " kalem" : ""}</span><span class="cargo-ton"><b>${l.ton}</b> ton</span></div>
     <div class="listing-spec"><span>${l.veh} · ${l.body || "Kasa belirtilmedi"}</span><span class="load-date">Yükleme: <b>${l.date}</b></span></div>
     <div class="listing-footer"><span class="listing-trust">${starTxt(l)}${vbadge(l.uid ? lvU(l.uid) : 0)}<span>${nearTxt(l)}${l.km ? "≈ " + l.km + " km" : ""}${ago(l) ? " · " + ago(l) : ""}</span></span><button type="button" aria-label="${favs.includes(String(l.id)) ? "Kaydı kaldır" : "Kaydet"}" aria-pressed="${favs.includes(String(l.id))}" class="fav ${favs.includes(String(l.id)) ? "on" : ""}" data-fav="${l.id}">${favs.includes(String(l.id)) ? "♥" : "♡"}</button></div>
     </article>`;
 
-const tCard = t => `<button class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}">${routeTitle(t)}<div style="margin-top:6px;font-size:14px">${t.who || nm(t.uid)}${vbadge(lvT(t))} · ${t.cap} ton boş kapasite</div><div class="meta"><span><span class="tag">${t.veh}</span> ${isF(t) ? '<span class="tag ft">Öne çıkan</span> ' : ""}${t.date === "Bugün" ? '<span class="tag hot">Bugün</span> ' : ""}&nbsp;${t.date}</span><span>${starTxt(t)}</span></div><div class="meta" style="margin-top:6px"><span>${nearTxt(t)}${t.body}</span><span role="button" tabindex="0" aria-label="Kaydet" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</span></div></button>`;
+const tCard = t => `<article class="load ${isF(t) ? "feat" : ""}" data-tid="${t.id}" role="button" tabindex="0" aria-label="${t.from} → ${t.to}, ${t.cap} ton boş araç, ilanı aç">${isF(t) ? '<div class="listing-label"><span class="tag ft">Öne çıkan</span></div>' : ""}<div class="card-main">${cardRoute(t)}<div class="listing-price"><span>Boş kapasite</span><strong class="price">${t.cap}<small> ton</small></strong></div></div><div class="cargo-line"><span class="cargo-icon">${cargoIcon}</span><span><b>${t.who || nm(t.uid)}</b>${vbadge(lvT(t))}</span></div><div class="listing-spec"><span>${t.veh} · ${t.body}</span><span>Müsait: <b>${t.date}</b></span></div><div class="listing-footer"><span class="listing-trust">${starTxt(t)}<span>${nearTxt(t)}</span></span><button type="button" aria-label="${favs.includes(String(t.id)) ? "Kaydı kaldır" : "Kaydet"}" aria-pressed="${favs.includes(String(t.id))}" class="fav ${favs.includes(String(t.id)) ? "on" : ""}" data-fav="${t.id}">${favs.includes(String(t.id)) ? "♥" : "♡"}</button></div></article>`;
 
 function openFilter() {
     const isT = mode === "truck", B = $("#sheetBody");
@@ -210,7 +212,7 @@ function toggleNear() {
     }, e => toast(e && e.code === 1 ? "Konum izni verilmedi. Tarayıcı ayarlarından izin verebilirsin." : "Konum alınamadı"), { timeout: 10000, maximumAge: 600000 });
 }
 
-const nearRow = () => `<div class="chips"><button class="chip ${nearOn ? "on" : ""}" id="nr0">Yakınımda${nearOn && myCity ? " · " + myCity : ""}</button>${nearOn ? [100, 250, 500, 0].map(k => `<button class="chip ${nearR === k ? "on" : ""}" data-nr="${k}">${k ? k + " km" : "Tümü"}</button>`).join("") : ""}</div>`;
+const nearRow = () => nearOn ? `<div class="chips" aria-label="Yakınlık mesafesi">${[100, 250, 500, 0].map(k => `<button class="chip ${nearR === k ? "on" : ""}" data-nr="${k}">${k ? k + " km" : "Tümü"}</button>`).join("")}</div>` : "";
 
 function toggleCmp(id) {
     const i = cmp.indexOf(id);
