@@ -51,7 +51,7 @@ function updTheme() {
     try {
         const m = document.querySelector('meta[name="theme-color"]');
         if (m)
-            m.content = isDark() ? "#075b60" : "#007f83";
+            m.content = "#006970";
     }
     catch (e) { }
 }
@@ -124,4 +124,4 @@ const soft = () => {
 
 
 const demoNotice = () => !cloud ? `<p class="demo-note"><b>Demo modu</b> · Veriler bu cihazda tutulur. Yanıtlar ve test satın almaları simüledir; gerçek işlem yapılmaz.</p>` : "";
-const screenHeading = (title, note) => `<div class="screen-heading"><span class="eyebrow">NAKGO</span><h2>${title}</h2><p>${note}</p></div>`;
+const screenHeading = (title, note) => `<div class="screen-heading"><h2>${title}</h2><p>${note}</p></div>`;

@@ -4,6 +4,7 @@
  */
 
 function renderListings(m) {
+    m.dataset.comparing = cmp.length ? "true" : "false";
     const SEG = `<div class="seg"><button data-md="load" class="${mode === "load" ? "on" : ""}">Yükler</button><button data-md="truck" class="${mode === "truck" ? "on" : ""}">Boş araçlar</button></div>`;
     const segBind = () => m.querySelectorAll("[data-md]").forEach(b => b.onclick = () => {
         mode = b.dataset.md;
@@ -26,10 +27,10 @@ function renderListings(m) {
         const kl = loads.filter(x => x.km), avg = kl.length ? Math.round(kl.reduce((a, x) => a + x.price / x.km, 0) / kl.length) : 0;
         const st = isT ? [[trucks.length, "boş araç"], [trucks.filter(x => x.date === "Bugün").length, "bugün müsait"], [Math.round(trucks.reduce((a, x) => a + x.cap, 0)), "ton kapasite"]] : [[loads.filter(x => !x.closed).length, "açık ilan"], [loads.filter(x => x.date === "Bugün").length, "bugün yükleme"], [avg, "ort. ₺/km"]];
         const hero = `<div class="hero">${st.map(([a, b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("")}</div>`;
-        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
+        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"></div>
     ${nearRow()}${ac.length ? `<div class="chips active-filters wrap">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
-    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" aria-label="İlanları sırala" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
-    <div class="listing-grid">${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}</div>${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
+    <div class="meta listing-count" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span><span>Yola çıkmaya hazır</span></div>
+    <div class="listing-grid">${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}</div><section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section><div class="list-actions" aria-label="İlan araçları">${cmpBar()}<div class="list-controls"><button class="chip ${n ? "on" : ""}" id="fb">${FI} Filtrele${n ? `<b class="bdg">${n}</b>` : ""}</button>${isT ? '<span class="dock-hint">Güzergâhına uygun araçlar</span>' : `<select id="s" aria-label="İlanları sırala"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}<button class="chip ${nearOn ? "on" : ""}" id="nr0" aria-pressed="${nearOn}" aria-label="Yakınımdaki ilanlar${nearOn && myCity ? ": " + myCity : ""}">Yakınımda</button></div></div>`;
         segBind();
         m.querySelectorAll("[data-fav]").forEach(b => b.onclick = e => {
             e.stopPropagation();
@@ -90,7 +91,10 @@ function renderListings(m) {
                 render();
             };
         m.querySelectorAll("[data-x]").forEach(b => b.onclick = () => rmF(b.dataset.x, b.dataset.v));
-        m.querySelectorAll("[data-tid]").forEach(b => b.onclick = () => openTruck(b.dataset.tid));
+        m.querySelectorAll("[data-tid]").forEach(b => {
+            b.onclick = () => openTruck(b.dataset.tid);
+            b.onkeydown = e => { if(e.target===b && (e.key==="Enter" || e.key===" ")){e.preventDefault();openTruck(b.dataset.tid);} };
+        });
         m.querySelectorAll("[data-id]").forEach(b => {
             b.onclick = () => openLoad(+b.dataset.id);
             b.onkeydown = e => {

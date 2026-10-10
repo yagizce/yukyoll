@@ -43,6 +43,9 @@ with sync_playwright() as p:
     b = p.chromium.launch(channel=os.environ.get("NAKGO_BROWSER_CHANNEL") or None)
     ctx = b.new_context(viewport={"width": 390, "height": 844}, locale="tr-TR", permissions=["geolocation"], geolocation={"latitude": 39.93, "longitude": 32.86})
     pg = ctx.new_page()
+    # DOMContentLoaded döndüğünde kısa açılış animasyonu bitmiş olabilir.
+    # İlk boyamayı gözlemleyerek zamanlayıcı yarışını testten çıkarırız.
+    pg.add_init_script("""window.__splashSeen=false;const splashObserver=new MutationObserver(()=>{const e=document.getElementById('splash');if(e&&getComputedStyle(e).display!=='none'&&getComputedStyle(e).opacity!=='0'){window.__splashSeen=true;splashObserver.disconnect();}});splashObserver.observe(document,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style']});""")
     pg.on("pageerror", lambda e: errors.append(str(e)))
     pg.on("console", lambda m: errors.append(m.text) if m.type == "error" and "ERR_" not in m.text and "Failed to load" not in m.text and "fonts.g" not in m.text else None)
     toast = lambda: pg.inner_text("#toast")
@@ -51,7 +54,7 @@ with sync_playwright() as p:
 
     # 1) Açılış, tanıtım ve rol
     pg.goto(URL, wait_until="domcontentloaded")
-    check("açılış ekranı görünür", pg.is_visible("#splash"))
+    check("açılış ekranı görünür", pg.is_visible("#splash") or pg.evaluate("window.__splashSeen"))
     pg.wait_for_timeout(2300)
     check("açılış ekranı kapanır", not pg.is_visible("#splash"))
     check("ilk açılışta tanıtım gelir", pg.is_visible("#onb"))
@@ -166,6 +169,14 @@ with sync_playwright() as p:
             page = matrix.new_page(); page.on("pageerror",lambda e:errors.append(str(e)))
             page.goto(URL); page.wait_for_selector('.load[data-id]')
             prefix=f"{theme}/{width} "
+            nav_box=page.locator('#nav').bounding_box();dock_box=page.locator('.list-actions').bounding_box()
+            check(prefix+"ana menü ve ilan araçları ekranın altında",nav_box['y']>=740 and abs(nav_box['y']-dock_box['y']-dock_box['height'])<2)
+            page.locator('#main').evaluate('e=>e.scrollTop=e.scrollHeight')
+            check(prefix+"filtre, sıralama ve yakınlık kaydırmada erişilir",all(page.is_visible(s) for s in ('#fb','#s','#nr0')) and abs(page.locator('.list-actions').bounding_box()['y']-dock_box['y'])<2)
+            page.evaluate('cmp=[loads[0].id,loads[1].id];render()')
+            cmp_box=page.locator('.cmpbar').bounding_box();filter_box=page.locator('#fb').bounding_box()
+            check(prefix+"karşılaştırma alt işlemlerle çakışmaz",cmp_box['y']+cmp_box['height']<=filter_box['y']+1)
+            page.evaluate('cmp=[];render()');page.locator('#main').evaluate('e=>e.scrollTop=0')
             page.select_option('#route-from','İstanbul');page.select_option('#route-to','Ankara')
             check(prefix+"güzergâh filtresi",page.locator('.load[data-id]').count()==1)
             page.locator('[data-id]').first.click();page.fill('#o','27000');page.click('#send')
@@ -184,6 +195,14 @@ with sync_playwright() as p:
             page.reload();page.click('nav [data-t=post]')
             check(prefix+"taslak ve ücret yenilemede korunur",page.input_value('#p')=='123456789' and page.input_value('[data-in]')=='Palet')
             if width==390: check(prefix+"fotoğraf taslağı korunur",page.locator('#phs img').count()==1)
+            publish=page.locator('#go').bounding_box();form_nav=page.locator('#nav').bounding_box()
+            check(prefix+"yayınla işlemi altta sabit",page.locator('.form-dock #go').count()==1 and publish['y']+publish['height']<=form_nav['y']+1)
+            page.locator('#main').evaluate('e=>e.scrollTop=e.scrollHeight')
+            check(prefix+"yayınla düğmesi form kaydırmasında yerini korur",abs(page.locator('#go').bounding_box()['y']-publish['y'])<2)
+            if width==390:
+                page.set_viewport_size({'width':390,'height':430});page.fill('#n','Klavye alanında deneme')
+                publish=page.locator('#go').bounding_box();check(prefix+"küçük klavye alanında yayınla görünür",publish['y']>=0 and publish['y']+publish['height']<=430)
+                page.set_viewport_size({'width':390,'height':844})
             page.click('#go');check(prefix+"yayın sonrası taslak temizlenir",page.evaluate("!JSON.parse(localStorage.getItem('ng-post-drafts')).load"))
             page.click('nav [data-t=me]');page.locator('summary',has_text='İletişim ve tercihler').click();page.fill('#myph','0555 123 45 67');page.click('#phs2')
             check(prefix+"profil telefonu kaydedilir",page.evaluate("myCar.phone==='0555 123 45 67'"))
@@ -191,7 +210,10 @@ with sync_playwright() as p:
             check(prefix+"belge formu erişilir",page.is_visible('#lic'))
             page.click('nav [data-t=post]');page.click('[data-pm=truck]');page.select_option('#f','Afyonkarahisar');page.select_option('#t','Kahramanmaraş');page.click('#post-next');page.fill('#w','20');page.click('#post-next');page.click('#go')
             check(prefix+"boş araç yayınlanır ve filtre arkasında kalmaz",page.evaluate("trucks.some(t=>t.mine&&t.from==='Afyonkarahisar'&&t.to==='Kahramanmaraş'&&t.cap===20)&&document.querySelectorAll('.load[data-tid]').length===trucks.length"))
-            page.locator('.load[data-tid]').first.click();check(prefix+"araç detayını kapatmak erişilir",page.is_visible('.detail-top #close'));page.click('#close')
+            page.locator('.load[data-tid]').first.click();check(prefix+"araç detayını kapatmak erişilir",page.is_visible('.detail-top #close'))
+            message=page.locator('#mg').bounding_box();page.locator('.detail-scroll').evaluate('e=>e.scrollTop=e.scrollHeight')
+            check(prefix+"araç detayı mesaj düğmesi altta sabit",page.locator('.contact-dock #mg').count()==1 and abs(page.locator('#mg').bounding_box()['y']-message['y'])<2 and message['y']+message['height']<=844)
+            page.click('#close')
             for screen in ('list','post','mine','me'):
                 page.click(f'nav [data-t={screen}]')
                 check(prefix+screen+" yatay taşmaz",page.evaluate("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('#main').scrollWidth<=document.querySelector('#main').clientWidth+1"))
