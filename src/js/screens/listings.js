@@ -1,0 +1,103 @@
+/**
+ * İlan ekranı
+ * Klasik uygulama kapsamında yüklenir; sıra tools/project.js içinde tanımlıdır.
+ */
+
+function renderListings(m) {
+    const SEG = `<div class="seg"><button data-md="load" class="${mode === "load" ? "on" : ""}">Yükler</button><button data-md="truck" class="${mode === "truck" ? "on" : ""}">Boş araçlar</button></div>`;
+    const segBind = () => m.querySelectorAll("[data-md]").forEach(b => b.onclick = () => {
+        mode = b.dataset.md;
+        render();
+    });
+        const isT = mode === "truck";
+        const ok = x => !x.closed && !expired(x, isT ? "truck" : "load") && !(x.uid && blocked.includes(x.uid)) && (!nearOn || !nearR || dKm(x) <= nearR) && match(x, isT) && (!q || (x.from + x.to + (x.cargo || x.who)).toLocaleLowerCase("tr").includes(q.toLocaleLowerCase("tr")));
+        let items = isT ? trucks.filter(ok) : sortL(loads.filter(ok));
+        if (nearOn && myPos)
+            items = [...items].sort((a, b) => dKm(a) - dKm(b));
+        items = [...items.filter(isF), ...items.filter(x => !isF(x))];
+        const n = fcount(), ac = activeChips();
+        {
+            const sg = JSON.stringify([F, q, mode, sort, nearOn, nearR]);
+            if (sg !== lastSig) {
+                lastSig = sg;
+                shown = 20;
+            }
+        }
+        const kl = loads.filter(x => x.km), avg = kl.length ? Math.round(kl.reduce((a, x) => a + x.price / x.km, 0) / kl.length) : 0;
+        const st = isT ? [[trucks.length, "boş araç"], [trucks.filter(x => x.date === "Bugün").length, "bugün müsait"], [Math.round(trucks.reduce((a, x) => a + x.cap, 0)), "ton kapasite"]] : [[loads.filter(x => !x.closed).length, "açık ilan"], [loads.filter(x => x.date === "Bugün").length, "bugün yükleme"], [avg, "ort. ₺/km"]];
+        const hero = `<div class="hero">${st.map(([a, b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("")}</div>`;
+        m.innerHTML = routeSearch() + SEG + (!cloud ? '<p class="demo-note"><b>Demo modu</b> · Örnek ilanlar ve teklifler deneme amaçlıdır; gerçek taşıma talebi değildir.</p>' : "") + `<div class="row listing-search" style="margin-bottom:12px"><input class="search" id="q" aria-label="İlanlarda ara" placeholder="${isT ? "Şehir veya taşıyıcı ara" : "Şehir veya yük ara"}" value="${q}" style="margin:0"><button class="chip ${n ? "on" : ""}" id="fb" style="flex:none;display:flex;gap:6px;align-items:center">${FI}Filtre${n ? `<b class="bdg">${n}</b>` : ""}</button></div>
+    ${nearRow()}${ac.length ? `<div class="chips active-filters wrap">${ac.map(c => `<button class="chip on" data-x="${c[0]}" data-v="${c[1]}">${c[2]} ×</button>`).join("")}</div>` : ""}
+    <div class="meta" style="margin:0 2px 10px"><span>${items.length} ${isT ? "boş araç" : "ilan"}${!isT && (F.from || F.to) ? ` <button class="chip" id="al" style="margin-left:6px;padding:4px 10px;font-size:12px">Alarm kur</button>` : ""}</span>${isT ? "" : `<select id="s" aria-label="İlanları sırala" style="width:auto;padding:5px 30px 5px 12px;font-size:16px;border-radius:99px"><option value="new">En yeni</option><option value="price" ${sort === "price" ? "selected" : ""}>Ücret ↓</option><option value="km" ${sort === "km" ? "selected" : ""}>Mesafe ↑</option><option value="rate" ${sort === "rate" ? "selected" : ""}>Puan ↓</option></select>`}</div>
+    <div class="listing-grid">${!loaded ? SKEL : items.length ? items.slice(0, shown).map(isT ? tCard : lCard).join("") + (items.length > shown ? `<button class="chip" id="more" style="display:block;margin:4px auto 12px">Daha fazla göster (${items.length - shown})</button>` : "") : `<div class="empty">Bu filtrelere uyan ${isT ? "boş araç" : "ilan"} yok.<br><button class="chip" id="rs" style="margin-top:12px">Filtreleri sıfırla</button></div>`}</div>${cmpBar()}<section class="market-stats" aria-label="Pazar özeti"><h2>Pazar özeti</h2>${hero}</section>`;
+        segBind();
+        m.querySelectorAll("[data-fav]").forEach(b => b.onclick = e => {
+            e.stopPropagation();
+            const f = b.dataset.fav, was = favs.includes(f);
+            tog(favs, f);
+            if (/^\d+$/.test(f))
+                (was ? untrack : track)("s", +f);
+            render();
+        });
+        $("#q").oninput = e => {
+            q = e.target.value;
+            const p = e.target.selectionStart;
+            render();
+            const i = $("#q");
+            i.focus();
+            i.setSelectionRange(p, p);
+        };
+        $("#fb").onclick = openFilter;
+        m.querySelectorAll("[data-route]").forEach(e => e.onchange = () => {
+            F[e.dataset.route] = e.value;
+            render();
+            $("[data-route=\"" + e.dataset.route + "\"]").focus();
+        });
+        $("#route-swap").onclick = () => {
+            [F.from, F.to] = [F.to, F.from];
+            render();
+            $("#route-swap").focus();
+        };
+        if ($("#al"))
+            $("#al").onclick = addAlert;
+        if ($("#more"))
+            $("#more").onclick = () => {
+                shown += 20;
+                render();
+            };
+        $("#nr0").onclick = toggleNear;
+        m.querySelectorAll("[data-nr]").forEach(b => b.onclick = () => {
+            nearR = +b.dataset.nr;
+            render();
+        });
+        if ($("#cmpgo"))
+            $("#cmpgo").onclick = openCompare;
+        if ($("#cmpx"))
+            $("#cmpx").onclick = () => {
+                cmp = [];
+                render();
+            };
+        if ($("#s"))
+            $("#s").onchange = e => {
+                sort = e.target.value;
+                render();
+            };
+        if ($("#rs"))
+            $("#rs").onclick = () => {
+                F = F0();
+                q = "";
+                nearOn = false;
+                render();
+            };
+        m.querySelectorAll("[data-x]").forEach(b => b.onclick = () => rmF(b.dataset.x, b.dataset.v));
+        m.querySelectorAll("[data-tid]").forEach(b => b.onclick = () => openTruck(b.dataset.tid));
+        m.querySelectorAll("[data-id]").forEach(b => {
+            b.onclick = () => openLoad(+b.dataset.id);
+            b.onkeydown = e => {
+                if (e.target === b && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    openLoad(+b.dataset.id);
+                }
+            };
+        });
+}

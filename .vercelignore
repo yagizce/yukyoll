@@ -1,0 +1,11 @@
+src
+assets
+tools
+tests
+docs
+export
+www
+node_modules
+__pycache__
+*.md
+capacitor.config.json

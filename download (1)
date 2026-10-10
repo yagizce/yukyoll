@@ -1,9 +1,0 @@
-src
-tools
-tests
-docs
-export
-www
-README.md
-node_modules
-*.zip

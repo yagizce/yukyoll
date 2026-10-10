@@ -1,3 +1,9 @@
 .vercel
 node_modules
+tests/shots
+export
+www
+__pycache__
 .DS_Store
+
+docs/CODEMAP.md

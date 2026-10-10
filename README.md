@@ -1,136 +1,43 @@
 # NakGo
 
-Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarlanmış yük pazarı. Çerçevesiz, statik uygulama: yayına giden tek dosya `index.html`.
+Mobil öncelikli yük ve boş araç pazarı; turkuaz/sarı marka, açık/koyu tema ve geniş ekran düzeni. Bağımlılıksız HTML/CSS/JavaScript + PWA kullanır. Normal web yayınında **yerel demo** çalışır: örnek ilanlar ve otomatik yanıtlar gerçek taşıma talebi değildir; test üyelikleri ödeme almaz.
 
-## Klasör yapısı
+## Çalıştırma
 
-```
-nakgo/
-├─ index.html            Yayına giden uygulama (src/'den ÜRETİLİR, elle düzenleme)
-├─ sw.js                 Servis çalışanı (internet olmadan açılış)
-├─ manifest.webmanifest  Ana ekrana eklenebilir uygulama (PWA) ayarları
-├─ vercel.json           Vercel güvenlik başlıkları
-├─ package.json          Komutlar
-├─ README.md             Bu dosya
-├─ icons/                Uygulama simgeleri (5 dosya)
-├─ src/                  KAYNAK KOD: düzenlediğin yer
-│  ├─ index.template.html
-│  ├─ js/                9 modül (00-config … 99-init)
-│  └─ css/               4 dosya
-├─ tools/                bundle.js (birleştirir), dev.js (lint, map, new, www), logo.py
-├─ tests/                run.js, unit/ (2 dosya), e2e.py
-└─ docs/                 ARCHITECTURE.md (mimari), HANDOFF.md (devir notu), MOBIL-VE-MARKA.md
+Node 18+ ile proje kökünde:
+
+```sh
+npm run bundle         # kaynaklardan index.html üret
+npm start              # HTTP sunucusu; ilk kullanımda serve indirilir
+npm test               # çıktı tutarlılığı, lint, davranış testleri
+npm run test:e2e        # gerçek Chromium; kurulum docs/development.md
+npm run test:shots      # tests/shots/ görüntüleri
+npm run logo           # tek SVG kaynağından web/PWA simgeleri
+npm run mobile:prepare # www/ çıktısı; native derleme değildir
 ```
 
-Toplam 36 dosya. Yayına yalnızca `index.html`, `sw.js`, `manifest.webmanifest`, `icons/` ve ayar dosyaları gider (`.vercelignore`). Logo ve mağaza görselleri depoda tutulmaz, `npm run logo` ile üretilir (ayrı bir "görseller" paketi olarak da verilmiştir).
+## Kaynak ve çıktı
 
-## Hızlı başlangıç
+| Yol | Sorumluluk |
+| --- | --- |
+| src/index.template.html, src/js/, src/css/ | Düzenlenebilir uygulama kaynakları |
+| assets/brand/mark.svg | Tek marka kaynağı |
+| tools/ | Kaynak sırası, bundle, lint, harita, simge üretimi |
+| tests/run.js, tests/unit/, tests/e2e.py | Testler |
+| docs/ | Ayrıntılı belgeler |
+| index.html | **Üretilen yayın çıktısı**, doğrudan düzenlemeyin |
+| icons/ | **Üretilen** web/PWA simgeleri |
+| manifest.webmanifest, sw.js, vercel.json | PWA, önbellek ve statik yayın ayarları |
+| capacitor.config.json | Mobil kabuk başlangıç ayarı |
 
-`index.html` dosyasına çift tıklayıp tarayıcıda açabilirsin. Daha doğru bir deneme için (servis çalışanı ve konum için) Node.js 18+ ile:
+www/, tests/shots/ ve docs/CODEMAP.md yerel üretilen çıktılardır, Git dışında kalır. Kaynak değişikliğinde bundle çalıştırın.
 
-```
-npm start
-```
+## Belgeler
 
-Açılan adres genellikle `http://localhost:3000`.
+- [Mimari ve veri saklama](docs/architecture.md)
+- [Geliştirme ve test](docs/development.md)
+- [PWA ve mobil kurulum](docs/mobile.md)
+- [Ürün kuralları ve sınırlar](docs/product.md)
+- [Birleştirilen ve kaldırılan dosyalar](docs/cleanup.md)
 
-## Geliştirme akışı
-
-Kodu **`src/` altında** düzenle, `index.html` bundan üretilir:
-
-```
-npm run bundle     # src/ → index.html
-npm test           # bundle güncel mi + lint + hızlı testler
-npm run test:e2e   # gerçek tarayıcı testi
-```
-
-Yeni özellik için `npm run new -- ad "Başlık" "Açıklama"`. Kodun nerede olduğu, yükleme sırası ve kontrol listesi `docs/ARCHITECTURE.md` içindedir. `index.html`'i elle değiştirirsen `npm test` hata verir.
-
-## Komutlar
-
-| Komut | Ne yapar | Gerekenler |
-|---|---|---|
-| `npm run bundle` | `src/` dosyalarını birleştirip `index.html` üretir | Node.js 18+ |
-| `npm test` | Bundle güncel mi, lint, 100'den fazla hızlı kontrol | Node.js 18+ |
-| `npm run test:e2e` | Gerçek Chromium'da uygulamayı baştan sona gezer | `pip install playwright` ve `playwright install chromium` |
-| `npm run test:all` | İkisini birden çalıştırır | Yukarıdakiler |
-| `npm run test:shots` | Ekran görüntüleri alır (`tests/shots/`, git dışı) | Playwright |
-| `npm run lint` | Kaynak denetimi (ad çakışması, başlıklar, yasaklı ifadeler) | Node.js 18+ |
-| `npm run map` | Dosya ve işlev haritasını ekrana yazar | Node.js 18+ |
-| `npm run new -- ad "Başlık" "Açıklama"` | Yeni özellik modülü ve test iskeleti | Node.js 18+ |
-| `npm run logo` | Logo, simge ve mobil görselleri üretir (`icons/` ve `export/`) | `pip install fonttools playwright`, Poppins Bold (bkz. `docs/MOBIL-VE-MARKA.md`) |
-| `npm run mobile:prepare` | Web dosyalarını `www/` klasörüne kopyalar (mobil kabuk için) | Node.js 18+ |
-
-Yayına çıkmadan önce `npm run test:all` çalıştır. Bunlar gerçek telefon testinin yerini tutmaz.
-
-## GitHub'a yükleme (ilk kez)
-
-1. github.com'da yeni bir depo oluştur (örneğin `nakgo`).
-2. Bu klasörün içindeki **her şeyi** depoya yükle (GitHub Desktop veya tarayıcıdan "Add file → Upload files").
-
-Komut satırıyla:
-
-```
-git init
-git add .
-git commit -m "NakGo ilk sürüm"
-git branch -M main
-git remote add origin https://github.com/KULLANICI_ADIN/nakgo.git
-git push -u origin main
-```
-
-## Var olan depoyu güncelleme (en güvenli yol)
-
-Eski sürümlerde dosya düzeni farklıydı (`brand/`, `mobile/`, `tests/lib/` gibi klasörler artık yok). Karışmaması için:
-
-1. Depo klasörünü aç. **`.git` klasörüne dokunma** (gizli olabilir), onun dışındaki her şeyi sil.
-2. Bu zip'in içindeki dosyaların hepsini o klasöre kopyala.
-3. GitHub Desktop'ta "Changes" altında silinen ve eklenen dosyaları göreceksin. Bir özet yazıp **Commit**, sonra **Push origin**.
-4. "Pull" sırasında çakışma (conflict) çıkarsa: her çakışmada **senin bilgisayarındaki** sürümü tut, Copilot ile çözmeye çalışma.
-
-## Vercel'e yayınlama
-
-1. vercel.com'a GitHub hesabınla gir, **Add New → Project**, deponu seç.
-2. **Framework Preset: Other** kalsın. Build Command, Output Directory, Install Command alanları **boş** kalsın. (`package.json` içinde bilerek `build` komutu yok.)
-3. **Deploy**. Birkaç saniye sonra `https://nakgo-....vercel.app` adresinde yayında olur.
-4. Depoya her gönderişinde Vercel otomatik yeniden yayınlar.
-
-Telefonda siteyi açıp tarayıcı menüsünden "Ana ekrana ekle" dersen uygulama gibi açılır. Kamera, konum ve arama gibi özellikler için adres `https` olmalı, Vercel adresleri zaten öyle.
-
-## Sorun giderme
-
-| Belirti | Çözüm |
-|---|---|
-| Vercel "No Output Directory" veya build hatası | Project Settings → Build and Output Settings'te Build Command ve Output Directory'yi boşalt |
-| Değişiklik sitede görünmüyor | Vercel → Deployments'ta son dağıtımın "Ready" olduğuna bak. Tarayıcıda sayfayı sert yenile (Ctrl+Shift+R) veya site verilerini sil. Servis çalışanı önce ağdan dener, ama tarayıcı bazen eski sayfayı tutar |
-| Sayfa 404 | `index.html` deponun **kökünde** olmalı, bir alt klasörde değil |
-| Değişikliğim yayında yok ama `src/` içinde yaptım | `npm run bundle` çalıştırıp **`index.html`'i de commit et**. Vercel `src/`'yi derlemez, hazır `index.html`'i yayınlar |
-| GitHub Desktop "Resolve conflicts" | Her çakışmada kendi sürümünü tut ("Accept Current Change"), sonra Continue merge |
-| Telefonda konum/kamera çalışmıyor | Adres `https` mi? Tarayıcı site ayarlarında izni ver |
-| Eski logo görünüyor | Tarayıcı simgeyi önbelleğe alır. Sekmeyi kapatıp aç, ana ekran simgesini silip yeniden ekle |
-
-## Mobil uygulama (Android ve iOS)
-
-Uygulama mobil uyumlu bir web uygulamasıdır: güvenli alanlar, Android geri tuşu, ana ekrana ekleme (profilde kart), kısayollar (`?go=post`, `?go=mine`, `?go=near`) hazırdır. Mağazaya koymak için Capacitor kabuğu kullanılır, adımlar `docs/MOBIL-VE-MARKA.md` içindedir. Telefona uygulama gibi eklemek için Vercel adresini açıp "Ana ekrana ekle" demen yeterlidir.
-
-## Veriler nerede?
-
-Bu sürümde veritabanı yok. İlanlar, teklifler, mesajlar ve ayarlar her kullanıcının **kendi tarayıcısında** (localStorage) durur. İki farklı telefon birbirinin ilanını görmez. Örnek ilanlara verilen teklifler uygulama tarafından simüle edilen yanıtlarla sonuçlanır, ilan istatistikleri yerel modda örnek verilerdir.
-
-Aynı dosya Claude üzerinde yayınlanınca ortak veritabanıyla da çalışır. `claude` yoksa uygulama otomatik yerel moda geçer, Vercel'de her zaman yerel moddadır.
-
-## Premium üyelik (test modu)
-
-Doğrudan arama yalnızca Premium üyelere açıktır. Planlar `index.html` içinde `PLANS` satırındadır (299 ₺ aylık, 3.099 ₺ yıllık). **Satın alma şu an simüle edilir**, gerçek ödeme almaz. Profildeki "Üyeliği sıfırla (test)" testte üyeliği kapatır. Premium kontrolü yalnızca arayüzdedir: gerçek ürüne geçerken üyelik durumu sunucuda tutulmalı ve telefon numarası yalnızca üyeye sunucudan verilmelidir.
-
-## Özellikler
-
-İlan listesi ve filtre (81 il), boş araç ilanları, yakınımda (konum), ilan verme (kalem, fotoğraf, fiyat önerisi), haritada rota, piyasa karşılaştırma, iki ilanı karşılaştırma, yakıt hesabı, teklif ve karşı teklif, mesajlaşma, teslim kanıtı (fotoğraflı), puan ve yorum, herkese açık profil, belge rozeti ve yönetici onayı, rota alarmı, bildirimler, favoriler, ilan istatistikleri (yük sahibi), öne çıkan ilan ve boş araç ilanı (sabit fiyat listesi, test modu) ve öne çıkarmanın etkisi, haftalık kazanç grafiği (taşıyıcı), şikayet ve engelleme, yardım, açılış tanıtımı, açık/koyu tema (üst barda ay/güneş düğmesi), internet olmadan açılış, ana ekrana ekleme.
-
-## Bilinen sınırlar
-
-- 81 ilin mesafeleri yaklaşıktır (ilk 12 şehir elle girilmiş tablodan, diğerleri koordinattan hesaplanır), gerçek rota hesabı değildir.
-- Mazot fiyatı varsayılanı (95 ₺/L) 4 Ekim 2026 İstanbul fiyatıdır. Yakıt hesabından değiştirilebilir.
-- Piyasa fiyatı karşılaştırması yalnızca uygulamadaki ilanlardan hesaplanır.
-- "Belgeli" rozeti kişinin beyanı, "Onaylı" rozeti yöneticinin onayıdır.
-- Gerçek kullanıcıya açmadan önce kullanıcı doğrulama, ödeme, KVKK ve hukuki konular ayrıca ele alınmalıdır (bkz. `docs/HANDOFF.md`).
+[GitHub deposu](https://github.com/yagizce/yukyoll) · [Vercel projesi](https://vercel.com/yagizces-projects/yukyoll) · [Canlı site](https://yukyoll.vercel.app). Yeni değişiklikler ayrı dal ve önizleme üzerinden incelenir; canlıya geçiş kullanıcı onayından sonradır.

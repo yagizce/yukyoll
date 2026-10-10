@@ -1,9 +1,0 @@
-.vercel
-node_modules
-.DS_Store
-__pycache__/
-www/
-export/
-tests/shots/
-tools/*.ttf
-docs/CODEMAP.md

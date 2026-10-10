@@ -1,0 +1,111 @@
+/* Animasyonlar, hareket azaltma ve dar ekran düzeltmeleri (en sonda, diğer kuralları ezer) */
+
+/* ----- Animasyonlar ve hareket azaltma ----- */
+
+@keyframes up {
+  from {
+    transform:translateY(30px);
+    opacity:0;
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset:-20;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity:.45;
+  }
+}
+
+@keyframes pop {
+  from {
+    transform:scale(.6);
+    opacity:0;
+  }
+}
+
+@keyframes drive {
+  from {
+    transform:translateX(-34px);
+    opacity:0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform:translateY(10px);
+    opacity:0;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .sheet>div {
+    animation:none;
+  }
+  .load {
+    transition:none;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .rt {
+    animation:none;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .sk i {
+    animation:none;
+  }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .splash,
+  .splash * {
+    animation:none!important;
+    transition:none!important;
+  }
+}
+
+/* ----- Dar ekran düzeltmeleri ----- */
+
+@media (max-width:340px) {
+  nav button {
+    font-size:10px;
+  }
+  .route {
+    font-size:16px;
+  }
+  .price {
+    font-size:16px;
+  }
+  .hero b {
+    font-size:19px;
+  }
+  .plans {
+    flex-direction:column;
+  }
+  .itrow {
+    flex-wrap:wrap;
+  }
+  .itrow [data-in] {
+    flex:1 1 100%;
+  }
+  main {
+    padding:14px 12px 22px;
+  }
+  header {
+    padding:calc(12px + env(safe-area-inset-top,0px)) 14px 14px;
+  }
+  .bell {
+    width:36px;
+    height:36px;
+  }
+  .callnum {
+    font-size:22px;
+  }
+}

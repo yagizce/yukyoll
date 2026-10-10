@@ -8,13 +8,12 @@
     "dev": "npx --yes serve .",
     "bundle": "node tools/bundle.js",
     "test": "node tools/bundle.js --check && node tools/dev.js lint && node tests/run.js",
-    "test:e2e": "python3 tests/e2e.py",
-    "test:shots": "python3 tests/e2e.py --shots",
+    "test:e2e": "python tests/e2e.py",
+    "test:shots": "python tests/e2e.py --shots",
     "test:all": "npm test && npm run test:e2e",
     "lint": "node tools/dev.js lint",
     "map": "node tools/dev.js map",
-    "new": "node tools/dev.js new",
-    "logo": "python3 tools/logo.py",
+    "logo": "node tools/brand.js",
     "mobile:prepare": "node tools/dev.js www"
   },
   "engines": {

@@ -1,0 +1,28 @@
+// Kaynakların tek ve açık yükleme sırası.
+const path=require("path");
+module.exports={root:path.resolve(__dirname,".."),js:[
+  "src/js/config.js",
+  "src/js/state.js",
+  "src/js/core.js",
+  "src/js/features/listings.js",
+  "src/js/features/offers.js",
+  "src/js/features/account.js",
+  "src/js/features/monetization.js",
+  "src/js/ui/helpers.js",
+  "src/js/ui/post-draft.js",
+  "src/js/ui/dialog.js",
+  "src/js/screens/listings.js",
+  "src/js/screens/post.js",
+  "src/js/screens/offers.js",
+  "src/js/screens/profile.js",
+  "src/js/screens/details.js",
+  "src/js/screens/main.js",
+  "src/js/app.js"
+],css:[
+  "src/css/tokens.css",
+  "src/css/components.css",
+  "src/css/features.css",
+  "src/css/motion.css",
+  "src/css/listings.css",
+  "src/css/system.css"
+]};
