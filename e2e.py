@@ -1,10 +1,32 @@
 """Uçtan uca test: gerçek Chromium ile uygulamayı bir kullanıcı gibi baştan sona gezer.
 Gereken: pip install playwright && playwright install chromium
-Çalıştır:  python3 tests/e2e.py        (hata varsa çıkış kodu 1)"""
+Çalıştır:  npm run test:e2e        (hata varsa çıkış kodu 1)
+Ekran görüntüsü:  npm run test:shots   (390x844 görüntüleri tests/shots/ içine yazar, git dışındadır)"""
 import os, sys, threading, http.server, socketserver, functools
 from playwright.sync_api import sync_playwright
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+def take_shots():
+    out = os.path.join(ROOT, "tests", "shots"); os.makedirs(out, exist_ok=True); errs = []
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        ctx = b.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=2, permissions=["geolocation"], geolocation={"latitude": 39.93, "longitude": 32.86}, locale="tr-TR")
+        ctx.add_init_script("localStorage.setItem('yy-onb','1')")
+        pg = ctx.new_page(); pg.on("pageerror", lambda e: errs.append(str(e)))
+        pg.goto("file://" + os.path.join(ROOT, "index.html"))
+        pg.wait_for_timeout(500); pg.screenshot(path=os.path.join(out, "01_splash.png"))
+        pg.wait_for_timeout(2200); pg.screenshot(path=os.path.join(out, "02_liste.png"))
+        for name, js in (("03_detay", "openLoad(1)"), ("04_karsilastirma", "closeSheet();toggleCmp(1);toggleCmp(2);openCompare()"),
+                         ("05_profil", "closeSheet();offers=[{...loads[0],offer:28500,status:'ok',loadId:1,bidder:'',stage:3,doneAt:Date.now()}];tab='me';setNav();render()"),
+                         ("06_yakinimda", "tab='list';setNav();render();toggleNear()")):
+            pg.evaluate(js); pg.wait_for_timeout(500); pg.screenshot(path=os.path.join(out, name + ".png"))
+        b.close()
+    print("Görüntüler:", out, "| JS hatası:", errs or "yok")
+    sys.exit(1 if errs else 0)
+
+if "--shots" in sys.argv:
+    take_shots()
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass

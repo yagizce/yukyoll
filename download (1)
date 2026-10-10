@@ -1,8 +1,9 @@
-brand
+src
+tools
 tests
-mobile
+docs
+export
 www
-HANDOFF.md
 README.md
 node_modules
 *.zip

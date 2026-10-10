@@ -1,27 +1,28 @@
 # NakGo
 
-Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarlanmış yük pazarı. Tek sayfalık statik uygulama: derleme yok, bağımlılık yok.
+Yük sahipleri ile taşıyıcıları buluşturan, telefon ekranına göre tasarlanmış yük pazarı. Çerçevesiz, statik uygulama: yayına giden tek dosya `index.html`.
 
 ## Klasör yapısı
 
 ```
 nakgo/
-├─ index.html              Uygulamanın tamamı (arayüz, mantık, örnek veri)
-├─ sw.js                   Servis çalışanı (internet olmadan açılış)
-├─ manifest.webmanifest    Ana ekrana eklenebilir uygulama (PWA) ayarları
-├─ vercel.json             Vercel güvenlik başlıkları
-├─ .vercelignore           Yayına gitmeyecek klasörler (brand, mobile, tests, belgeler)
-├─ package.json            Komutlar: start, test, test:e2e, logo, mobile:prepare
-├─ icons/                  Uygulamanın kullandığı simgeler (yayına gider)
-├─ brand/                  Logo kaynakları ve çıktıları, üretici betik (yayına gitmez)
-│  ├─ svg/  png/  generate.py  README.md
-├─ mobile/                 Android ve iOS kabuğu için hazırlık: Capacitor şablonu, simge ve splash görselleri (yayına gitmez)
-├─ tests/                  run.js (hızlı testler), e2e.py (gerçek tarayıcı testi), shots.py (ekran görüntüsü)
-├─ README.md               Bu dosya
-└─ HANDOFF.md              Projeyi devralacak kişi/yapay zekâ için ayrıntılı not
+├─ index.html            Yayına giden uygulama (src/'den ÜRETİLİR, elle düzenleme)
+├─ sw.js                 Servis çalışanı (internet olmadan açılış)
+├─ manifest.webmanifest  Ana ekrana eklenebilir uygulama (PWA) ayarları
+├─ vercel.json           Vercel güvenlik başlıkları
+├─ package.json          Komutlar
+├─ README.md             Bu dosya
+├─ icons/                Uygulama simgeleri (5 dosya)
+├─ src/                  KAYNAK KOD: düzenlediğin yer
+│  ├─ index.template.html
+│  ├─ js/                9 modül (00-config … 99-init)
+│  └─ css/               4 dosya
+├─ tools/                bundle.js (birleştirir), dev.js (lint, map, new, www), logo.py
+├─ tests/                run.js, unit/ (2 dosya), e2e.py
+└─ docs/                 ARCHITECTURE.md (mimari), HANDOFF.md (devir notu), MOBIL-VE-MARKA.md
 ```
 
-Yayına yalnızca `index.html`, `sw.js`, `manifest.webmanifest`, `icons/` ve ayar dosyaları gider.
+Toplam 36 dosya. Yayına yalnızca `index.html`, `sw.js`, `manifest.webmanifest`, `icons/` ve ayar dosyaları gider (`.vercelignore`). Logo ve mağaza görselleri depoda tutulmaz, `npm run logo` ile üretilir (ayrı bir "görseller" paketi olarak da verilmiştir).
 
 ## Hızlı başlangıç
 
@@ -33,17 +34,34 @@ npm start
 
 Açılan adres genellikle `http://localhost:3000`.
 
-## Testler
+## Geliştirme akışı
+
+Kodu **`src/` altında** düzenle, `index.html` bundan üretilir:
+
+```
+npm run bundle     # src/ → index.html
+npm test           # bundle güncel mi + lint + hızlı testler
+npm run test:e2e   # gerçek tarayıcı testi
+```
+
+Yeni özellik için `npm run new -- ad "Başlık" "Açıklama"`. Kodun nerede olduğu, yükleme sırası ve kontrol listesi `docs/ARCHITECTURE.md` içindedir. `index.html`'i elle değiştirirsen `npm test` hata verir.
+
+## Komutlar
 
 | Komut | Ne yapar | Gerekenler |
 |---|---|---|
-| `npm test` | 100'den fazla hızlı kontrol (mantık, dosyalar, bağlantılar) | Node.js 18+ |
-| `npm run test:e2e` | Gerçek Chromium'da uygulamayı baştan sona gezer (tanıtım, ilan, teklif, premium, çevrimdışı, 320 px) | `pip install playwright` ve `playwright install chromium` |
-| `npm run test:shots` | Ekran görüntüleri alır (`tests/shots/`) | Aynısı |
-| `npm run mobile:prepare` | Web dosyalarını `www/` klasörüne kopyalar (mobil kabuk için, bkz. `mobile/README.md`) | Node.js 18+ |
-| `npm run logo` | Logo, simge ve mobil görselleri yeniden üretir | `pip install fonttools playwright`, Poppins Bold (bkz. `brand/README.md`) |
+| `npm run bundle` | `src/` dosyalarını birleştirip `index.html` üretir | Node.js 18+ |
+| `npm test` | Bundle güncel mi, lint, 100'den fazla hızlı kontrol | Node.js 18+ |
+| `npm run test:e2e` | Gerçek Chromium'da uygulamayı baştan sona gezer | `pip install playwright` ve `playwright install chromium` |
+| `npm run test:all` | İkisini birden çalıştırır | Yukarıdakiler |
+| `npm run test:shots` | Ekran görüntüleri alır (`tests/shots/`, git dışı) | Playwright |
+| `npm run lint` | Kaynak denetimi (ad çakışması, başlıklar, yasaklı ifadeler) | Node.js 18+ |
+| `npm run map` | Dosya ve işlev haritasını ekrana yazar | Node.js 18+ |
+| `npm run new -- ad "Başlık" "Açıklama"` | Yeni özellik modülü ve test iskeleti | Node.js 18+ |
+| `npm run logo` | Logo, simge ve mobil görselleri üretir (`icons/` ve `export/`) | `pip install fonttools playwright`, Poppins Bold (bkz. `docs/MOBIL-VE-MARKA.md`) |
+| `npm run mobile:prepare` | Web dosyalarını `www/` klasörüne kopyalar (mobil kabuk için) | Node.js 18+ |
 
-Yayına çıkmadan önce `npm test` ve `npm run test:e2e` çalıştır. İkisi de gerçek telefon testinin yerini tutmaz.
+Yayına çıkmadan önce `npm run test:all` çalıştır. Bunlar gerçek telefon testinin yerini tutmaz.
 
 ## GitHub'a yükleme (ilk kez)
 
@@ -63,7 +81,7 @@ git push -u origin main
 
 ## Var olan depoyu güncelleme (en güvenli yol)
 
-Eski sürümde dosya adları farklıydı (`brand/logo-*.svg` gibi). Karışmaması için:
+Eski sürümlerde dosya düzeni farklıydı (`brand/`, `mobile/`, `tests/lib/` gibi klasörler artık yok). Karışmaması için:
 
 1. Depo klasörünü aç. **`.git` klasörüne dokunma** (gizli olabilir), onun dışındaki her şeyi sil.
 2. Bu zip'in içindeki dosyaların hepsini o klasöre kopyala.
@@ -86,13 +104,14 @@ Telefonda siteyi açıp tarayıcı menüsünden "Ana ekrana ekle" dersen uygulam
 | Vercel "No Output Directory" veya build hatası | Project Settings → Build and Output Settings'te Build Command ve Output Directory'yi boşalt |
 | Değişiklik sitede görünmüyor | Vercel → Deployments'ta son dağıtımın "Ready" olduğuna bak. Tarayıcıda sayfayı sert yenile (Ctrl+Shift+R) veya site verilerini sil. Servis çalışanı önce ağdan dener, ama tarayıcı bazen eski sayfayı tutar |
 | Sayfa 404 | `index.html` deponun **kökünde** olmalı, bir alt klasörde değil |
+| Değişikliğim yayında yok ama `src/` içinde yaptım | `npm run bundle` çalıştırıp **`index.html`'i de commit et**. Vercel `src/`'yi derlemez, hazır `index.html`'i yayınlar |
 | GitHub Desktop "Resolve conflicts" | Her çakışmada kendi sürümünü tut ("Accept Current Change"), sonra Continue merge |
 | Telefonda konum/kamera çalışmıyor | Adres `https` mi? Tarayıcı site ayarlarında izni ver |
 | Eski logo görünüyor | Tarayıcı simgeyi önbelleğe alır. Sekmeyi kapatıp aç, ana ekran simgesini silip yeniden ekle |
 
 ## Mobil uygulama (Android ve iOS)
 
-Uygulama mobil uyumlu bir web uygulamasıdır: güvenli alanlar, Android geri tuşu, ana ekrana ekleme (profilde kart), kısayollar (`?go=post`, `?go=mine`, `?go=near`) hazırdır. Mağazaya koymak için Capacitor kabuğu kullanılır, adımlar `mobile/README.md` içindedir. Telefona uygulama gibi eklemek için Vercel adresini açıp "Ana ekrana ekle" demen yeterlidir.
+Uygulama mobil uyumlu bir web uygulamasıdır: güvenli alanlar, Android geri tuşu, ana ekrana ekleme (profilde kart), kısayollar (`?go=post`, `?go=mine`, `?go=near`) hazırdır. Mağazaya koymak için Capacitor kabuğu kullanılır, adımlar `docs/MOBIL-VE-MARKA.md` içindedir. Telefona uygulama gibi eklemek için Vercel adresini açıp "Ana ekrana ekle" demen yeterlidir.
 
 ## Veriler nerede?
 
@@ -114,4 +133,4 @@ Doğrudan arama yalnızca Premium üyelere açıktır. Planlar `index.html` içi
 - Mazot fiyatı varsayılanı (95 ₺/L) 4 Ekim 2026 İstanbul fiyatıdır. Yakıt hesabından değiştirilebilir.
 - Piyasa fiyatı karşılaştırması yalnızca uygulamadaki ilanlardan hesaplanır.
 - "Belgeli" rozeti kişinin beyanı, "Onaylı" rozeti yöneticinin onayıdır.
-- Gerçek kullanıcıya açmadan önce kullanıcı doğrulama, ödeme, KVKK ve hukuki konular ayrıca ele alınmalıdır (bkz. `HANDOFF.md`).
+- Gerçek kullanıcıya açmadan önce kullanıcı doğrulama, ödeme, KVKK ve hukuki konular ayrıca ele alınmalıdır (bkz. `docs/HANDOFF.md`).

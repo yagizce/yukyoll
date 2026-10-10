@@ -6,9 +6,9 @@ Bu dosya, projeyi devralacak yapay zekâ asistanı (Opus) ve geliştirici için 
 NakGo, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet, panelvan, tanker, lowbed, konteyner) buluşturan, **telefon ekranı için tasarlanmış** bir yük pazarı. Yükal ve Qmove gibi uygulamalardan esinlenildi. Türkiye'de, Türkçe kullanılacak. Şu an **geliştirme/prototip aşaması**: arayüz ve akışlar tamam, gerçek giriş, ödeme ve gerçek veritabanı yok.
 
 ## 1b. Marka
-- Adı **NakGo** (eski çalışma adı YükYol, kodda kalmadı). Renkler ve kullanım kuralları `brand/README.md` içindedir.
+- Adı **NakGo** (eski çalışma adı YükYol, kodda kalmadı). Renkler ve kullanım kuralları `docs/MOBIL-VE-MARKA.md` içindedir.
 - Logo (v2): gradyanlı amber zemin üzerinde lacivert tır; kasasında ">>" okları ("Go"), ayrı kabin (cam, far, egzoz), üç tekerlek (arkada tandem), altta kesikli yol çizgisi.
-- Tek kaynak `brand/generate.py`. Başlıktaki ve açılış ekranındaki logo, çizimin `index.html` içine gömülü kopyalarıdır (maske kimlikleri `mkh` ve `mks`). Logoyu değiştirirsen betikteki `truck()` ile bu iki kopyayı birlikte güncelle.
+- Tek kaynak `tools/logo.py` (`npm run logo`). Başlıktaki ve açılış ekranındaki logo, çizimin `src/index.template.html` içine gömülü kopyalarıdır (maske kimlikleri `mkh` ve `mks`). Logoyu değiştirirsen betikteki `truck()` ile bu iki kopyayı (`src/index.template.html`) birlikte güncelle.
 - localStorage anahtarları (`yy2`, `yy-seen`, `yy-onb`, `yy-role`, `yy-theme`) eski adın kısaltmasıdır, verileri silmemek için bilerek değiştirilmedi.
 - Açılış ekranı (splash): `#splash`. Oturum başına bir kez ~1,5 sn gösterilir (`sessionStorage` anahtarı `ng-splash`), hareket azaltma tercihinde kısa ve hareketsizdir.
 
@@ -24,33 +24,32 @@ NakGo, yük sahipleri ile taşıyıcıları (tır, kırkayak, kamyon, kamyonet, 
 - Dağıtım: GitHub'a yüklenip **Vercel**'de statik site olarak yayınlanacak.
 
 ## 3. Dosyalar ve komutlar
-Klasör yapısı `README.md` içinde ağaç olarak verilmiştir. Özet:
+Klasör ağacı `README.md` içindedir (toplam 36 dosya). **Önce `docs/ARCHITECTURE.md`'yi oku**: modül düzeni, yükleme sırası, çizim deseni ve "yeni özellik ekleme kontrol listesi" orada. Dosya ve işlev listesi için `npm run map`.
 
 | Yol | Görev |
 |---|---|
-| `index.html` | Uygulamanın tamamı (CSS + JS + örnek veri). **Tek dosya** |
+| `src/` | **Kaynak.** `src/js/NN-ad.js` (9 betik modülü, bölümlere ayrılmış), `src/css/NN-ad.css` (4 stil dosyası), `src/index.template.html` (HTML iskeleti). Düzenlenen yer burasıdır |
+| `index.html` | `src/`'den **üretilir** (`npm run bundle`), yayına giden tek parça dosya. Elle düzenleme, `npm test` bunu yakalar. Commit'e dahil edilir |
 | `sw.js` | Servis çalışanı: önce ağ, ağ yoksa kayıtlı kopya. https ve localhost'ta kaydolur, Claude adresinde kaydolmaz |
 | `manifest.webmanifest`, `icons/` | Ana ekrana eklenebilir uygulama ve simgeler |
-| `vercel.json`, `.vercelignore` | Güvenlik başlıkları; `brand/`, `tests/` ve belgeler yayına gitmez |
-| `mobile/` | Android/iOS kabuğu (Capacitor) şablonu, `prepare-web.js`, simge ve splash görselleri, mağaza kontrol listesi. Yayına gitmez |
-| `brand/` | Logo kaynakları: `generate.py` her şeyi üretir (`icons/` dahil) |
-| `tests/run.js` | Hızlı testler (Node, sahte DOM) |
-| `tests/e2e.py` | Gerçek Chromium ile uçtan uca test (Playwright) |
-| `tests/shots.py` | Ekran görüntüsü alır, görsel kontrol içindir |
+| `vercel.json`, `.vercelignore` | Güvenlik başlıkları; `src/`, `tools/`, `tests/`, `docs/`, `export/` ve README yayına gitmez |
+| `tools/` | `bundle.js` (birleştirir), `dev.js` (lint, map, new, www komutları), `logo.py` (logo ve simge üretici) |
+| `tests/` | `run.js` (hızlı testler, sahte DOM) + `unit/app.test.js`, `unit/platform.test.js`; `e2e.py` (gerçek Chromium, `--shots` ile ekran görüntüsü) |
+| `docs/` | `ARCHITECTURE.md`, `HANDOFF.md` (bu dosya), `MOBIL-VE-MARKA.md` (logo, renkler, Capacitor ayarı ve mağaza notları) |
+| `export/` (git dışı) | `npm run logo` ile üretilen logo çıktıları (svg, png) ve mobil görseller. Ayrı "görseller" paketi olarak verilir |
 
-- Komutlar: `npm start`, `npm test`, `npm run test:e2e`, `npm run test:shots`, `npm run logo`.
-- **Her değişiklikten sonra `npm test` ve `npm run test:e2e` çalıştır.** Görsel değişiklikte `npm run test:shots` ile görüntülere de bak (390×844).
-- Yayın: GitHub → Vercel "Other" preset, build komutu yok.
+- Komutlar: `npm run bundle`, `npm test` (bundle kontrolü + lint + hızlı testler), `npm run test:e2e`, `npm run test:all`, `npm run test:shots`, `npm run lint`, `npm run map`, `npm run new -- ad "Başlık" "Açıklama"`, `npm run logo`, `npm run mobile:prepare`, `npm start`.
+- **Her değişiklikte:** `src/`'yi düzenle → `npm run bundle` → `npm test` → `npm run test:e2e`. Görsel değişiklikte `npm run test:shots` ile görüntülere bak (390×844).
+- Yayın: GitHub → Vercel "Other" preset, **build komutu yok** (`package.json`'a `build` adlı komut ekleme, Vercel çalıştırır). Commit'e `index.html` ve `src/` birlikte girer.
 - Aynı dosya Claude'un artifact ortamında da yayınlanır. Orada `claude.use("db")` ile ortak veritabanı çalışır. Vercel'de `claude` yoktur, uygulama **yerel moda** (localStorage) düşer. Bu davranışı bozma.
 
-## 4. Mimari (tek dosya, çerçevesiz)
-- Durum, betiğin üstündeki global `let` değişkenlerdedir: `loads, trucks, offers, incoming, chats, rates, alerts, favs, blocked, reports, myCar, prem, carriers, appr, calc, F (filtre), tab, mode, postMode, role, cloud, me, db`.
-- **Çizim:** `render()` o anki `tab` için `#main` içine `innerHTML` yazar, ardından olayları `querySelectorAll(...).forEach(b=>b.onclick=...)` ile bağlar. Alt pencere (sheet) için `#sheetBody` kullanılır: `openLoad`, `openTruck`, `openFilter`, `openCalc`, `openPaywall`, `callTo`, `openRate`, `openReport`, `openBell`, `openChat` hepsi bunu doldurup `#sheet`'e `open` sınıfı ekler. `closeSheet()` kapatır.
-- Sekmeler: `list` (İlanlar), `post` (İlan ver), `mine` (Tekliflerim), `me` (Profil). Liste iki kipli: `mode="load"` (yükler) / `"truck"` (boş araçlar).
-- **Kaydetme:** `save()` her `render()`'da çağrılır. localStorage `yy2` anahtarına yazar. Bulut modunda `savePrefs()` kullanıcıya özel tercihleri (`favs, calc, alerts, blocked`) `data/users/<id>/prefs` belgesine yazar.
-- **Bulut/yerel ayrımı:** `cloud` bayrağı. Yazma çağrıları `if(cloud)dbw(db.doc(...).set(...))` biçimindedir; `dbw` yazma hatasında uyarı verir. Okumalar betiğin sonundaki `(async()=>{...claude.use("db")...})()` bloğunda canlı dinlenir (`onSnapshot`). Gelen veri `clean()` ile kaçışlanır.
-- **`soft()`**: bulut güncellemeleri `soft()` ile çizer; `post` sekmesinde formu silmemek için o sekmede çizmez. Yeni dinleyicilerde `render()` yerine `soft()` kullan.
-- Tema: CSS değişkenleri `:root`'ta, koyu tema iki yerde (`prefers-color-scheme` ve `data-theme="dark"`). Yeni renk eklersen üç yere de ekle.
+## 4. Mimari özeti
+Ayrıntı `docs/ARCHITECTURE.md` içinde. Kısaca:
+- Çerçevesiz, tek betik kapsamı. Modüller dosya adındaki sıraya göre birleşir; `01-state` tüm `let` durumunu ve örnek veriyi, `99-init` en sonda çalışan başlatmayı içerir. Üst düzeyde çalışan kod yalnızca `01-state`, `02-core`, `99-init` içinde olabilir (`npm run lint` uyarır).
+- **Çizim:** `render()` (`30-screens`) `#main`'e `innerHTML` yazar ve olayları bağlar; alt pencereler `open*()` işlevleriyle `#sheetBody`'yi doldurur. Arka plan güncellemelerinde `soft()` kullan (İlan ver formu silinmesin).
+- **Kayıt:** `save()` (`02-core`) her `render()`'da localStorage `yy2`'ye yazar; bulutta `savePrefs()` tercihleri (`favs, calc, alerts, blocked`) `data/users/<id>/prefs`'e yazar.
+- **Bulut/yerel:** `cloud` bayrağı; yazma `if(cloud)dbw(...)`; okuma `initCloud()` (`02-core`) canlı dinler.
+- **Tema:** renk değişkenleri `src/css/01-tokens.css` içinde, koyu tema iki yerde (`prefers-color-scheme` ve `data-theme="dark"`).
 
 ## 5. Veri modeli (koleksiyon: alanlar) ve Supabase eşleşmesi
 | Koleksiyon | Alanlar | Önerilen tablo |
@@ -87,7 +86,7 @@ Klasör yapısı `README.md` içinde ağaç olarak verilmiştir. Özet:
 
 ## 8. Tuzaklar (bozma)
 - `isDark()` koyu tema arka planını **`#101722`** sabitiyle anlar. Koyu `--bg` rengini değiştirirsen `isDark` ve test bozulur.
-- İki ayrı sabit var: `BASE` (harita SVG gövdesi) ve `APPURL` (paylaşım bağlantısı). Karıştırma.
+- Betik tek kapsamdır: iki dosyada aynı ad tanımlanamaz (örnek: `BASE` harita gövdesi, `APPURL` paylaşım bağlantısı ayrı adlardır). `npm run lint` çakışmayı yakalar.
 - Veri öznitelikleri: `data-md` (liste kipi) ile `data-md2` (ilan sil) farklıdır. `data-ro` rol, `data-rc` şikayet kapat, `data-ub` engel kaldır, `data-sg/sp/sv` teslim aşamaları.
 - `B12` + `D` yalnızca ilk 12 şehir için elle girilmiş gerçek mesafe tablosudur; diğer çiftler `LL` koordinatlarından kuş uçuşu × 1,3 ile **yaklaşık** hesaplanır. Gerçek yol mesafesi için harita servisi gerekir.
 - Mazot fiyatı varsayılanı 95 ₺/L (4 Ekim 2026, İstanbul) ve piyasa karşılaştırması yalnızca uygulamadaki ilanlardan hesaplanır.
@@ -95,7 +94,7 @@ Klasör yapısı `README.md` içinde ağaç olarak verilmiştir. Özet:
 - localStorage anahtarları: `yy2` (veri), `yy-seen` (okunan bildirimler), `yy-onb` (tanıtım görüldü), `yy-role` (rol), `yy-theme` (tema).
 - Servis çalışanı eski sürümde takılı kalmasın diye ağ öncelikli çalışır. `sw.js` içindeki `V` sürüm adını önbellek yapısını değiştirdiğinde artır. Vercel'de `sw.js` için `no-cache` başlığı vardır.
 - Profil sayfasındaki yorum metni bulutta `clean()` ile kaçışlıdır, yerel modda gösterirken `esc` uygulanır. Bu ayrım bozulursa çift kaçış veya XSS olur.
-- Artifact sürümü tek dosya ve kendine yeterli olmak zorunda. Dosyayı birden çok dosyaya bölersen Claude'daki yayın kırılır. Bölmek istersen build adımı ekleyip `index.html`'i üretmelisin.
+- Artifact ve Vercel yayını tek parça `index.html` bekler. Kaynak `src/` altında bölünmüştür ve `npm run bundle` tek dosyaya birleştirir, bu yüzden `index.html`'i elle değiştirme.
 - `render()` her çağrıda `innerHTML` yeniden yazdığı için yazılan formlar silinir. Form içindeki alanları etkileyecek yerde `soft()` veya hedefli güncelleme kullan.
 
 ## 9. Opus için öncelikli yapılacaklar (ürün sahibi onayından sonra)
@@ -106,10 +105,10 @@ Klasör yapısı `README.md` içinde ağaç olarak verilmiştir. Özet:
 5. **Bildirimler:** push (FCM / web push), WhatsApp bildirimi; sonra Flutter veya React Native ile mağaza uygulaması.
 6. **Hukuk/KVKK:** metinler, rıza akışı, veri silme, kayıt tutma.
 7. **Kalite:** gerçek tarayıcı testleri (Playwright), erişilebilirlik (kontrast, odak, ekran okuyucu), performans (liste sayfalama, 1000+ ilan), çok sayıda ilanda arama.
-8. **Kod düzeni:** `index.html`'i `src/` altında modüllere böl (veri, çizim, özellikler), build ile tek dosya üret; Vercel build komutunu buna göre ayarla.
+8. **Kod kalitesi:** kaynak modüllere bölünmüştür (`src/`). Sıradaki adımlar: ES modüllerine veya bir derleyiciye (örneğin Vite) geçiş, durum yönetimini sadeleştirme (her çağrıda tüm ekranı yazan `render()` yerine hedefli güncelleme), tip denetimi (JSDoc veya TypeScript).
 
 ## 10. Test notları
-`npm test` mantığı kontrol eder; görünümü kontrol etmez. Görünüm için `python3 tests/shots.py` ile ekran görüntüsü al (390×844). Gerçek cihaz testi yine gereklidir.
+`npm test` mantığı kontrol eder; görünümü kontrol etmez. Görünüm için `npm run test:shots` ile ekran görüntüsü al (390×844). Gerçek cihaz testi yine gereklidir.
 
 ## 10b. Gerçek cihaz test listesi (ürün sahibi yapacak)
 - iPhone Safari ve Android Chrome: tüm sekmeler, kaydırma, klavye açılınca form, yazı alanına dokununca yakınlaşma olmaması.
@@ -122,7 +121,7 @@ Klasör yapısı `README.md` içinde ağaç olarak verilmiştir. Özet:
 - İki farklı hesapla (bulut sürümünde): teklif, karşı teklif, kabul, mesaj, teslim, puan.
 
 ## 12. Mobil entegrasyon
-Ayrıntı ve adımlar `mobile/README.md` içindedir. Özet:
+Ayrıntı ve adımlar `docs/MOBIL-VE-MARKA.md` içindedir. Özet:
 - Web tarafı hazır: güvenli alanlar **başlıkta ve alt menüde** uygulanır (`header` üst boşluğu, `nav` alt boşluğu; kök `:root` üzerinde değil, böylece lacivert başlık durum çubuğunun altına uzanır), `viewport-fit=cover`, `theme-color` (tema değişince `updTheme()` günceller), iOS meta etiketleri, `overscroll-behavior:none`, `touch-action:manipulation`.
 - **Geri tuşu:** alt pencere açılınca `history.pushState` eklenir, geri tuşu (`popstate`) pencereyi kapatır; kod pencereyi kapatınca durum geri alınır. `#sheet` üzerindeki `MutationObserver` bunu yönetir. Yeni bir tam ekran katman eklersen aynı deseni uygula.
 - `isNative()` Capacitor'ı algılar: yerel kabukta servis çalışanı kaydolmaz, açılış ekranı kısa tutulur, "Ana ekrana ekle" kartı gizlenir.
@@ -148,80 +147,5 @@ Yük sahibi ilanını, taşıyıcı boş araç ilanını listenin en üstüne "�
 - **Etki ölçümü:** ilan istatistiği ekranında "Öne çıkarmanın etkisi" kutusu ve profilde "Öne çıkarma özeti" (toplam harcama, öne çıkan ilan sayısı, ortalama ilgi artışı) vardır. Hesap `featEffect()`: öne çıkarılan saatlerdeki saatlik benzersiz görüntülenme, ilanın diğer saatlerindeki saatlik görüntülenmeyle karşılaştırılır; öne çıkarma sırasında gelen teklifler de sayılır. `featWin` alanı her satın almanın `[başlangıç, bitiş]` aralığını (en son 10) tutar. **Sınırlar:** yalnızca yük ilanları için (boş araç ilanı görüntülenmesi izlenmiyor); her izleyici için tek `events` kaydı tutulduğundan ts, o kişinin son görüntülemesidir (kaba bir ölçü); en az 3 saat öne çıkarılmış, 3 saat normal geçmiş ve 8 görüntülenme yoksa sonuç gösterilmez; karşılaştırma neden-sonuç kanıtı değildir (günün saati, yük türü gibi etkenler karışabilir). Yerel modda sayılar örnek veridir ve öyle etiketlenir.
 - **Doğrulama önerisi:** fiyatı A/B ile dene (örneğin 49 / 99 / 149 ₺ günlük), ödemeye razı olan oranı ve öne çıkarmanın görüntülenme/teklif etkisini (`events` + istatistik ekranı) ölç. Fiyat listesi tek yerde olduğu için değiştirmek kolaydır. Gelecekte olası: hafta sonu veya yoğun saat fiyatı, ilk öne çıkarmaya deneme indirimi, taşıyıcı ve yük sahibi için farklı fiyat.
 
-## 11. Kod haritası (otomatik üretildi)
-`db.doc(...)` / `db.collection(...)` çağrılarının bulunduğu satırlar (veri katmanı taşınırken değiştirilecek yerler): 294, 295, 297, 323, 329, 337, 340, 369, 397, 416, 458, 459, 524, 525, 528, 530, 536, 537, 540, 543, 548, 610, 616, 651, 660, 663, 717, 718, 719, 720, 721, 722, 723
-
-Fonksiyonlar:
-- `F0` (satır 246)
-- `match` (satır 250)
-- `fcount` (satır 260)
-- `activeChips` (satır 261)
-- `rmF` (satır 262)
-- `openFilter` (satır 266)
-- `oup` (satır 294)
-- `postTruck` (satır 295)
-- `rebuild` (satır 296)
-- `savePrefs` (satır 297)
-- `dist` (satır 301)
-- `mkt` (satır 302)
-- `sugg` (satır 304)
-- `mapSVG` (satır 315)
-- `patchIt` (satır 323)
-- `openEdit` (satır 324)
-- `askDel` (satır 328)
-- `openCounter` (satır 331)
-- `listBind` (satır 336)
-- `notifs` (satır 347)
-- `bell` (satır 350)
-- `openBell` (satır 351)
-- `deep` (satır 358)
-- `shareLoad` (satır 360)
-- `openRate` (satır 366)
-- `myRate` (satır 371)
-- `addAlert` (satır 372)
-- `setRole` (satır 375)
-- `openOnb` (satır 377)
-- `itemsUI` (satır 390)
-- `openPaywall` (satır 393)
-- `callTo` (satır 399)
-- `savePhone` (satır 403)
-- `openReport` (satır 414)
-- `blockUser` (satır 418)
-- `openProfile` (satır 425)
-- `nearestCity` (satır 438)
-- `toggleNear` (satır 439)
-- `toggleCmp` (satır 445)
-- `openCompare` (satır 447)
-- `weekly` (satır 454)
-- `weekChart` (satır 456)
-- `track` (satır 458)
-- `untrack` (satır 459)
-- `statsOf0` (satır 460)
-- `statTips` (satır 467)
-- `openStats` (satır 474)
-- `updTheme` (satır 480)
-- `toggleTheme` (satır 481)
-- `openFeature` (satır 495)
-- `featEffect` (satır 508)
-- `fxOf` (satır 512)
-- `statsOf` (satır 515)
-- `setStage` (satır 524)
-- `shrink` (satır 526)
-- `pickImg` (satır 527)
-- `sendPod` (satır 528)
-- `showImg` (satır 529)
-- `showPod` (satır 530)
-- `docPhoto` (satır 536)
-- `viewDoc` (satır 537)
-- `setCar` (satır 540)
-- `carBind` (satır 541)
-- `save` (satır 547)
-- `simulate` (satır 548)
-- `toast` (satır 557)
-- `render` (satır 558)
-- `openLoad` (satır 641)
-- `openTruck` (satır 653)
-- `openChat` (satır 654)
-- `openCalc` (satır 667)
-- `closeSheet` (satır 687)
-- `setNav` (satır 689)
+## 11. Kod haritası
+Dosya, işlev, depolama anahtarı ve koleksiyon listesi için `npm run map` çalıştır (çıktıyı ekrana yazar, satır numarası tutmaz).
